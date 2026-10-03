@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Iniciar sesión')}"></head>
+<body class="login-page d-flex align-items-center justify-content-center p-3">
+<main class="card login-card">
+    <div class="card-body p-4 p-md-5">
+        <div class="text-center mb-4">
+            <div class="fs-1 mb-2">🛒</div>
+            <h1 class="h3 fw-bold mb-1">Minisúper</h1>
+            <p class="text-secondary mb-0">Inicia sesión para continuar</p>
+        </div>
+        <div class="alert alert-danger" role="alert" th:if="${loginError}">Usuario o contraseña incorrectos.</div>
+        <div class="alert alert-success" role="status" th:if="${logout}">Sesión</div> cerrada correctamente.</div>
+        <form th:action="@{/login}" method="post">
+            <div class="mb-3"><label for="username" class="form-label">Usuario</label><input id="username" name="username" type="text" class="form-control form-control-lg" autocomplete="username" required autofocus></div>
+            <div class="mb-4"><label for="password" class="form-label">Contraseña</label><input id="password" name="password" type="password" class="form-control form-control-lg" autocomplete="current-password" required></div>
+            <button class="btn btn-primary btn-lg w-100" type="submit">Iniciar sesión</button>
+        </form>
+
+</main>
+</body>
+</html>

@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Categoría')}"></head>
+<body class="app-page">
+<nav th:replace="~{fragments/layout :: navbar('categorias')}"></nav>
+<main class="app-main">
+    <div class="mb-3"><a class="text-decoration-none" th:href="@{/categorias}">← Volver a categorías</a></div>
+    <section class="content-card mx-auto p-4" style="max-width:680px">
+        <h1 class="h4 fw-bold mb-4" th:text="${categoria.id == 0 ? 'Nueva categoría' : 'Editar categoría'}"></h1>
+        <form th:action="@{/categorias/guardar}" th:object="${categoria}" method="post" data-swal-confirm data-swal-action="save" data-swal-title="¿Guardar categoría?" data-swal-text="Confirma para guardar los cambios de la categoría." data-swal-confirm-text="Sí, guardar">
+            <input type="hidden" th:field="*{id}">
+            <div class="mb-3"><label for="nombreCategoria" class="form-label">Nombre de la categoría</label><input id="nombreCategoria" class="form-control" type="text" th:field="*{nombreCategoria}" maxlength="100" required autofocus></div>
+            <div class="d-flex justify-content-end gap-2 mt-4"><a class="btn btn-outline-light" th:href="@{/categorias}">Cancelar</a><button class="btn btn-primary" type="submit">Guardar categoría</button></div>
+        </form>
+    </section>
+</main>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

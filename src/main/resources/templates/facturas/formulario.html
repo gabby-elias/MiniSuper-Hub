@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Nueva factura')}"></head>
+<body class="app-page">
+<nav th:replace="~{fragments/layout :: navbar('facturas')}"></nav>
+<main class="invoice-shell">
+    <form id="invoiceForm" th:action="@{/facturas/guardar}" th:object="${factura}" method="post" class="invoice-panel" data-swal-confirm data-swal-action="save" data-swal-title="¿Guardar factura?" data-swal-text="Se guardarán el cliente seleccionado (si aplica), los productos y el total calculado." data-swal-confirm-text="Sí, guardar factura">
+        <input type="hidden" th:field="*{id}">
+        <input type="hidden" th:field="*{fecha}">
+        <div class="d-flex align-items-start justify-content-between gap-3 mb-3">
+            <h1 class="h5 fw-semibold mb-0" th:text="${factura.id == 0 ? 'Nueva factura' : 'Editar factura'}"></h1>
+            <span class="invoice-date">Fecha: <span th:text="${factura.fecha != null ? #temporals.format(factura.fecha, 'dd/MM/yyyy') : '—'}">30/09/2026</span></span>
+        </div>
+        <div class="alert alert-danger py-2" role="alert" th:if="${error}" th:text="${error}"></div>
+        <div class="mb-3">
+            <label for="clienteId" class="form-label">Cliente <span class="text-secondary">(opcional)</span></label>
+            <select id="clienteId" name="clienteId" class="form-select">
+                <option value="" th:selected="${factura.cliente == null}">Consumidor final (sin registro)</option>
+                <option th:each="cliente : ${clientes}" th:value="${cliente.id}" th:text="${cliente.nombre}" th:selected="${factura.cliente != null and factura.cliente.id == cliente.id}"></option>
+            </select>
+            <div class="form-text">Si no eliges un cliente, la factura se emitirá a nombre de consumidor final.</div>
+        </div>div>
+        <div class="invoice-entry-grid mb-4">
+            <div><label for="productoSelect" class="form-label">Producto</label>
+                <select id="productoSelect" class="form-select">
+                    <option value="">Selecciona un producto</option>
+                    <option th:each="producto : ${productos}" th:value="${producto.id}" th:attr="data-name=${producto.nombre},data-price=${producto.precioVenta}" th:text="|${producto.nombre} · $${#numbers.formatDecimal(producto.precioVenta, 1, 2)}|"></option>
+                </select>
+            </div>
+            <div><label for="cantidadInput" class="form-label">Cantidad</label><input id="cantidadInput" class="form-control" type="number" min="1" step="1" value="1"></div>
+            <button id="agregarProducto" type="button" class="btn btn-outline-light">Agregar</button>
+        </div>
+        <div class="table-responsive">
+            <table class="table invoice-lines align-middle">
+                <thead><tr><th>Producto</th><th class="text-end">Cantidad</th><th class="text-end">Precio</th><th class="text-end">Subtotal</th><th></th></tr></thead>
+                <tbody id="invoiceLines">
+                <tr th:each="detalle : ${factura.detalles}" class="invoice-line" th:attr="data-product-id=${detalle.producto.id},data-name=${detalle.producto.nombre},data-price=${detalle.precioUnitario},data-quantity=${detalle.cantidad}">
+                    <td><span class="line-product-name" th:text="${detalle.producto.nombre}"></span><input type="hidden" name="productoIds" th:value="${detalle.producto.id}"><input type="hidden" name="cantidades" th:value="${detalle.cantidad}"></td>
+                    <td class="text-end line-quantity" th:text="${detalle.cantidad}"></td>
+                    <td class="text-end line-price" th:text="|$${#numbers.formatDecimal(detalle.precioUnitario, 1, 2)}|"></td>
+                    <td class="text-end line-subtotal" th:text="|$${#numbers.formatDecimal(detalle.subtotal, 1, 2)}|"></td>
+                    <td class="text-end"><button type="button" class="btn btn-sm btn-outline-secondary remove-line" aria-label="Quitar producto">×</button></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="invoice-actions d-flex flex-wrap justify-content-end align-items-center gap-3">
+            <span class="text-secondary">Total</span><span id="invoiceTotal" class="invoice-total">$0.00</span>
+            <a class="btn btn-outline-light" th:href="@{/facturas}">Cancelar</a>
+            <button class="btn btn-light px-3" type="submit" th:text="${factura.id == 0 ? 'Guardar factura' : 'Guardar cambios'}">Guardar factura</button>
+        </div>
+    </form>
+</main>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+<script>
+(() => {
+    const select = document.getElementById('productoSelect');
+    const quantityInput = document.getElementById('cantidadInput');
+    const lines = document.getElementById('invoiceLines');
+    const totalLabel = document.getElementById('invoiceTotal');
+    const form = document.getElementById('invoiceForm');
+    const currency = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+
+    function renderEmptyState() {
+        if (lines.querySelector('.invoice-line')) return;
+        const row = document.createElement('tr');
+        row.className = 'empty-lines';
+        const cell = document.createElement('td');
+        cell.colSpan = 5;
+        cell.className = 'text-center text-secondary py-3';
+        cell.textContent = 'Agrega productos para completar la factura.';
+        row.appendChild(cell);
+        lines.appendChild(row);
+    }
+
+    function updateTotal() {
+        let total = 0;
+        lines.querySelectorAll('.invoice-line').forEach((row) => {
+            const subtotal = Number(row.dataset.price) * Number(row.dataset.quantity);
+            total += subtotal;
+            row.querySelector('.line-subtotal').textContent = currency.format(subtotal);
+        });
+        totalLabel.textContent = currency.format(total);
+        if (lines.querySelector('.invoice-line')) lines.querySelector('.empty-lines')?.remove();
+        else renderEmptyState();
+    }
+
+    function addLine(productId, name, price, quantity) {
+        const row = document.createElement('tr');
+        row.className = 'invoice-line';
+        row.dataset.productId = productId;
+        row.dataset.name = name;
+        row.dataset.price = price;
+        row.dataset.quantity = quantity;
+
+        const productCell = document.createElement('td');
+        const productName = document.createElement('span');
+        productName.className = 'line-product-name';
+        productName.textContent = name;
+        productCell.appendChild(productName);
+        const productIdInput = document.createElement('input');
+        productIdInput.type = 'hidden';
+        productIdInput.name = 'productoIds';
+        productIdInput.value = productId;
+        productCell.appendChild(productIdInput);
+        const quantityInputHidden = document.createElement('input');
+        quantityInputHidden.type = 'hidden';
+        quantityInputHidden.name = 'cantidades';
+        quantityInputHidden.value = quantity;
+        productCell.appendChild(quantityInputHidden);
+
+        const quantityCell = document.createElement('td');
+        quantityCell.className = 'text-end line-quantity';
+        quantityCell.textContent = quantity;
+        const priceCell = document.createElement('td');
+        priceCell.className = 'text-end line-price';
+        priceCell.textContent = currency.format(price);
+        const subtotalCell = document.createElement('td');
+        subtotalCell.className = 'text-end line-subtotal';
+        subtotalCell.textContent = currency.format(price * quantity);
+        const actionCell = document.createElement('td');
+        actionCell.className = 'text-end';
+        const removeButton = document.createElement('button');
+        removeButton.type = 'button';
+        removeButton.className = 'btn btn-sm btn-outline-secondary remove-line';
+        removeButton.setAttribute('aria-label', 'Quitar producto');
+        removeButton.textContent = '×';
+        actionCell.appendChild(removeButton);
+
+        row.append(productCell, quantityCell, priceCell, subtotalCell, actionCell);
+        lines.querySelector('.empty-lines')?.remove();
+        lines.appendChild(row);
+        updateTotal();
+    }
+
+    document.getElementById('agregarProducto').addEventListener('click', () => {
+        const option = select.selectedOptions[0];
+        const quantity = Number.parseInt(quantityInput.value, 10);
+        if (!option || !option.value || !Number.isInteger(quantity) || quantity < 1) return;
+        addLine(option.value, option.dataset.name, Number(option.dataset.price), quantity);
+        select.value = '';
+        quantityInput.value = '1';
+        select.focus();
+    });
+
+    lines.addEventListener('click', (event) => {
+        if (event.target.closest('.remove-line')) {
+            event.target.closest('.invoice-line').remove();
+            updateTotal();
+        }
+    });
+
+    form.addEventListener('submit', (event) => {
+        if (!lines.querySelector('.invoice-line')) {
+            event.preventDefault();
+            window.alert('Agrega al menos un producto a la factura.');
+        }
+    });
+
+    updateTotal();
+})();
+</script>
+</body>
+</html>

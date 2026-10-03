@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Facturas')}"></head>
+<body class="app-page">
+<nav th:replace="~{fragments/layout :: navbar('facturas')}"></nav>
+<main class="app-main">
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 page-heading">
+        <div><h1>Facturas</h1><p th:text="${esAdmin ? 'Consulta y administra todas las ventas del minisúper.' : 'Consulta tus facturas y registra nuevas ventas.'}">Consulta facturas.</p></div>
+        <a class="btn btn-primary" th:href="@{/facturas/nuevo}">＋ Nueva factura</a>
+    </div>
+    <section class="content-card table-responsive">
+        <table class="table table-hover align-middle">
+            <thead><tr><th>N.º</th><th>Fecha</th><th>Cliente</th><th th:if="${esAdmin}">Vendedor</th><th>Productos</th><th>Total</th><th>Estado</th><th class="text-end">Acciones</th></tr></thead>
+            <tbody>
+            <tr th:each="factura : ${facturas}">
+                <td th:text="${factura.id}"></td>
+                <td th:text="${factura.fecha != null ? #temporals.format(factura.fecha, 'dd/MM/yyyy') : '—'}"></td>
+                <td th:text="${factura.cliente != null ? factura.cliente.nombre : 'Consumidor final'}"></td>
+                <td th:if="${esAdmin}" th:text="${factura.vendedor != null ? factura.vendedor.nombre : '—'}"></td>
+                <td th:text="${factura.detalles != null ? factura.detalles.size() : 0}"></td>
+                <td th:text="|$${#numbers.formatDecimal(factura.total, 1, 2)}|"></td>
+                <td><span class="badge" th:classappend="${factura.anulada} ? ' text-bg-danger' : ' text-bg-success'" th:text="${factura.anulada} ? 'Anulada' : 'Vigente'"></span></td>
+                <td class="text-end text-nowrap">
+                    <a class="btn btn-sm btn-outline-light" th:href="@{/facturas/ver/{id}(id=${factura.id})}">Ver</a>
+                    <th:block th:if="${esAdmin}">
+                        <a th:if="${!factura.anulada}" class="btn btn-sm btn-outline-light" th:href="@{/facturas/editar/{id}(id=${factura.id})}">Editar</a>
+                        <form th:if="${!factura.anulada}" class="d-inline" th:action="@{/facturas/anular/{id}(id=${factura.id})}" method="post" data-swal-confirm data-swal-action="delete" data-swal-title="¿Anular factura?" data-swal-text="La factura y sus detalles se conservarán para consulta.">
+                            <button class="btn btn-sm btn-outline-warning" type="submit">Anular</button>
+                        </form>
+                        <form class="d-inline" th:action="@{/facturas/eliminar/{id}(id=${factura.id})}" method="post" data-swal-confirm data-swal-action="delete" data-swal-title="¿Eliminar factura?" data-swal-text="También se eliminarán sus detalles.">
+                            <button class="btn btn-sm btn-outline-danger" type="submit">Eliminar</button>
+                        </form>
+                    </th:block>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(facturas)}"><td th:colspan="${esAdmin ? 8 : 7}" class="text-center text-secondary py-5">No hay facturas registradas.</td></tr>
+            </tbody>
+        </table>
+    </section>
+</main>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>
