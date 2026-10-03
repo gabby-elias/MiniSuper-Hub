@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Cliente')}"></head>
+<body class="app-page">
+<nav th:replace="~{fragments/layout :: navbar('clientes')}"></nav>
+<main class="app-main">
+    <div class="mb-3"><a class="text-decoration-none" th:href="@{/clientes}">← Volver a clientes</a></div>
+    <section class="content-card mx-auto p-4" style="max-width:680px">
+        <h1 class="h4 fw-bold mb-4" th:text="${cliente.id == 0 ? 'Nuevo cliente' : 'Editar cliente'}"></h1>
+        <form th:action="@{/clientes/guardar}" th:object="${cliente}" method="post" data-swal-confirm data-swal-action="save" data-swal-title="¿Guardar cliente?" data-swal-text="Confirma para guardar los cambios del cliente." data-swal-confirm-text="Sí, guardar">
+            <input type="hidden" th:field="*{id}">
+            <div class="mb-3"><label for="nombre" class="form-label">Nombre</label><input id="nombre" class="form-control" type="text" th:field="*{nombre}" maxlength="150" required autofocus></div>
+            <div class="mb-3"><label for="documento" class="form-label">Documento</label><input id="documento" class="form-control" type="text" th:field="*{documento}" maxlength="50"></div>
+            <div class="mb-3"><label for="direccion" class="form-label">Dirección</label><textarea id="direccion" class="form-control" rows="3" th:field="*{direccion}" maxlength="255"></textarea></div>
+            <div class="d-flex justify-content-end gap-2 mt-4"><a class="btn btn-outline-light" th:href="@{/clientes}">Cancelar</a><button class="btn btn-primary" type="submit">Guardar cliente</button></div>
+        </form>
+    </section>
+</main>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

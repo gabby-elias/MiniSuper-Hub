@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Categorías')}"></head>
+<body class="app-page">
+<nav th:replace="~{fragments/layout :: navbar('categorias')}"></nav>
+<main class="app-main">
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 page-heading">
+        <div><h1>Categorías</h1><p th:text="${esAdmin ? 'Organiza los productos de tu minisúper.' : 'Consulta las categorías disponibles.'}">Categorías</p></div>
+        <a th:if="${esAdmin}" class="btn btn-primary" th:href="@{/categorias/nuevo}">＋ Nueva categoría</a>
+    </div>
+    <section class="content-card table-responsive">
+        <table class="table table-hover align-middle">
+            <thead><tr><th>ID</th><th>Nombre de categoría</th><th th:if="${esAdmin}" class="text-end">Acciones</th></tr></thead>
+            <tbody>
+            <tr th:each="categoria : ${categorias}">
+                <td th:text="${categoria.id}"></td><td th:text="${categoria.nombreCategoria}"></td>
+                <td th:if="${esAdmin}" class="text-end text-nowrap"><a class="btn btn-sm btn-outline-light" th:href="@{/categorias/editar/{id}(id=${categoria.id})}">Editar</a>
+                    <form class="d-inline" th:action="@{/categorias/eliminar/{id}(id=${categoria.id})}" method="post" data-swal-confirm data-swal-action="delete" data-swal-title="¿Eliminar categoría?" data-swal-text="Si tiene productos asociados, no podrá eliminarse."><button class="btn btn-sm btn-outline-danger" type="submit">Eliminar</button></form>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(categorias)}"><td th:colspan="${esAdmin ? 3 : 2}" class="text-center text-secondary py-5">No hay categorías registradas.</td></tr>
+            </tbody>
+        </table>
+    </section>
+</main>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

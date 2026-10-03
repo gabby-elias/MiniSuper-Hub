@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Detalle de factura')}"></head>
+<body class="app-page">
+<nav th:replace="~{fragments/layout :: navbar('detalles')}"></nav>
+<main class="app-main">
+    <div class="mb-3"><a class="text-decoration-none" th:href="@{/detalles-factura}">← Volver a detalles</a></div>
+    <section class="content-card mx-auto p-4" style="max-width:760px">
+        <h1 class="h4 fw-bold mb-4" th:text="${detalleFactura.id == 0 ? 'Nuevo detalle' : 'Editar detalle'}"></h1>
+        <form th:action="@{/detalles-factura/guardar}" th:object="${detalleFactura}" method="post" data-swal-confirm data-swal-action="save" data-swal-title="¿Guardar detalle?" data-swal-text="Confirma para guardar esta línea de factura." data-swal-confirm-text="Sí, guardar">
+            <input type="hidden" th:field="*{id}">
+            <div class="mb-3"><label for="factura" class="form-label">Factura</label><select id="factura" name="factura.id" class="form-select" required><option value="">Selecciona una factura</option><option th:each="factura : ${facturas}" th:value="${factura.id}" th:text="|Factura #${factura.id} · ${factura.fecha ?: 'Sin fecha'}|" th:selected="${detalleFactura.factura != null and detalleFactura.factura.id == factura.id}"></option></select></div>
+            <div class="mb-3"><label for="producto" class="form-label">Producto</label><select id="producto" name="producto.id" class="form-select" required><option value="">Selecciona un producto</option><option th:each="producto : ${productos}" th:value="${producto.id}" th:text="|${producto.nombre} · $${producto.precioVenta}|" th:selected="${detalleFactura.producto != null and detalleFactura.producto.id == producto.id}"></option></select></div>
+            <div class="row g-3">
+                <div class="col-md-4"><label for="cantidad" class="form-label">Cantidad</label><input id="cantidad" class="form-control" type="number" min="1" th:field="*{cantidad}" required></div>
+                <div class="col-md-4"><label for="precioUnitario" class="form-label">Precio unitario</label><input id="precioUnitario" class="form-control" type="number" step="0.01" min="0" th:field="*{precioUnitario}" required></div>
+                <div class="col-md-4"><label for="subtotal" class="form-label">Subtotal</label><input id="subtotal" class="form-control" type="number" step="0.01" min="0" th:field="*{subtotal}" required></div>
+            </div>
+            <div class="d-flex justify-content-end gap-2 mt-4"><a class="btn btn-outline-light" th:href="@{/detalles-factura}">Cancelar</a><button class="btn btn-primary" type="submit">Guardar detalle</button></div>
+        </form>
+    </section>
+</main>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

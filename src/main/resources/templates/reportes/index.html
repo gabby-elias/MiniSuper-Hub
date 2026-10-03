@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Reportes')}"></head>
+<body class="app-page">
+<nav th:replace="~{fragments/layout :: navbar('reportes')}"></nav>
+<main class="app-main">
+    <div class="page-heading"><h1>Reportes</h1><p>Resumen general de la actividad del minisúper.</p></div>
+    <div class="row g-3">
+        <div class="col-6 col-xl-4"><div class="card stat-card"><div class="card-body"><div class="text-secondary mb-2">Ventas vigentes</div><div class="h2 mb-0" th:text="|$${#numbers.formatDecimal(totalVentas, 1, 2)}|"></div></div></div></div>
+        <div class="col-6 col-xl-4"><div class="card stat-card"><div class="card-body"><div class="text-secondary mb-2">Facturas vigentes</div><div class="h2 mb-0" th:text="${cantidadFacturas}"></div></div></div></div>
+        <div class="col-6 col-xl-4"><div class="card stat-card"><div class="card-body"><div class="text-secondary mb-2">Facturas anuladas</div><div class="h2 mb-0" th:text="${cantidadAnuladas}"></div></div></div></div>
+        <div class="col-6 col-xl-4"><div class="card stat-card"><div class="card-body"><div class="text-secondary mb-2">Productos</div><div class="h2 mb-0" th:text="${cantidadProductos}"></div></div></div></div>
+        <div class="col-6 col-xl-4"><div class="card stat-card"><div class="card-body"><div class="text-secondary mb-2">Categorías</div><div class="h2 mb-0" th:text="${cantidadCategorias}"></div></div></div></div>
+        <div class="col-6 col-xl-4"><div class="card stat-card"><div class="card-body"><div class="text-secondary mb-2">Clientes</div><div class="h2 mb-0" th:text="${cantidadClientes}"></div></div></div></div>
+    </div>
+</main>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

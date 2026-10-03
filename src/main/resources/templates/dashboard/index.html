@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Inicio')}"></head>
+<body class="app-page">
+<nav th:replace="~{fragments/layout :: navbar('dashboard')}"></nav>
+<main class="app-main">
+    <div class="page-heading"><h1>Inicio</h1><p>Resumen de tu minisúper.</p></div>
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-xl-3"><a class="text-decoration-none" th:href="@{/categorias}"><div class="card stat-card"><div class="card-body"><div class="text-secondary mb-2">Categorías</div><div class="h2 mb-0" th:text="${cantidadCategorias}">0</div></div></div></a></div>
+        <div class="col-6 col-xl-3"><a class="text-decoration-none" th:href="@{/productos}"><div class="card stat-card"><div class="card-body"><div class="text-secondary mb-2">Productos</div><div class="h2 mb-0" th:text="${cantidadProductos}">0</div></div></div></a></div>
+        <div class="col-6 col-xl-3"><a class="text-decoration-none" th:href="@{/clientes}"><div class="card stat-card"><div class="card-body"><div class="text-secondary mb-2">Clientes</div><div class="h2 mb-0" th:text="${cantidadClientes}">0</div></div></div></a></div>
+        <div class="col-6 col-xl-3"><a class="text-decoration-none" th:href="@{/facturas}"><div class="card stat-card"><div class="card-body"><div class="text-secondary mb-2">Facturas</div><div class="h2 mb-0" th:text="${cantidadFacturas}">0</div></div></div></a></div>
+    </div>
+    <section class="content-card">
+        <div class="d-flex justify-content-between align-items-center p-3"><h2 class="h5 mb-0">Facturas recientes</h2><a class="btn btn-sm btn-outline-light" th:href="@{/facturas}">Ver todas</a></div>
+        <div class="table-responsive"><table class="table table-hover align-middle">
+            <thead><tr><th>N.º</th><th>Fecha</th><th>Cliente</th><th>Total</th><th></th></tr></thead>
+            <tbody>
+            <tr th:each="factura : ${ultimasFacturas}"><td th:text="${factura.id}"></td><td th:text="${factura.fecha != null ? factura.fecha : '—'}"></td><td th:text="${factura.cliente != null ? factura.cliente.nombre : 'Consumidor final'}"></td><td th:text="|$${#numbers.formatDecimal(factura.total, 1, 2)}|"></td><td><a class="btn btn-sm btn-outline-light" th:href="@{/facturas/ver/{id}(id=${factura.id})}">Ver</a></td></tr>
+            <tr th:if="${#lists.isEmpty(ultimasFacturas)}"><td colspan="5" class="text-center text-secondary py-4">Todavía no hay facturas registradas.</td></tr>
+            </tbody>
+        </table></div>
+    </section>
+</main>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>
