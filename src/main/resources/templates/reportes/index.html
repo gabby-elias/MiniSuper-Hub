@@ -1,18 +1,38 @@
 <!doctype html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments/layout :: head('Reportes', 'reportes')}"></head>
-<body class="app-page">
+<body class="app-page report-page">
 <nav th:replace="~{fragments/layout :: navbar('reportes')}"></nav>
 <main class="app-main">
-    <div class="page-heading"><h1>Reportes</h1><p>Resumen general de la actividad del minisúper.</p></div>
-    <div class="row g-3">
-        <div class="col-6 col-xl-4"><div class="card stat-card"><div class="card-body"><div class="text-secondary mb-2">Ventas vigentes</div><div class="h2 mb-0" th:text="|$${#numbers.formatDecimal(totalVentas, 1, 2)}|"></div></div></div></div>
-        <div class="col-6 col-xl-4"><div class="card stat-card"><div class="card-body"><div class="text-secondary mb-2">Facturas vigentes</div><div class="h2 mb-0" th:text="${cantidadFacturas}"></div></div></div></div>
-        <div class="col-6 col-xl-4"><div class="card stat-card"><div class="card-body"><div class="text-secondary mb-2">Facturas anuladas</div><div class="h2 mb-0" th:text="${cantidadAnuladas}"></div></div></div></div>
-        <div class="col-6 col-xl-4"><div class="card stat-card"><div class="card-body"><div class="text-secondary mb-2">Productos</div><div class="h2 mb-0" th:text="${cantidadProductos}"></div></div></div></div>
-        <div class="col-6 col-xl-4"><div class="card stat-card"><div class="card-body"><div class="text-secondary mb-2">Categorías</div><div class="h2 mb-0" th:text="${cantidadCategorias}"></div></div></div></div>
-        <div class="col-6 col-xl-4"><div class="card stat-card"><div class="card-body"><div class="text-secondary mb-2">Clientes</div><div class="h2 mb-0" th:text="${cantidadClientes}"></div></div></div></div>
-    </div>
+    <header class="report-heading page-heading">
+        <div>
+            <span class="report-eyebrow">MINISÚPER · ANÁLISIS</span>
+            <h1>Reportes</h1>
+            <p>Un resumen claro de la actividad y las ventas de tu negocio.</p>
+        </div>
+        <div class="report-heading-mark" aria-hidden="true">R</div>
+    </header>
+
+    <section class="report-total content-card mb-4" aria-label="Total de ventas vigentes">
+        <div class="report-total-copy">
+            <span class="report-label">VENTAS VIGENTES</span>
+            <h2 th:text="|$${#numbers.formatDecimal(totalVentas, 1, 2)}|">$0.00</h2>
+            <p>Ingresos registrados en facturas no anuladas</p>
+        </div>
+        <div class="report-total-icon" aria-hidden="true">$</div>
+    </section>
+
+    <section aria-label="Resumen de registros">
+        <div class="report-section-heading"><h2>Resumen general</h2><span>Conteo actual</span></div>
+        <div class="row g-3">
+            <div class="col-6 col-xl-4"><article class="card stat-card report-stat report-stat--gold"><div class="card-body"><span class="report-stat-icon">$</span><div class="report-stat-label">Facturas vigentes</div><div class="report-stat-value" th:text="${cantidadFacturas}">0</div><div class="report-stat-note">Ventas activas</div></div></article></div>
+            <div class="col-6 col-xl-4"><article class="card stat-card report-stat report-stat--lavender"><div class="card-body"><span class="report-stat-icon">↗</span><div class="report-stat-label">Facturas anuladas</div><div class="report-stat-value" th:text="${cantidadAnuladas}">0</div><div class="report-stat-note">Operaciones anuladas</div></div></article></div>
+            <div class="col-6 col-xl-4"><article class="card stat-card report-stat report-stat--gold"><div class="card-body"><span class="report-stat-icon">▦</span><div class="report-stat-label">Productos</div><div class="report-stat-value" th:text="${cantidadProductos}">0</div><div class="report-stat-note">En el catálogo</div></div></article></div>
+            <div class="col-6 col-xl-4"><article class="card stat-card report-stat report-stat--lavender"><div class="card-body"><span class="report-stat-icon">◇</span><div class="report-stat-label">Categorías</div><div class="report-stat-value" th:text="${cantidadCategorias}">0</div><div class="report-stat-note">Para organizar productos</div></div></article></div>
+            <div class="col-6 col-xl-4"><article class="card stat-card report-stat report-stat--gold"><div class="card-body"><span class="report-stat-icon">◎</span><div class="report-stat-label">Clientes</div><div class="report-stat-value" th:text="${cantidadClientes}">0</div><div class="report-stat-note">Registrados en el sistema</div></div></article></div>
+
+        </div>
+    </section>
 </main>
 <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
 </body>
