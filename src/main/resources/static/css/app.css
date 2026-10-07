@@ -32,73 +32,6 @@ body.app-page {
     box-shadow: 0 1rem 2.5rem rgba(35, 65, 46, 0.08);
 }
 
-.top-nav {
-    min-height: 58px;
-    padding-top: 0.35rem;
-    padding-bottom: 0.35rem;
-    background: var(--app-green);
-    border: 0;
-    border-radius: 0.95rem 0.95rem 0 0;
-}
-
-.brand-mark,
-.brand-mark:hover,
-.top-nav .nav-link {
-    color: #ffffff;
-}
-
-.brand-mark {
-    font-weight: 700;
-    letter-spacing: -0.02em;
-}
-
-.brand-icon {
-    margin-right: 0.35rem;
-}
-
-.top-nav .nav-link {
-    padding: 0.38rem 0.75rem;
-    border-radius: 0.65rem;
-    opacity: 0.88;
-}
-
-.top-nav .nav-link:hover,
-.top-nav .nav-link.active {
-    color: #ffffff;
-    background: rgba(255, 255, 255, 0.18);
-    opacity: 1;
-}
-
-.current-user {
-    color: #ffffff;
-    font-weight: 600;
-}
-
-.role-badge {
-    padding: 0.25rem 0.65rem;
-    color: var(--app-green);
-    background: #ffffff;
-    border-radius: 999px;
-    font-size: 0.78rem;
-    font-weight: 600;
-    white-space: nowrap;
-}
-
-.top-nav .btn-outline-light {
-    --bs-btn-color: #ffffff;
-    --bs-btn-border-color: rgba(255, 255, 255, 0.65);
-    --bs-btn-hover-color: var(--app-green-dark);
-    --bs-btn-hover-bg: #ffffff;
-    --bs-btn-hover-border-color: #ffffff;
-}
-
-.navbar-toggler {
-    border-color: rgba(255, 255, 255, 0.55);
-}
-
-.navbar-toggler-icon {
-    filter: invert(1);
-}
 
 .app-main {
     width: min(100%, 1080px);
@@ -262,86 +195,8 @@ body.app-page {
     --bs-alert-border-color: #c6dfce;
 }
 
-.invoice-shell {
-    width: min(100%, 920px);
-    margin: 0 auto;
-    padding: 1rem 1rem 2rem;
-}
 
-.invoice-panel {
-    padding: 1rem;
-    background: var(--app-panel);
-    border: 1px solid var(--app-border);
-    border-radius: 0.9rem;
-    box-shadow: 0 0.35rem 1rem rgba(35, 65, 46, 0.035);
-}
 
-.invoice-date {
-    color: var(--app-muted);
-    font-size: 0.9rem;
-}
-
-.invoice-entry-grid {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 90px 88px;
-    gap: 0.5rem;
-    align-items: end;
-}
-
-.invoice-lines td {
-    vertical-align: middle;
-}
-
-.invoice-total {
-    color: var(--app-green);
-    font-size: 1.45rem;
-    font-weight: 650;
-    letter-spacing: -0.02em;
-}
-
-.invoice-actions {
-    border-top: 1px solid var(--app-border);
-    margin-top: 0.4rem;
-    padding-top: 0.85rem;
-}
-
-.stock-badge {
-    display: inline-block;
-    padding: 0.23rem 0.6rem;
-    border-radius: 999px;
-    font-size: 0.78rem;
-    font-weight: 600;
-    white-space: nowrap;
-}
-
-.stock-available {
-    color: #287a4b;
-    background: #e1f1e7;
-}
-
-.stock-low {
-    color: #95620b;
-    background: #fff2d6;
-}
-
-.stock-empty {
-    color: #b83b3b;
-    background: #fbe5e5;
-}
-
-.login-page {
-    min-height: 100vh;
-    background: radial-gradient(circle at top left, #e3efe7, transparent 38%), #edf1ee;
-}
-
-.login-card {
-    width: min(100%, 440px);
-    color: var(--app-text);
-    background: var(--app-panel);
-    border: 1px solid var(--app-border);
-    border-radius: 1rem;
-    box-shadow: 0 1rem 2.5rem rgba(35, 65, 46, 0.1);
-}
 
 @media (max-width: 575.98px) {
     body.app-page {
@@ -350,12 +205,5 @@ body.app-page {
         margin: 0.5rem auto;
     }
 
-    .invoice-entry-grid {
-        grid-template-columns: minmax(0, 1fr) 74px 82px;
-    }
 
-    .invoice-shell {
-        padding-right: 0.5rem;
-        padding-left: 0.5rem;
-    }
 }
