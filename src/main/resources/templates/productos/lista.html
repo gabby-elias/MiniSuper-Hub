@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/layout :: head('Productos')}"></head>
+<head th:replace="~{fragments/layout :: head('Productos', 'productos-lista')}"></head>
 <body class="app-page">
 <nav th:replace="~{fragments/layout :: navbar('productos')}"></nav>
 <main class="app-main">
@@ -37,7 +37,7 @@
                 <td th:text="${producto.categoria != null ? producto.categoria.nombreCategoria : '—'}"></td>
                 <td th:text="|$${#numbers.formatDecimal(producto.precioVenta, 1, 2)}|"></td>
                 <td>
-                    <span class="stock-badge" th:classappend="${producto.stock == 0 ? ' stock-empty' : (producto.stock <= 5 ? ' stock-low</h1>' : ' stock-available')}"
+                    <span class="stock-badge" th:classappend="${producto.stock == 0 ? ' stock-empty' : (producto.stock <= 5 ? ' stock-low' : ' stock-available')}"
                           th:title="|Existencias: ${producto.stock}|"
                           th:text="${producto.stock == 0 ? 'Agotado' : (producto.stock <= 5 ? 'Stock bajo' : 'Disponible')}">Disponible</span>
                 </td>
