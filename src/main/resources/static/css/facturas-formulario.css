@@ -1,0 +1,53 @@
+.invoice-shell {
+    width: min(100%, 920px);
+    margin: 0 auto;
+    padding: 1rem 1rem 2rem;
+}
+
+.invoice-panel {
+    padding: 1rem;
+    background: var(--app-panel);
+    border: 1px solid var(--app-border);
+    border-radius: 0.9rem;
+    box-shadow: 0 0.35rem 1rem rgba(35, 65, 46, 0.035);
+}
+
+.invoice-date {
+    color: var(--app-muted);
+    font-size: 0.9rem;
+}
+
+.invoice-entry-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 90px 88px;
+    gap: 0.5rem;
+    align-items: end;
+}
+
+.invoice-lines td {
+    vertical-align: middle;
+}
+
+.invoice-total {
+    color: var(--app-green);
+    font-size: 1.45rem;
+    font-weight: 650;
+    letter-spacing: -0.02em;
+}
+
+.invoice-actions {
+    border-top: 1px solid var(--app-border);
+    margin-top: 0.4rem;
+    padding-top: 0.85rem;
+}
+
+@media (max-width: 575.98px) {
+    .invoice-entry-grid {
+        grid-template-columns: minmax(0, 1fr) 74px 82px;
+    }
+
+    .invoice-shell {
+        padding-right: 0.5rem;
+        padding-left: 0.5rem;
+    }
+}

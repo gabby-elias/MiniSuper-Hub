@@ -1,0 +1,67 @@
+.top-nav {
+    min-height: 58px;
+    padding-top: 0.35rem;
+    padding-bottom: 0.35rem;
+    background: var(--app-green);
+    border: 0;
+    border-radius: 0.95rem 0.95rem 0 0;
+}
+
+.brand-mark,
+.brand-mark:hover,
+.top-nav .nav-link {
+    color: #ffffff;
+}
+
+.brand-mark {
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+.brand-icon {
+    margin-right: 0.35rem;
+}
+
+.top-nav .nav-link {
+    padding: 0.38rem 0.75rem;
+    border-radius: 0.65rem;
+    opacity: 0.88;
+}
+
+.top-nav .nav-link:hover,
+.top-nav .nav-link.active {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.18);
+    opacity: 1;
+}
+
+.current-user {
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.role-badge {
+    padding: 0.25rem 0.65rem;
+    color: var(--app-green);
+    background: #ffffff;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.top-nav .btn-outline-light {
+    --bs-btn-color: #ffffff;
+    --bs-btn-border-color: rgba(255, 255, 255, 0.65);
+    --bs-btn-hover-color: var(--app-green-dark);
+    --bs-btn-hover-bg: #ffffff;
+    --bs-btn-hover-border-color: #ffffff;
+}
+
+.navbar-toggler {
+    border-color: rgba(255, 255, 255, 0.55);
+}
+
+.navbar-toggler-icon {
+    filter: invert(1);
+}
