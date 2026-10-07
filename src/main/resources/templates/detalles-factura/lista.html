@@ -1,15 +1,19 @@
 <!doctype html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments/layout :: head('Detalles de factura', 'detalles-factura-lista')}"></head>
-<body class="app-page">
+<body class="app-page details-page">
 <nav th:replace="~{fragments/layout :: navbar('detalles')}"></nav>
 <main class="app-main">
-    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 page-heading">
-        <div><h1>Detalles de factura</h1><p>Productos y cantidades de cada venta.</p></div>
-        <a class="btn btn-primary" th:href="@{/detalles-factura/nuevo}">＋ Nuevo detalle</a>
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 page-heading details-heading">
+        <div>
+            <span class="details-eyebrow">VENTAS · REGISTROS</span>
+            <h1>Detalles de factura</h1>
+            <p>Productos y cantidades de cada venta.</p>
+        </div>
+        <a class="btn btn-primary details-new-button" th:href="@{/detalles-factura/nuevo}">＋ Nuevo detalle</a>
     </div>
-    <section class="content-card table-responsive">
-        <table class="table table-hover align-middle">
+    <section class="content-card details-table-card table-responsive">
+        <table class="table table-hover align-middle details-table">
             <thead><tr><th>ID</th><th>Factura</th><th>Producto</th><th>Cantidad</th><th>Precio unitario</th><th>Subtotal</th><th class="text-end">Acciones</th></tr></thead>
             <tbody>
             <tr th:each="detalle : ${detalles}">
@@ -17,7 +21,7 @@
                 <td th:text="${detalle.cantidad}"></td><td th:text="|$${#numbers.formatDecimal(detalle.precioUnitario, 1, 2)}|"></td><td th:text="|$${#numbers.formatDecimal(detalle.subtotal, 1, 2)}|"></td>
                 <td class="text-end text-nowrap"><a class="btn btn-sm btn-outline-light" th:href="@{/detalles-factura/editar/{id}(id=${detalle.id})}">Editar</a><form class="d-inline" th:action="@{/detalles-factura/eliminar/{id}(id=${detalle.id})}" method="post" data-swal-confirm data-swal-action="delete" data-swal-title="¿Eliminar detalle?" data-swal-text="Esta acción no se puede deshacer."><button class="btn btn-sm btn-outline-danger" type="submit">Eliminar</button></form></td>
             </tr>
-            <tr th:if="${#lists.isEmpty(detalles)}"><td colspan="7" class="text-center text-secondary py-5">No hay detalles de factura registrados.</td></tr>
+            <tr th:if="${#lists.isEmpty(detalles)}"><td colspan="7" class="details-empty text-center py-5"><span>No hay detalles de factura registrados.</span><small>Los de</small>talles guardados aparecerán aquí.</small></td></tr>
             </tbody>
         </table>
     </section>

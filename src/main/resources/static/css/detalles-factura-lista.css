@@ -1,1 +1,180 @@
-/* Estilos específicos de templates/detalles-factura/lista.html. */
+/* Estilos locales de la vista de detalles de factura. */
+body.app-page.details-page {
+    --details-purple: #5B2C83;
+    --details-gold: #D4AF37;
+    width: calc(100% - 2.5rem);
+    max-width: none;
+    min-height: calc(100vh - 2rem);
+    margin: 1rem auto;
+    display: flex;
+    flex-direction: column;
+    border-color: rgba(91, 44, 131, .16);
+}
+
+.details-page .top-nav {
+    flex: 0 0 auto;
+    background: var(--details-purple);
+}
+
+.details-page .app-main {
+    width: 100%;
+    max-width: none;
+    flex: 1;
+    padding: clamp(1.5rem, 3vw, 3.25rem);
+}
+
+.details-page .details-heading {
+    margin-bottom: clamp(1.5rem, 3vw, 2.25rem);
+}
+
+.details-page .details-eyebrow {
+    display: block;
+    margin-bottom: .45rem;
+    color: var(--details-gold);
+    font-size: .75rem;
+    font-weight: 800;
+    letter-spacing: .14em;
+}
+
+.details-page .details-heading h1 {
+    margin: 0;
+    color: var(--details-purple);
+    font-size: clamp(1.8rem, 3vw, 2.5rem);
+    font-weight: 750;
+    letter-spacing: -.04em;
+}
+
+.details-page .details-heading p {
+    margin: .55rem 0 0;
+    color: #6c5969;
+}
+
+.details-page .details-new-button {
+    padding: .75rem 1.15rem;
+    border: 1px solid var(--details-gold);
+    border-radius: .75rem;
+    background: var(--details-gold);
+    color: var(--details-purple);
+    font-weight: 750;
+    box-shadow: 0 .35rem .9rem rgba(91, 44, 131, .12);
+    transition: transform .18s ease, box-shadow .18s ease, background-color .18s ease;
+}
+
+.details-page .details-new-button:hover,
+.details-page .details-new-button:focus-visible {
+    border-color: #c19b24;
+    background: #c19b24;
+    color: var(--details-purple);
+    transform: translateY(-1px);
+    box-shadow: 0 .55rem 1.1rem rgba(91, 44, 131, .16);
+}
+
+.details-page .details-table-card {
+    flex: 1;
+    overflow: hidden;
+    border: 1px solid rgba(91, 44, 131, .15);
+    border-radius: 1rem;
+    background: #fff;
+    box-shadow: 0 .5rem 1.5rem rgba(91, 44, 131, .06);
+}
+
+.details-page .details-table {
+    min-width: 760px;
+    margin: 0;
+    --bs-table-bg: #fff;
+    --bs-table-color: var(--details-purple);
+    --bs-table-border-color: rgba(91, 44, 131, .1);
+    --bs-table-hover-bg: rgba(91, 44, 131, .035);
+    --bs-table-hover-color: var(--details-purple);
+}
+
+.details-page .details-table thead th {
+    padding: 1rem 1.15rem;
+    border: 0;
+    background: var(--details-purple);
+    color: #fff;
+    font-size: .78rem;
+    font-weight: 750;
+    letter-spacing: .055em;
+    text-transform: uppercase;
+}
+
+.details-page .details-table tbody td {
+    padding: 1rem 1.15rem;
+    border-color: rgba(91, 44, 131, .09);
+    vertical-align: middle;
+}
+
+.details-page .details-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.details-page .details-table tbody td:nth-child(1) {
+    color: #6c5969;
+    font-weight: 650;
+}
+
+.details-page .details-table tbody td:nth-child(2) {
+    color: var(--details-purple);
+    font-weight: 750;
+}
+
+.details-page .details-table tbody td:nth-child(6) {
+    color: var(--details-purple);
+    font-weight: 750;
+}
+
+.details-page .details-table .btn-outline-light {
+    --bs-btn-color: var(--details-purple);
+    --bs-btn-border-color: rgba(91, 44, 131, .35);
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: var(--details-purple);
+    --bs-btn-hover-border-color: var(--details-purple);
+    border-radius: .55rem;
+    font-weight: 650;
+}
+
+.details-page .details-empty {
+    height: 220px;
+    color: var(--details-purple);
+}
+
+.details-page .details-empty span,
+.details-page .details-empty small {
+    display: block;
+}
+
+.details-page .details-empty span {
+    font-weight: 700;
+}
+
+.details-page .details-empty small {
+    margin-top: .35rem;
+    color: #6c5969;
+}
+
+@media (max-width: 767.98px) {
+    body.app-page.details-page {
+        width: calc(100% - 1rem);
+        min-height: calc(100vh - 1rem);
+        margin: .5rem auto;
+    }
+
+    .details-page .app-main {
+        padding: 1.25rem;
+    }
+
+    .details-page .details-heading {
+        align-items: flex-start !important;
+    }
+
+    .details-page .details-new-button {
+        width: 100%;
+        text-align: center;
+    }
+
+    .details-page .details-table thead th,
+    .details-page .details-table tbody td {
+        padding: .8rem;
+    }
+}

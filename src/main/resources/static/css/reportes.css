@@ -1,1 +1,211 @@
-/* Estilos específicos de templates/reportes/index.html. */
+/* Estilos locales de la vista de reportes. */
+body.app-page.report-page {
+    --report-purple: #5B2C83;
+    --report-gold: #D4AF37;
+    width: calc(100% - 2.5rem);
+    max-width: none;
+    min-height: calc(100vh - 2rem);
+    margin: 1rem auto;
+    display: flex;
+    flex-direction: column;
+    border-color: rgba(91, 44, 131, .16);
+}
+
+.report-page .top-nav {
+    flex: 0 0 auto;
+    background: var(--report-purple);
+}
+
+.report-page .app-main {
+    width: 100%;
+    max-width: none;
+    flex: 1;
+    padding: clamp(1.5rem, 3vw, 3.25rem);
+}
+
+.report-page .page-heading {
+    margin-bottom: clamp(1.5rem, 3vw, 2.25rem);
+}
+
+.report-page .report-heading h1,
+.report-page .report-section-heading h2 {
+    color: var(--report-purple);
+}
+
+.report-page .report-eyebrow,
+.report-page .report-label {
+    color: var(--report-gold);
+    font-size: .75rem;
+    font-weight: 800;
+    letter-spacing: .14em;
+}
+
+.report-page .report-heading h1 {
+    margin: .45rem 0 0;
+    font-size: clamp(1.8rem, 3vw, 2.5rem);
+    font-weight: 750;
+    letter-spacing: -.04em;
+}
+
+.report-page .report-heading p {
+    margin: .55rem 0 0;
+    color: #6c5969;
+}
+
+.report-page .report-heading-mark {
+    width: clamp(3.5rem, 6vw, 5rem);
+    height: clamp(3.5rem, 6vw, 5rem);
+    display: grid;
+    place-items: center;
+    border: 1px solid rgba(212, 175, 55, .6);
+    border-radius: 1.1rem;
+    background: #fff;
+    color: var(--report-purple);
+    box-shadow: 0 .5rem 1.5rem rgba(91, 44, 131, .08);
+    font-size: 1.8rem;
+    font-weight: 800;
+}
+
+.report-page .report-total {
+    min-height: 190px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: clamp(1.5rem, 3vw, 2.5rem);
+    overflow: hidden;
+    border: 0;
+    border-radius: 1rem;
+    background: var(--report-purple);
+    box-shadow: 0 .75rem 2rem rgba(91, 44, 131, .16);
+}
+
+.report-page .report-total h2 {
+    margin: .35rem 0;
+    color: var(--report-gold);
+    font-size: clamp(2.25rem, 5vw, 3.5rem);
+    font-weight: 800;
+    letter-spacing: -.05em;
+}
+
+.report-page .report-total p {
+    margin: 0;
+    color: #fff;
+    opacity: .8;
+}
+
+.report-page .report-total-icon {
+    width: clamp(3.75rem, 7vw, 5.5rem);
+    height: clamp(3.75rem, 7vw, 5.5rem);
+    display: grid;
+    place-items: center;
+    border: 1px solid rgba(212, 175, 55, .65);
+    border-radius: 1.25rem;
+    background: rgba(255, 255, 255, .08);
+    color: var(--report-gold);
+    font-size: 2.25rem;
+    font-weight: 700;
+}
+
+.report-page .report-section-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    margin: 2rem 0 1rem;
+}
+
+.report-page .report-section-heading h2 {
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 750;
+}
+
+.report-page .report-section-heading span {
+    color: #6c5969;
+    font-size: .9rem;
+}
+
+.report-page .report-stat {
+    position: relative;
+    min-height: 170px;
+    overflow: hidden;
+    border: 1px solid rgba(91, 44, 131, .14);
+    border-radius: 1rem;
+    background: #fff;
+    box-shadow: 0 .35rem 1.25rem rgba(91, 44, 131, .06);
+    transition: transform .18s ease, box-shadow .18s ease;
+}
+
+.report-page .report-stat:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 .75rem 1.5rem rgba(91, 44, 131, .12);
+}
+
+.report-page .report-stat::before {
+    position: absolute;
+    inset: 0 0 auto;
+    height: 4px;
+    background: var(--report-gold);
+    content: "";
+}
+
+.report-page .report-stat--lavender::before {
+    background: var(--report-purple);
+}
+
+.report-page .report-stat .card-body {
+    padding: 1.35rem;
+}
+
+.report-page .report-stat-icon {
+    float: right;
+    width: 2.5rem;
+    height: 2.5rem;
+    display: grid;
+    place-items: center;
+    border: 1px solid rgba(212, 175, 55, .55);
+    border-radius: .8rem;
+    background: #fff;
+    color: var(--report-purple);
+    font-size: 1.15rem;
+    font-weight: 800;
+}
+
+.report-page .report-stat-label {
+    color: #6c5969;
+    font-size: .9rem;
+}
+
+.report-page .report-stat-value {
+    margin-top: .45rem;
+    color: var(--report-purple);
+    font-size: clamp(1.8rem, 3vw, 2.25rem);
+    font-weight: 800;
+    letter-spacing: -.04em;
+}
+
+.report-page .report-stat-note {
+    margin-top: .25rem;
+    color: #6c5969;
+    font-size: .82rem;
+}
+
+@media (max-width: 767.98px) {
+    body.app-page.report-page {
+        width: calc(100% - 1rem);
+        min-height: calc(100vh - 1rem);
+        margin: .5rem auto;
+    }
+
+    .report-page .app-main {
+        padding: 1.25rem;
+    }
+
+    .report-page .report-stat {
+        min-height: 150px;
+    }
+
+    .report-page .report-stat .card-body {
+        padding: 1rem;
+    }
+}
