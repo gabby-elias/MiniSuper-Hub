@@ -1,38 +1,58 @@
 <!doctype html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments/layout :: head('Detalle de factura', 'facturas-detalle')}"></head>
-<body class="app-page">
+<body class="app-page invoice-detail-page">
 <nav th:replace="~{fragments/layout :: navbar('facturas')}"></nav>
 <main class="app-main">
-    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 page-heading">
-        <div><h1 th:text="|Factura #${factura.id}|">Factura</h1><p>Consulta de la venta y sus productos.</p></div>
-        <div class="d-flex gap-2">
-            <a class="btn btn-outline-light" th:href="@{/facturas}">Volver</a>
-            <a class="btn btn-success" th:href="@{/facturas/descargar/{id}(id=${factura.id})}">Descargar PDF</a>
-            <a th:if="${esAdmin and !factura.anulada}" class="btn btn-primary" th:href="@{/facturas/editar/{id}(id=${factura.id})}">Editar</a>
+    <header class="invoice-heading page-heading">
+        <div>
+            <span class="invoice-eyebrow">VENTAS · COMPROBANTE</span>
+            <h1 th:text="|Factura #${factura.id}|">Factura</h1>
+            <p>Detalle de los productos y datos de esta venta.</p>
         </div>
-    </div>
-    <section class="content-card p-4 mb-3">
-        <div class="row g-3">
-            <div class="col-md-3"><span class="text-secondary">Fecha</span><div th:text="${factura.fecha != null ? #temporals.format(factura.fecha, 'dd/MM/yyyy HH:mm') : '—'}"></div></div>
-            <div class="col-md-3"><span class="text-secondary">Cliente</span><div th:text="${factura.cliente != null ? factura.cliente.nombre : 'Consumidor final'}"></div></div>
-            <div class="col-md-3"><span class="text-secondary">Vendedor</span><div th:text="${factura.vendedor != null ? factura.vendedor.nombre : '—'}"></div></div>
-            <div class="col-md-3"><span class="text-secondary">Estado</span><div th:text="${factura.anulada ? 'Anulada' : 'Vigente'}"></div></div>
+        <div class="invoice-actions">
+            <a class="btn btn-outline-light" th:href="@{/facturas}">← Volver a facturas</a>
+            <a class="btn btn-gold" th:href="@{/facturas/descargar/{id}(id=${factura.id})}">Descargar PDF</a>
+            <a th:if="${esAdmin and !factura.anulada}" class="btn btn-lavender" th:href="@{/facturas/editar/{id}(id=${factura.id})}">Editar factura</a>
+        </div>
+    </header>
+
+    <section class="invoice-summary content-card mb-4" aria-label="Información de la factura">
+        <div class="invoice-summary-top">
+            <div>
+                <span class="invoice-summary-label">RESUMEN DE VENTA</span>
+                <div class="invoice-number" th:text="|#${factura.id}|">#0</div>
+            </div>
+            <span class="invoice-status" th:classappend="${factura.anulada} ? ' invoice-status--void' : ' invoice-status--valid'" th:text="${factura.anulada ? 'Anulada' : 'Vigente'}">Vigente</span>
+        </div>
+        <div class="row g-3 invoice-meta">
+            <div class="col-6 col-md-3"><span>Fecha</span><strong th:text="${factura.fecha != null ? #temporals.format(factura.fecha, 'dd/MM/yyyy HH:mm') : '—'}"></strong></div>
+            <div class="col-6 col-md-3"><span>Cliente</span><strong th:text="${factura.cliente != null ? factura.cliente.nombre : 'Consumidor final'}"></strong></div>
+            <div class="col-6 col-md-3"><span>Vendedor</span><strong th:text="${factura.vendedor != null ? factura.vendedor.nombre : '—'}"></strong></div>
+            <div class="col-6 col-md-3"><span>Artículos</span><strong th:text="${factura.detalles != null ? #lists.size(factura.detalles) : 0}"></strong></div>
         </div>
     </section>
-    <section class="content-card table-responsive">
-        <table class="table table-hover align-middle">
-            <thead><tr><th>Producto</th><th class="text-end">Cantidad</th><th class="text-end">Precio unitario</th><th class="text-end">Subtotal</th></tr></thead>
-            <tbody>
-            <tr th:each="detalle : ${factura.detalles}">
-                <td th:text="${detalle.producto != null ? detalle.producto.nombre : '—'}"></td>
-                <td class="text-end" th:text="${detalle.cantidad}"></td>
-                <td class="text-end" th:text="|$${#numbers.formatDecimal(detalle.precioUnitario, 1, 2)}|"></td>
-                <td class="text-end" th:text="|$${#numbers.formatDecimal(detalle.subtotal, 1, 2)}|"></td>
-            </tr>
-            <tr><th colspan="3" class="text-end">Total</th><th class="text-end" th:text="|$${#numbers.formatDecimal(factura.total, 1, 2)}|"></th></tr>
-            </tbody>
-        </table>
+
+    <section class="invoice-lines content-card">
+        <div class="invoice-lines-heading">
+            <div><span class="invoice-summary-label">DESGLOSE</span><h2>Productos facturados</h2></div>
+            <span class="invoice-lines-count" th:text="${factura.detalles != null ? #lists.size(factura.detalles) + ' líneas' : '0 líneas'}">0 líneas</span>
+        </div>
+        <div class="table-responsive">
+            <table class="table invoice-table align-middle">
+                <thead><tr><th>Producto</th><th class="text-end">Cantidad</th><th class="text-end">Precio unitario</th><th class="text-end">Subtotal</th></tr></thead>
+                <tbody>
+                <tr th:each="detalle : ${factura.detalles}">
+                    <td><span class="product-name" th:text="${detalle.producto != null ? detalle.producto.nombre : 'Producto no disponible'}"></span></td>
+                    <td class="text-end" th:text="${detalle.cantidad}"></td>
+                    <td class="text-end" th:text="|$${#numbers.formatDecimal(detalle.precioUnitario, 1, 2)}|"></td>
+                    <td class="text-end invoice-subtotal" th:text="|$${#numbers.formatDecimal(detalle.subtotal, 1, 2)}|"></td>
+                </tr>
+                <tr th:if="${factura.detalles == null or #lists.isEmpty(factura.detalles)}"><td colspan="4" class="text-center text-secondary py-5">Esta factura no tiene productos registrados.</td></tr>
+                </tbody>
+                <tfoot><tr><th colspan="3" class="text-end">Total de factura</th><th class="text-end invoice-total" th:text="|$${#numbers.formatDecimal(factura.total, 1, 2)}|"></th></tr></tfoot>
+            </table>
+        </div>
     </section>
 </main>
 <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
