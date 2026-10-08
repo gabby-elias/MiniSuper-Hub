@@ -1,1 +1,125 @@
-/* Estilos específicos de templates/clientes/formulario.html. */
+body.app-page.client-form-page {
+    --client-purple: #5B2C83;
+    --client-purple-dark: #452064;
+    --client-gold: #D4AF37;
+    --client-lavender: #F3EDF7;
+
+    width: calc(100% - 2.5rem);
+    max-width: none;
+    min-height: calc(100vh - 2rem);
+    margin: 1rem auto;
+    display: flex;
+    flex-direction: column;
+    border-color: rgba(91, 44, 131, .16);
+}
+
+.client-form-page .top-nav {
+    flex: 0 0 auto;
+    background: var(--client-purple);
+}
+
+.client-form-page .app-main {
+    width: 100%;
+    max-width: none;
+    flex: 1;
+    padding: clamp(1.5rem, 3vw, 3.25rem);
+}
+
+/* Título */
+.client-form-page .page-heading {
+    margin-bottom: 1.5rem;
+}
+
+.client-form-page .page-heading h1 {
+    color: var(--client-purple);
+    font-size: clamp(1.8rem, 3vw, 2.5rem);
+    font-weight: 750;
+    letter-spacing: -.04em;
+}
+
+.client-form-page .page-heading p {
+    color: #6c5969;
+}
+
+/* Formulario */
+.client-form-page .content-card {
+    max-width: 850px;
+    margin: 0 auto;
+    padding: clamp(1.5rem, 3vw, 2.5rem);
+    border: 1px solid rgba(91, 44, 131, .14);
+    border-radius: 1rem;
+    background: #fff;
+    box-shadow: 0 .75rem 2rem rgba(91, 44, 131, .08);
+}
+
+/* Etiquetas */
+.client-form-page .form-label {
+    color: #4d3c52;
+    font-weight: 650;
+}
+
+/* Campos */
+.client-form-page .form-control,
+.client-form-page .form-select {
+    border-color: #d8c9df;
+    border-radius: .65rem;
+}
+
+.client-form-page .form-control:focus,
+.client-form-page .form-select:focus {
+    border-color: #8A5AA8;
+    box-shadow: 0 0 0 .2rem rgba(91, 44, 131, .13);
+}
+
+/* Botón guardar */
+.client-form-page .btn-primary {
+    --bs-btn-bg: var(--client-purple);
+    --bs-btn-border-color: var(--client-purple);
+    --bs-btn-hover-bg: var(--client-purple-dark);
+    --bs-btn-hover-border-color: var(--client-purple-dark);
+}
+
+/* Botón cancelar */
+.client-form-page .btn-secondary {
+    background: #eee9f1;
+    color: #55475A;
+    border-color: #ddd2e1;
+}
+
+.client-form-page .btn-secondary:hover {
+    background: #ddd2e1;
+}
+
+/* Mensajes de error */
+.client-form-page .text-danger {
+    color: #A8445D !important;
+}
+
+/* Línea superior */
+.client-form-page .form-decoration {
+    height: 4px;
+    margin: -2.5rem -2.5rem 2rem;
+    background: var(--client-gold);
+}
+
+/* Responsive */
+@media (max-width: 767.98px) {
+
+    body.app-page.client-form-page {
+        width: calc(100% - 1rem);
+        min-height: calc(100vh - 1rem);
+        margin: .5rem auto;
+    }
+
+    .client-form-page .app-main {
+        padding: 1.25rem;
+    }
+
+    .client-form-page .content-card {
+        padding: 1.25rem;
+    }
+
+    .client-form-page .form-decoration {
+        margin: -1.25rem -1.25rem 1.5rem;
+    }
+}/* Estilos específicos de templates/clientes/formulario.html. */

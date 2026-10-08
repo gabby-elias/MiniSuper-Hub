@@ -1,1 +1,169 @@
-/* Estilos específicos de templates/clientes/lista.html. */
+/*ESTILOS LOCALES DE LA VISTA DE CLIENTES*/
+
+body.app-page.client-page {
+    --client-purple: #5B2C83;
+    --client-purple-dark: #452064;
+    --client-gold: #D4AF37;
+    --client-lavender: #F3EDF7;
+    --client-text: #44364A;
+
+    width: calc(100% - 2.5rem);
+    max-width: none;
+    min-height: calc(100vh - 2rem);
+    margin: 1rem auto;
+    display: flex;
+    flex-direction: column;
+    border-color: rgba(91, 44, 131, .16);
+}
+
+/* Encabezado */
+.client-page .top-nav {
+    flex: 0 0 auto;
+    background: var(--client-purple);
+}
+
+.client-page .app-main {
+    width: 100%;
+    max-width: none;
+    flex: 1;
+    padding: clamp(1.5rem, 3vw, 3.25rem);
+}
+
+.client-page .page-heading {
+    margin-bottom: clamp(1.5rem, 3vw, 2.25rem);
+}
+
+.client-page .page-heading h1 {
+    color: var(--client-purple);
+    margin: .45rem 0 0;
+    font-size: clamp(1.8rem, 3vw, 2.5rem);
+    font-weight: 750;
+    letter-spacing: -.04em;
+}
+
+.client-page .page-heading p {
+    color: #6c5969;
+}
+
+/* Tarjeta principal */
+.client-page .content-card {
+    border: 1px solid rgba(91, 44, 131, .14);
+    border-radius: 1rem;
+    background: #fff;
+    box-shadow: 0 .5rem 1.5rem rgba(91, 44, 131, .07);
+    overflow: hidden;
+}
+
+/* Encabezado de la tabla */
+.client-page .table thead th {
+    color: var(--client-purple);
+    background: var(--client-lavender);
+    border-bottom: 1px solid rgba(91, 44, 131, .14);
+    font-weight: 700;
+}
+
+/* Filas */
+.client-page .table tbody tr {
+    transition: background-color .18s ease;
+}
+
+.client-page .table tbody tr:hover {
+    background: #faf7fc;
+}
+
+/* Botón principal */
+.client-page .btn-primary {
+    --bs-btn-bg: var(--client-purple);
+    --bs-btn-border-color: var(--client-purple);
+    --bs-btn-hover-bg: var(--client-purple-dark);
+    --bs-btn-hover-border-color: var(--client-purple-dark);
+    --bs-btn-active-bg: var(--client-purple-dark);
+    --bs-btn-active-border-color: var(--client-purple-dark);
+}
+
+/* Botones de acción */
+.client-page .btn-warning {
+    color: #fff;
+    background: #8A5AA8;
+    border-color: #8A5AA8;
+}
+
+.client-page .btn-warning:hover {
+    color: #fff;
+    background: #704080;
+    border-color: #704080;
+}
+
+.client-page .btn-danger {
+    background: #A8445D;
+    border-color: #A8445D;
+}
+
+.client-page .btn-danger:hover {
+    background: #8B354B;
+    border-color: #8B354B;
+}
+
+/* Etiqueta dorada */
+.client-page .client-label {
+    color: var(--client-gold);
+    font-size: .75rem;
+    font-weight: 800;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+}
+
+/* Marca / icono */
+.client-page .client-heading-mark {
+    width: clamp(3.5rem, 6vw, 5rem);
+    height: clamp(3.5rem, 6vw, 5rem);
+    display: grid;
+    place-items: center;
+    border: 1px solid rgba(212, 175, 55, .6);
+    border-radius: 1.1rem;
+    background: #fff;
+    color: var(--client-purple);
+    box-shadow: 0 .5rem 1.5rem rgba(91, 44, 131, .08);
+    font-size: 1.8rem;
+    font-weight: 800;
+}
+
+/* Contenedor de acciones */
+.client-page .client-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+/* Línea decorativa */
+.client-page .client-divider {
+    height: 3px;
+    width: 100%;
+    background: var(--client-gold);
+    opacity: .75;
+}
+
+/* Responsive */
+@media (max-width: 767.98px) {
+
+    body.app-page.client-page {
+        width: calc(100% - 1rem);
+        min-height: calc(100vh - 1rem);
+        margin: .5rem auto;
+    }
+
+    .client-page .app-main {
+        padding: 1.25rem;
+    }
+
+    .client-page .client-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .client-page .table {
+        font-size: .9rem;
+    }
+}/* Estilos específicos de templates/clientes/lista.html. */

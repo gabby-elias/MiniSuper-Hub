@@ -1,1 +1,158 @@
-/* Estilos específicos de templates/usuarios/lista.html. */
+/*ESTILOS LOCALES DE LA VISTA DE USUARIOS*/
+body.app-page.user-page {
+    --user-purple: #5B2C83;
+    --user-purple-dark: #452064;
+    --user-gold: #D4AF37;
+    --user-lavender: #F3EDF7;
+
+    width: calc(100% - 2.5rem);
+    max-width: none;
+    min-height: calc(100vh - 2rem);
+    margin: 1rem auto;
+    display: flex;
+    flex-direction: column;
+    border-color: rgba(91, 44, 131, .16);
+}
+
+.user-page .top-nav {
+    flex: 0 0 auto;
+    background: var(--user-purple);
+}
+
+.user-page .app-main {
+    width: 100%;
+    max-width: none;
+    flex: 1;
+    padding: clamp(1.5rem, 3vw, 3.25rem);
+}
+
+/* Encabezado */
+.user-page .page-heading {
+    margin-bottom: clamp(1.5rem, 3vw, 2.25rem);
+}
+
+.user-page .page-heading h1 {
+    color: var(--user-purple);
+    margin: .45rem 0 0;
+    font-size: clamp(1.8rem, 3vw, 2.5rem);
+    font-weight: 750;
+    letter-spacing: -.04em;
+}
+
+.user-page .page-heading p {
+    color: #6c5969;
+}
+
+/* Tarjeta */
+.user-page .content-card {
+    border: 1px solid rgba(91, 44, 131, .14);
+    border-radius: 1rem;
+    background: #fff;
+    box-shadow: 0 .5rem 1.5rem rgba(91, 44, 131, .07);
+    overflow: hidden;
+}
+
+/* Tabla */
+.user-page .table thead th {
+    color: var(--user-purple);
+    background: var(--user-lavender);
+    border-bottom: 1px solid rgba(91, 44, 131, .14);
+    font-weight: 700;
+}
+
+.user-page .table tbody tr {
+    transition: background-color .18s ease;
+}
+
+.user-page .table tbody tr:hover {
+    background: #faf7fc;
+}
+
+/* Botón principal */
+.user-page .btn-primary {
+    --bs-btn-bg: var(--user-purple);
+    --bs-btn-border-color: var(--user-purple);
+    --bs-btn-hover-bg: var(--user-purple-dark);
+    --bs-btn-hover-border-color: var(--user-purple-dark);
+    --bs-btn-active-bg: var(--user-purple-dark);
+    --bs-btn-active-border-color: var(--user-purple-dark);
+}
+
+/* Editar */
+.user-page .btn-warning {
+    color: #fff;
+    background: #8A5AA8;
+    border-color: #8A5AA8;
+}
+
+.user-page .btn-warning:hover {
+    color: #fff;
+    background: #704080;
+    border-color: #704080;
+}
+
+/* Eliminar */
+.user-page .btn-danger {
+    background: #A8445D;
+    border-color: #A8445D;
+}
+
+.user-page .btn-danger:hover {
+    background: #8B354B;
+    border-color: #8B354B;
+}
+
+/* Etiqueta */
+.user-page .user-label {
+    color: var(--user-gold);
+    font-size: .75rem;
+    font-weight: 800;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+}
+
+/* Icono */
+.user-page .user-heading-mark {
+    width: clamp(3.5rem, 6vw, 5rem);
+    height: clamp(3.5rem, 6vw, 5rem);
+    display: grid;
+    place-items: center;
+    border: 1px solid rgba(212, 175, 55, .6);
+    border-radius: 1.1rem;
+    background: #fff;
+    color: var(--user-purple);
+    box-shadow: 0 .5rem 1.5rem rgba(91, 44, 131, .08);
+    font-size: 1.8rem;
+    font-weight: 800;
+}
+
+.user-page .user-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+/* Responsive */
+@media (max-width: 767.98px) {
+
+    body.app-page.user-page {
+        width: calc(100% - 1rem);
+        min-height: calc(100vh - 1rem);
+        margin: .5rem auto;
+    }
+
+    .user-page .app-main {
+        padding: 1.25rem;
+    }
+
+    .user-page .user-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .user-page .table {
+        font-size: .9rem;
+    }
+}/* Estilos específicos de templates/usuarios/lista.html. */
