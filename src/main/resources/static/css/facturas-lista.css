@@ -201,37 +201,71 @@ body.app-page.invoice-list-page > main.app-main {
 }
 
 .invoice-list-table {
-    min-width: 1050px;
+    min-width: 920px;
 }
 
 .invoice-list-table thead th {
-    padding-top: 0.78rem;
-    padding-bottom: 0.78rem;
+    padding: 0.6rem 0.7rem;
+    border-bottom: 0;
     background: #183e6c;
     color: #ffffff;
     font-size: 0.72rem;
 }
 
 .invoice-list-table tbody td {
-    padding-top: 0.62rem;
-    padding-bottom: 0.62rem;
-    color: #405875;
-    font-size: 0.78rem;
+    padding: 0.5rem 0.7rem;
+    color: #2E2A3B;
+    font-size: 0.75rem;
+    font-weight: 400;
     white-space: nowrap;
 }
 
 .invoice-list-table .invoice-id,
 .invoice-list-table .invoice-list-total {
-    color: #203c60;
+    color: #2E2A3B;
     font-weight: 700;
 }
 
 .invoice-state-badge {
     min-width: 4.3rem;
-    padding: 0.38rem 0.62rem;
+    padding: 0.32rem 0.56rem;
     border-radius: 999px;
     font-size: 0.66rem;
     font-weight: 700;
+}
+
+.invoice-list-page .invoice-state-badge {
+    border: 1px solid #C9C3D9;
+    background-color: #F5F3F9 !important;
+    color: #2E2A3B !important;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.invoice-list-page .invoice-state-badge.text-bg-warning {
+    background-color: #fff1cc !important;
+    color: #71540b !important;
+}
+
+.invoice-list-page .invoice-state-badge.text-bg-warning:hover {
+    background-color: #fce7b0 !important;
+}
+
+.invoice-list-page .invoice-state-badge.text-bg-danger {
+    background-color: #f8e0e4 !important;
+    color: #873846 !important;
+}
+
+.invoice-list-page .invoice-state-badge.text-bg-danger:hover {
+    background-color: #f3d0d7 !important;
+}
+
+.invoice-list-page .invoice-state-badge.text-bg-success {
+    background-color: #dff1e6 !important;
+    color: #246745 !important;
+}
+
+.invoice-list-page .invoice-state-badge.text-bg-success:hover {
+    background-color: #cbe8d7 !important;
 }
 
 .invoice-row-actions {
@@ -246,43 +280,77 @@ body.app-page.invoice-list-page > main.app-main {
 }
 
 .invoice-action-button {
-    border: 1px solid #d6e1ef;
+    display: inline-grid;
+    width: 1.9rem;
+    height: 1.9rem;
+    flex: 0 0 1.9rem;
+    place-items: center;
+    padding: 0;
+    border: 1px solid #C9C3D9;
+    border-radius: 0.42rem;
     background: #ffffff;
-    color: #385775;
-    font-size: 0.68rem;
-    white-space: nowrap;
+    color: #2E2A3B;
+    line-height: 1;
+}
+
+.invoice-action-button svg {
+    width: 1.05rem;
+    height: 1.05rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.8;
 }
 
 .invoice-action-button:hover {
-    border-color: #a9c5e5;
-    background: #f1f6fd;
-    color: #174b88;
+    border-color: #C9C3D9;
+    background: #f7f3fa;
+    color: #594072;
+}
+
+.invoice-action-button[aria-label="Editar factura"] svg {
+    width: 1.15rem;
+    height: 1.15rem;
+    stroke-width: 2;
+}
+
+.invoice-action-button:focus-visible {
+    outline: 0;
+    box-shadow: 0 0 0 0.16rem rgba(107, 76, 138, 0.16);
 }
 
 .invoice-action-button--delivered {
-    border-color: #a9dec9;
-    color: #16815f;
+    border-color: #C9C3D9;
+    color: #2E2A3B;
 }
 
 .invoice-action-button--delivered:hover {
-    border-color: #6dc39f;
-    background: #effaf5;
-    color: #126e51;
+    border-color: #C9C3D9;
+    background: #e2f4eb;
+    color: #146c43;
 }
 
 .invoice-action-button--void {
-    border-color: #f0d49a;
-    color: #a36a0a;
+    border-color: #C9C3D9;
+    color: #2E2A3B;
+}
+
+.invoice-action-button--void:hover {
+    border-color: #C9C3D9;
+    background: #fff1c9;
+    color: #604900;
 }
 
 .invoice-action-button--delete {
-    border-color: #f0c5cd;
-    color: #c34559;
+    border-color: #C9C3D9;
+    background: #fff3f5;
+    color: #ae3448;
 }
 
 .invoice-action-button--delete:hover {
-    border-color: #e798a5;
-    background: #fff3f5;
+    border-color: #C9C3D9;
+    background: #ffe4e8;
     color: #ae3448;
 }
 

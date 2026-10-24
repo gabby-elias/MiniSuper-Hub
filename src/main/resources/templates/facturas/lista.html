@@ -59,16 +59,16 @@
                     <td><span class="badge invoice-state-badge" th:classappend="${factura.anulada ? ' text-bg-danger' : (factura.entregada ? ' text-bg-success' : ' text-bg-warning')}" th:text="${factura.anulada ? 'Anulada' : (factura.entregada ? 'Entregada' : 'Pendiente')}"></span></td>
                     <td>
                         <div class="invoice-row-actions">
-                            <a class="btn btn-sm invoice-action-button" th:href="@{/facturas/ver/{id}(id=${factura.id})}">Ver</a>
+                            <a class="btn btn-sm invoice-action-button" th:href="@{/facturas/ver/{id}(id=${factura.id})}" aria-label="Ver factura" title="Ver factura"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.3-6 9.5-6 9.5 6 9.5 6-3.3 6-9.5 6-9.5-6-9.5-6Z"/><circle cx="12" cy="12" r="2.5"/></svg></a>
                             <form th:if="${!factura.anulada and !factura.entregada}" th:action="@{/facturas/entregar/{id}(id=${factura.id})}" method="post" data-swal-confirm data-swal-action="save" data-swal-title="¿Marcar como entregada?" data-swal-text="La factura dejará de aparecer como pendiente.">
-                                <button class="btn btn-sm invoice-action-button invoice-action-button--delivered" type="submit">Marcar entregada</button>
+                                <button class="btn btn-sm invoice-action-button invoice-action-button--delivered" type="submit" aria-label="Marcar factura como entregada" title="Marcar entregada"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg></button>
                             </form>
-                            <a th:if="${!factura.anulada}" class="btn btn-sm invoice-action-button" th:href="@{/facturas/editar/{id}(id=${factura.id})}">Editar</a>
+                            <a th:if="${!factura.anulada}" class="btn btn-sm invoice-action-button" th:href="@{/facturas/editar/{id}(id=${factura.id})}" aria-label="Editar factura" title="Editar factura"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 5 4 4M4 20l4-.8L19.2 8a2.1 2.1 0 0 0-3-3L5 16.2 4 20Z"/></svg></a>
                             <form th:if="${!factura.anulada}" th:action="@{/facturas/anular/{id}(id=${factura.id})}" method="post" data-swal-confirm data-swal-action="delete" data-swal-title="¿Anular factura?" data-swal-text="La factura y sus detalles se conservarán para consulta.">
-                                <button class="btn btn-sm invoice-action-button invoice-action-button--void" type="submit">Anular</button>
+                                <button class="btn btn-sm invoice-action-button invoice-action-button--void" type="submit" aria-label="Anular factura" title="Anular factura"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m6 18 12-12"/></svg></button>
                             </form>
                             <form th:action="@{/facturas/eliminar/{id}(id=${factura.id})}" method="post" data-swal-confirm data-swal-action="delete" data-swal-title="¿Eliminar factura?" data-swal-text="También se eliminarán sus detalles.">
-                                <button class="btn btn-sm invoice-action-button invoice-action-button--delete" type="submit">Eliminar</button>
+                                <button class="btn btn-sm invoice-action-button invoice-action-button--delete" type="submit" aria-label="Eliminar factura" title="Eliminar factura"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M10 11v6m4-6v6M6 7l1 14h10l1-14M9 7V4h6v3"/></svg></button>
                             </form>
                         </div>
                     </td>
