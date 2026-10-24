@@ -85,6 +85,34 @@ class ThymeleafViewsTests {
 
     @Test
     @Transactional
+    void permiteCrearUsuariosAdministradorYEmpleado() throws Exception {
+        MockHttpSession session = iniciarSesion(adminUsername, adminPassword);
+        String[][] usuarios = {
+                {"nuevo-admin-prueba", "Administradora de prueba", "ROLE_ADMIN"},
+                {"nuevo-empleado-prueba", "Empleado de prueba", "ROLE_EMPLEADO"}
+        };
+
+        for (String[] datos : usuarios) {
+            MvcResult resultado = mockMvc.perform(post("/usuarios/guardar")
+                            .session(session)
+                            .with(SecurityMockMvcRequestPostProcessors.csrf())
+                            .param("username", datos[0])
+                            .param("nombre", datos[1])
+                            .param("password", "Prueba123!")
+                            .param("rol", datos[2])
+                            .param("activo", "true"))
+                    .andExpect(status().is3xxRedirection())
+                    .andReturn();
+
+            assertEquals("success", resultado.getFlashMap().get("alertType"));
+            var usuario = usuarioRepository.findByUsername(datos[0]).orElseThrow();
+            assertEquals(datos[1], usuario.getNombre());
+            assertTrue(usuario.getRoles().stream().anyMatch(rol -> datos[2].equals(rol.getNombre())));
+        }
+    }
+
+    @Test
+    @Transactional
     void elFormularioGuardaPrecioYExistenciasDelProducto() throws Exception {
         Categoria categoria = categoriaService.guardar(Categoria.builder()
                 .nombreCategoria("Categoría de prueba")
@@ -180,6 +208,72 @@ class ThymeleafViewsTests {
                 .findFirst()
                 .orElseThrow();
         assertEquals(1.66, factura.getTotal(), 0.0001);
+    }
+
+    @Test
+    @Transactional
+    void empleadoPuedeMarcarSuFacturaComoEntregada() throws Exception {
+        Factura factura = facturaService.guardarConDetalles(
+                Factura.builder().fecha(LocalDateTime.now()).total(5.00).build(),
+                List.of(), usuarioRepository.findByUsername(employeeUsername).orElseThrow());
+        MockHttpSession session = iniciarSesion(employeeUsername, employeePassword);
+
+        mockMvc.perform(post("/facturas/entregar/{id}", factura.getId())
+                        .session(session)
+                        .with(SecurityMockMvcRequestPostProcessors.csrf()))
+                .andExpect(status().is3xxRedirection());
+
+        Factura entregada = facturaService.buscarPorId(factura.getId()).orElseThrow();
+        assertTrue(entregada.isEntregada());
+        MvcResult detalle = mockMvc.perform(get("/facturas/ver/{id}", factura.getId()).session(session))
+                .andExpect(status().isOk())
+                .andReturn();
+        assertTrue(detalle.getResponse().getContentAsString().contains("Entregada"));
+    }
+
+    @Test
+    @Transactional
+    void empleadoPuedeEditarAnularYEliminarSusFacturas() throws Exception {
+        Categoria categoria = categoriaService.guardar(Categoria.builder()
+                .nombreCategoria("Categoría edición empleado")
+                .build());
+        Producto producto = productoService.guardar(Producto.builder()
+                .nombre("Producto edición empleado")
+                .unidadMedida("unidad")
+                .stock(5)
+                .precioVenta(2.00)
+                .categoria(categoria)
+                .build());
+        var empleado = usuarioRepository.findByUsername(employeeUsername).orElseThrow();
+        Factura factura = facturaService.guardarConDetalles(
+                Factura.builder().fecha(LocalDateTime.now()).total(2.00).build(),
+                List.of(DetalleFactura.builder().producto(producto).cantidad(1)
+                        .precioUnitario(2.00).subtotal(2.00).build()), empleado);
+        MockHttpSession session = iniciarSesion(employeeUsername, employeePassword);
+
+        mockMvc.perform(get("/facturas/editar/{id}", factura.getId()).session(session))
+                .andExpect(status().isOk());
+        mockMvc.perform(post("/facturas/guardar")
+                        .session(session)
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
+                        .param("id", String.valueOf(factura.getId()))
+                        .param("fecha", factura.getFecha().toString())
+                        .param("productoIds", String.valueOf(producto.getId()))
+                        .param("cantidades", "2"))
+                .andExpect(status().is3xxRedirection());
+        assertEquals(4.00, facturaService.buscarPorId(factura.getId()).orElseThrow().getTotal(), 0.0001);
+
+        mockMvc.perform(post("/facturas/anular/{id}", factura.getId())
+                        .session(session)
+                        .with(SecurityMockMvcRequestPostProcessors.csrf()))
+                .andExpect(status().is3xxRedirection());
+        assertTrue(facturaService.buscarPorId(factura.getId()).orElseThrow().isAnulada());
+
+        mockMvc.perform(post("/facturas/eliminar/{id}", factura.getId())
+                        .session(session)
+                        .with(SecurityMockMvcRequestPostProcessors.csrf()))
+                .andExpect(status().is3xxRedirection());
+        assertTrue(facturaService.buscarPorId(factura.getId()).isEmpty());
     }
 
     @Test
@@ -282,6 +376,17 @@ class ThymeleafViewsTests {
                         .param("productoIds", "1")
                         .param("cantidades", "1"))
                 .andExpect(status().isForbidden());
+        mockMvc.perform(get("/facturas/editar/{id}", factura.getId()).session(session))
+                .andExpect(status().isNotFound());
+        mockMvc.perform(post("/facturas/anular/{id}", factura.getId())
+                        .session(session)
+                        .with(SecurityMockMvcRequestPostProcessors.csrf()))
+                .andExpect(status().isNotFound());
+        mockMvc.perform(post("/facturas/eliminar/{id}", factura.getId())
+                        .session(session)
+                        .with(SecurityMockMvcRequestPostProcessors.csrf()))
+                .andExpect(status().isNotFound());
+        assertFalse(facturaService.buscarPorId(factura.getId()).orElseThrow().isAnulada());
         mockMvc.perform(post("/clientes/guardar")
                         .session(session)
                         .with(SecurityMockMvcRequestPostProcessors.csrf())
@@ -317,8 +422,14 @@ class ThymeleafViewsTests {
         assertEquals("application/pdf", resultado.getResponse().getContentType());
         assertTrue(resultado.getResponse().getHeader("Content-Disposition")
                 .contains("factura-" + factura.getId() + ".pdf"));
-        assertTrue(new String(resultado.getResponse().getContentAsByteArray(), 0, 5,
+        byte[] contenidoPdf = resultado.getResponse().getContentAsByteArray();
+        assertTrue(new String(contenidoPdf, 0, 5,
                 java.nio.charset.StandardCharsets.ISO_8859_1).startsWith("%PDF-"));
+        try (var lector = new com.lowagie.text.pdf.PdfReader(contenidoPdf)) {
+            String textoPdf = new com.lowagie.text.pdf.parser.PdfTextExtractor(lector).getTextFromPage(1);
+            assertTrue(textoPdf.contains("Minisúper"));
+            assertTrue(textoPdf.contains("Dirección del minisúper"));
+        }
     }
 
     @Test

@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments/layout :: head('Nueva factura', 'facturas-formulario')}"></head>
-<body class="app-page">
+<body class="app-page invoice-form-page">
 <nav th:replace="~{fragments/layout :: navbar('facturas')}"></nav>
 <main class="invoice-shell">
     <form id="invoiceForm" th:action="@{/facturas/guardar}" th:object="${factura}" method="post" class="invoice-panel" data-swal-confirm data-swal-action="save" data-swal-title="¿Guardar factura?" data-swal-text="Se guardarán el cliente seleccionado (si aplica), los productos y el total calculado." data-swal-confirm-text="Sí, guardar factura">
@@ -19,7 +19,7 @@
                 <option th:each="cliente : ${clientes}" th:value="${cliente.id}" th:text="${cliente.nombre}" th:selected="${factura.cliente != null and factura.cliente.id == cliente.id}"></option>
             </select>
             <div class="form-text">Si no eliges un cliente, la factura se emitirá a nombre de consumidor final.</div>
-        </div>div>
+        </div>
         <div class="invoice-entry-grid mb-4">
             <div><label for="productoSelect" class="form-label">Producto</label>
                 <select id="productoSelect" class="form-select">

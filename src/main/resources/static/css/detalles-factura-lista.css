@@ -1,11 +1,13 @@
 /* Estilos locales de la vista de detalles de factura. */
 body.app-page.details-page {
-    --details-purple: #5B2C83;
+    --details-purple: #6B4C8A;
     --details-gold: #D4AF37;
-    width: calc(100% - 2.5rem);
+    width: 100%;
     max-width: none;
-    min-height: calc(100vh - 2rem);
-    margin: 1rem auto;
+    min-height: 100vh;
+    margin: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
     display: flex;
     flex-direction: column;
     border-color: rgba(91, 44, 131, .16);
@@ -54,7 +56,7 @@ body.app-page.details-page {
     border: 1px solid var(--details-gold);
     border-radius: .75rem;
     background: var(--details-gold);
-    color: var(--details-purple);
+    color: #5B2C83;
     font-weight: 750;
     box-shadow: 0 .35rem .9rem rgba(91, 44, 131, .12);
     transition: transform .18s ease, box-shadow .18s ease, background-color .18s ease;
@@ -64,7 +66,7 @@ body.app-page.details-page {
 .details-page .details-new-button:focus-visible {
     border-color: #c19b24;
     background: #c19b24;
-    color: var(--details-purple);
+    color: #5B2C83;
     transform: translateY(-1px);
     box-shadow: 0 .55rem 1.1rem rgba(91, 44, 131, .16);
 }
@@ -125,11 +127,11 @@ body.app-page.details-page {
 }
 
 .details-page .details-table .btn-outline-light {
-    --bs-btn-color: var(--details-purple);
+    --bs-btn-color: #5B2C83;
     --bs-btn-border-color: rgba(91, 44, 131, .35);
     --bs-btn-hover-color: #fff;
-    --bs-btn-hover-bg: var(--details-purple);
-    --bs-btn-hover-border-color: var(--details-purple);
+    --bs-btn-hover-bg: #5B2C83;
+    --bs-btn-hover-border-color: #5B2C83;
     border-radius: .55rem;
     font-weight: 650;
 }
@@ -155,9 +157,9 @@ body.app-page.details-page {
 
 @media (max-width: 767.98px) {
     body.app-page.details-page {
-        width: calc(100% - 1rem);
-        min-height: calc(100vh - 1rem);
-        margin: .5rem auto;
+        width: 100%;
+        min-height: 100vh;
+        margin: 0;
     }
 
     .details-page .app-main {

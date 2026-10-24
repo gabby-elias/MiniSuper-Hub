@@ -34,6 +34,10 @@ public class Factura {
     @Column(nullable = false, columnDefinition = "boolean default false")
     private boolean anulada = false;
 
+    @Builder.Default
+    @Column(nullable = false, columnDefinition = "boolean default false")
+    private boolean entregada = false;
+
     @OneToMany(mappedBy = "factura", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DetalleFactura> detalles;
 }

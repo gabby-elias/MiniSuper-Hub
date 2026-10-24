@@ -17,7 +17,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/", "/login", "/css/**", "/js/**", "/images/**", "/webjars/**", "/error").permitAll()
                         .requestMatchers("/usuarios/**", "/reportes/**", "/detalles-factura/**").hasRole("ADMIN")
-                        .requestMatchers("/facturas/anular/**", "/facturas/editar/**", "/facturas/eliminar/**").hasRole("ADMIN")
+
                         .requestMatchers("/categorias/nuevo", "/categorias/editar/**", "/productos/nuevo", "/productos/editar/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/categorias/**", "/productos/**").hasRole("ADMIN")
                         .requestMatchers("/clientes/editar/**").hasRole("ADMIN")
