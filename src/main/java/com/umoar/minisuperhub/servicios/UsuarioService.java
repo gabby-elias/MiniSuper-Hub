@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -81,7 +80,8 @@ public class UsuarioService {
 
         usuario.setUsername(username);
         usuario.setNombre(form.getNombre().trim());
-        usuario.setRoles(Set.of(rolSeleccionado));
+        usuario.getRoles().clear();
+        usuario.getRoles().add(rolSeleccionado);
         usuario.setActivo(form.isActivo());
         if (nuevo && (form.getPassword() == null || form.getPassword().isBlank())) {
             throw new IllegalArgumentException("La contraseña es obligatoria para un usuario nuevo.");

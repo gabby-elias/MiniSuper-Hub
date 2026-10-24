@@ -10,38 +10,114 @@
     <link rel="stylesheet" th:href="@{/css/{file}.css(file=${stylesheet})}">
 </head>
 <body>
-<nav th:fragment="navbar(active)" class="navbar navbar-expand-lg top-nav">
-    <div class="container-fluid px-3 px-lg-4">
-        <a class="navbar-brand brand-mark" th:href="@{/dashboard}"><span class="brand-icon">🛒</span> Minisúper</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavigation" aria-controls="mainNavigation" aria-expanded="false" aria-label="Abrir navegación">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="mainNavigation">
-            <ul class="navbar-nav me-auto ms-lg-3 gap-lg-1">
-                <li class="nav-item"><a class="nav-link" th:classappend="${active == 'dashboard'} ? ' active' : ''" th:href="@{/dashboard}">Inicio</a></li>
-                <li class="nav-item"><a class="nav-link" th:classappend="${active == 'categorias'} ? ' active' : ''" th:href="@{/categorias}">Categorías</a></li>
-                <li class="nav-item"><a class="nav-link" th:classappend="${active == 'productos'} ? ' active' : ''" th:href="@{/productos}">Productos</a></li>
-                <li class="nav-item"><a class="nav-link" th:classappend="${active == 'clientes'} ? ' active' : ''" th:href="@{/clientes}">Clientes</a></li>
-                <li class="nav-item"><a class="nav-link" th:classappend="${active == 'facturas'} ? ' active' : ''" th:href="@{/facturas}">Facturas</a></li>
-                <li class="nav-item" th:if="${esAdmin}"><a class="nav-link" th:classappend="${active == 'detalles'} ? ' active' : ''" th:href="@{/detalles-factura}">Detalles</a></li>
-                <li class="nav-item" th:if="${esAdmin}"><a class="nav-link" th:classappend="${active == 'usuarios'} ? ' active' : ''" th:href="@{/usuarios}">Usuarios</a></li>
-                <li class="nav-item" th:if="${esAdmin}"><a class="nav-link" th:classappend="${active == 'reportes'} ? ' active' : ''" th:href="@{/reportes}">Reportes</a></li>
-            </ul>
-            <div class="d-flex align-items-center gap-3 py-2 py-lg-0">
+<th:block th:fragment="navbar(active)">
+    <aside class="app-sidebar" th:classappend="${active == 'facturas'} ? ' invoice-theme' : (${active == 'dashboard' or active == 'categorias' or active == 'productos' or active == 'clientes' or active == 'usuarios'} ? ' green-theme' : '')">
+        <a class="sidebar-brand" th:href="@{/dashboard}">
+            <span class="sidebar-brand-icon" aria-hidden="true">🛒</span>
+            <span class="sidebar-brand-copy"><strong>Mini Súper</strong><small>Tu súper, más cerca</small></span>
+        </a>
+        <nav class="sidebar-navigation" aria-label="Navegación principal">
+            <a class="sidebar-link" th:classappend="${active == 'dashboard'} ? ' active' : ''" th:href="@{/dashboard}" title="Inicio"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg><span class="sidebar-label">Inicio</span></a>
+            <a class="sidebar-link" th:classappend="${active == 'categorias'} ? ' active' : ''" th:href="@{/categorias}" title="Categorías"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span class="sidebar-label">Categorías</span></a>
+            <a class="sidebar-link" th:classappend="${active == 'productos'} ? ' active' : ''" th:href="@{/productos}" title="Productos"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2 9 5v10l-9 5-9-5V7z"/><path d="m3.5 7.5 8.5 5 8.5-5M12 12.5V22"/></svg><span class="sidebar-label">Productos</span></a>
+            <a class="sidebar-link" th:classappend="${active == 'clientes'} ? ' active' : ''" th:href="@{/clientes}" title="Clientes"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><span class="sidebar-label">Clientes</span></a>
+            <a class="sidebar-link" th:classappend="${active == 'facturas'} ? ' active' : ''" th:href="@{/facturas}" title="Facturas"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2h9l5 5v15H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z"/><path d="M14 2v6h6M8 13h8M8 17h8"/></svg><span class="sidebar-label">Facturas</span></a>
+            <a class="sidebar-link" th:if="${esAdmin}" th:classappend="${active == 'detalles'} ? ' active' : ''" th:href="@{/detalles-factura}" title="Detalles"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 6h13M8 12h13M8 18h13"/><path d="M3 6h.01M3 12h.01M3 18h.01"/></svg><span class="sidebar-label">Detalles</span></a>
+            <a class="sidebar-link" th:if="${esAdmin}" th:classappend="${active == 'usuarios'} ? ' active' : ''" th:href="@{/usuarios}" title="Usuarios"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0M16 4a4 4 0 0 1 0 8M18 14a6 6 0 0 1 4 6"/></svg><span class="sidebar-label">Usuarios</span></a>
+            <a class="sidebar-link" th:if="${esAdmin}" th:classappend="${active == 'reportes'} ? ' active' : ''" th:href="@{/reportes}" title="Reportes"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg><span class="sidebar-label">Reportes</span></a>
+        </nav>
 
-                <span class="role-badge" th:text="${esAdmin ? 'Administrador' : 'Empleado'}">Administrador</span>
-                <form th:action="@{/logout}" method="post" class="m-0">
-                    <button class="btn btn-sm btn-outline-light" type="submit">Salir</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</nav>
+    </aside>
+    <header class="app-topbar" th:classappend="${active == 'facturas'} ? ' invoice-theme' : (${active == 'dashboard' or active == 'categorias' or active == 'productos' or active == 'clientes' or active == 'usuarios'} ? ' green-theme' : '')">
+        <button class="sidebar-toggle" type="button" aria-label="Abrir menú" aria-expanded="false" data-sidebar-toggle><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+        <div class="topbar-spacer"></div>
+
+        <div class="topbar-user"><span class="user-avatar" th:text="${esAdmin ? 'A' : 'E'}">A</span><span class="user-copy"><strong th:text="${esAdmin ? 'Administrador' : 'Empleado'}">Administrador</strong><small th:text="${nombreUsuario}">admin</small></span></div>
+        <form th:action="@{/logout}" method="post" class="topbar-logout"><button type="submit" aria-label="Cerrar sesión" title="Cerrar sesión"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 17l5-5-5-5M15 12H3M12 3h6a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-6"/></svg></button></form>
+    </header>
+</th:block>
 <th:block th:fragment="scripts">
     <div id="flash-alert" class="d-none" th:if="${alertMessage != null}" th:attr="data-type=${alertType},data-message=${alertMessage}"></div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script th:src="@{/js/alerts.js}"></script>
+    <script>
+        (() => {
+            const toggle = document.querySelector('[data-sidebar-toggle]');
+            const isMobileLayout = () => window.matchMedia('(max-width: 720px)').matches;
+            const isSidebarOpen = () => isMobileLayout()
+                    ? document.body.classList.contains('sidebar-open')
+                    : !document.body.classList.contains('sidebar-collapsed');
+            const setSidebarOpen = (opened) => {
+                const mobile = isMobileLayout();
+                document.body.classList.toggle('sidebar-open', mobile && opened);
+                document.body.classList.toggle('sidebar-collapsed', !mobile && !opened);
+                toggle?.setAttribute('aria-expanded', String(opened));
+                toggle?.setAttribute('aria-label', opened ? 'Cerrar menú' : 'Abrir menú');
+            };
+            const syncSidebarMode = () => {
+                if (isMobileLayout()) document.body.classList.remove('sidebar-collapsed');
+                else document.body.classList.remove('sidebar-open');
+                const opened = isSidebarOpen();
+                toggle?.setAttribute('aria-expanded', String(opened));
+                toggle?.setAttribute('aria-label', opened ? 'Cerrar menú' : 'Abrir menú');
+            };
+            toggle?.addEventListener('click', (event) => {
+                event.stopPropagation();
+                setSidebarOpen(!isSidebarOpen());
+            });
+            document.addEventListener('click', (event) => {
+                if (isMobileLayout() && isSidebarOpen() && !event.target.closest('.app-sidebar, [data-sidebar-toggle]')) {
+                    setSidebarOpen(false);
+                }
+            });
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape' && isSidebarOpen()) setSidebarOpen(false);
+            });
+            window.addEventListener('resize', syncSidebarMode);
+            syncSidebarMode();
+            const searches = [...document.querySelectorAll('[data-table-search]')];
+            const invoiceRows = [...document.querySelectorAll('[data-invoice-row]')];
+            const pageRows = [...document.querySelectorAll('main table tbody tr')]
+                    .filter(row => !row.querySelector('td[colspan]'));
+            const invoiceState = document.querySelector('[data-invoice-state]');
+            const noResults = document.querySelector('[data-invoice-no-results]');
+            const resultCount = document.getElementById('invoiceResultCount');
+            const filterRows = () => {
+                const query = searches.map(input => input.value.trim().toLocaleLowerCase()).find(Boolean) || '';
+                const state = invoiceState?.value || '';
+                let visibleCount = 0;
+                if (invoiceRows.length) {
+                    invoiceRows.forEach(row => {
+                        const matches = row.textContent.toLocaleLowerCase().includes(query)
+                                && (!state || row.dataset.invoiceStatus === state);
+                        row.hidden = !matches;
+                        if (matches) visibleCount++;
+                    });
+                    if (noResults) noResults.hidden = visibleCount > 0;
+                    if (resultCount) resultCount.textContent = `Mostrando ${visibleCount} de ${invoiceRows.length} facturas`;
+                } else {
+                    pageRows.forEach(row => {
+                        row.hidden = !row.textContent.toLocaleLowerCase().includes(query);
+                    });
+                }
+            };
+            document.addEventListener('keydown', event => {
+                if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
+                    event.preventDefault();
+                    searches[0]?.focus();
+                }
+            });
+            searches.forEach(input => input.addEventListener('input', () => {
+                searches.forEach(other => {
+                    if (other !== input) other.value = input.value;
+                });
+                filterRows();
+            }));
+            invoiceState?.addEventListener('change', filterRows);
+            filterRows();
+        })();
+    </script>
 </th:block>
 </body>
 </html>

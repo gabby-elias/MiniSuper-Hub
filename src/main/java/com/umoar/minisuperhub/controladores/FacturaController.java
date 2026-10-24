@@ -25,6 +25,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,8 +43,21 @@ public class FacturaController {
     @GetMapping
     public String listar(Authentication authentication, Model model) {
         boolean admin = esAdmin(authentication);
-        model.addAttribute("facturas", admin ? facturaService.listar()
-                : facturaService.listarPorVendedor(authentication.getName()));
+        var facturas = admin ? facturaService.listar()
+                : facturaService.listarPorVendedor(authentication.getName());
+        LocalDate hoy = LocalDate.now(ZoneId.of("America/El_Salvador"));
+
+        model.addAttribute("facturas", facturas);
+        model.addAttribute("totalFacturas", facturas.size());
+        model.addAttribute("ventasHoy", facturas.stream()
+                .filter(factura -> !factura.isAnulada() && factura.getFecha() != null
+                        && factura.getFecha().toLocalDate().equals(hoy))
+                .mapToDouble(Factura::getTotal)
+                .sum());
+        model.addAttribute("facturasPendientes", facturas.stream()
+                .filter(factura -> !factura.isAnulada() && !factura.isEntregada())
+                .count());
+        model.addAttribute("facturasAnuladas", facturas.stream().filter(Factura::isAnulada).count());
         return "facturas/lista";
     }
 
@@ -58,27 +73,20 @@ public class FacturaController {
     }
 
     @GetMapping("/editar/{id}")
-    public String editar(@PathVariable Long id, Model model) {
-        return facturaService.buscarPorId(id)
-                .filter(factura -> !factura.isAnulada())
-                .map(factura -> {
-                    model.addAttribute("factura", factura);
-                    cargarClientes(model);
-                    return "facturas/formulario";
-                })
-                .orElse("redirect:/facturas");
+    public String editar(@PathVariable Long id, Authentication authentication, Model model) {
+        Factura factura = buscarFacturaAutorizada(id, authentication);
+        if (factura.isAnulada()) {
+            return "redirect:/facturas";
+        }
+        model.addAttribute("factura", factura);
+        cargarClientes(model);
+        return "facturas/formulario";
     }
 
     @GetMapping("/ver/{id}")
     public String ver(@PathVariable Long id, Authentication authentication, Model model) {
-        var factura = (esAdmin(authentication)
-                ? facturaService.buscarPorId(id)
-                : facturaService.buscarPorIdYVendedor(id, authentication.getName()));
-        return factura.map(item -> {
-                    model.addAttribute("factura", item);
-                    return "facturas/detalle";
-                })
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        model.addAttribute("factura", buscarFacturaAutorizada(id, authentication));
+        return "facturas/detalle";
     }
 
     @PostMapping("/guardar")
@@ -89,8 +97,9 @@ public class FacturaController {
                           Authentication authentication,
                           RedirectAttributes redirectAttributes) {
         boolean admin = esAdmin(authentication);
-        if (!admin && factura.getId() != 0) {
-            throw new AccessDeniedException("Los empleados solo pueden crear facturas.");
+        if (!admin && factura.getId() != 0
+                && facturaService.buscarPorIdYVendedor(factura.getId(), authentication.getName()).isEmpty()) {
+            throw new AccessDeniedException("Solo puedes modificar tus propias facturas.");
         }
         if (productoIds == null || cantidades == null || productoIds.isEmpty()
                 || productoIds.size() != cantidades.size()) {
@@ -141,8 +150,26 @@ public class FacturaController {
         return "redirect:/facturas";
     }
 
+    @PostMapping("/entregar/{id}")
+    public String marcarEntregada(@PathVariable Long id, Authentication authentication,
+                                  RedirectAttributes redirectAttributes) {
+        Factura factura = buscarFacturaAutorizada(id, authentication);
+        try {
+            facturaService.marcarEntregada(factura.getId());
+        } catch (IllegalStateException ex) {
+            redirectAttributes.addFlashAttribute("alertType", "error");
+            redirectAttributes.addFlashAttribute("alertMessage", ex.getMessage());
+            return "redirect:/facturas";
+        }
+        redirectAttributes.addFlashAttribute("alertType", "success");
+        redirectAttributes.addFlashAttribute("alertMessage", "Factura marcada como entregada.");
+        return "redirect:/facturas";
+    }
+
     @PostMapping("/anular/{id}")
-    public String anular(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+    public String anular(@PathVariable Long id, Authentication authentication,
+                         RedirectAttributes redirectAttributes) {
+        buscarFacturaAutorizada(id, authentication);
         facturaService.anular(id);
         redirectAttributes.addFlashAttribute("alertType", "success");
         redirectAttributes.addFlashAttribute("alertMessage", "Factura anulada correctamente.");
@@ -150,11 +177,20 @@ public class FacturaController {
     }
 
     @PostMapping("/eliminar/{id}")
-    public String eliminar(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+    public String eliminar(@PathVariable Long id, Authentication authentication,
+                           RedirectAttributes redirectAttributes) {
+        buscarFacturaAutorizada(id, authentication);
         facturaService.eliminar(id);
         redirectAttributes.addFlashAttribute("alertType", "success");
         redirectAttributes.addFlashAttribute("alertMessage", "Factura eliminada correctamente.");
         return "redirect:/facturas";
+    }
+
+    private Factura buscarFacturaAutorizada(Long id, Authentication authentication) {
+        return (esAdmin(authentication)
+                ? facturaService.buscarPorId(id)
+                : facturaService.buscarPorIdYVendedor(id, authentication.getName()))
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
     private boolean esAdmin(Authentication authentication) {

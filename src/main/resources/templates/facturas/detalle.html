@@ -13,7 +13,16 @@
         <div class="invoice-actions">
             <a class="btn btn-outline-light" th:href="@{/facturas}">← Volver a facturas</a>
             <a class="btn btn-gold" th:href="@{/facturas/descargar/{id}(id=${factura.id})}">Descargar PDF</a>
-            <a th:if="${esAdmin and !factura.anulada}" class="btn btn-lavender" th:href="@{/facturas/editar/{id}(id=${factura.id})}">Editar factura</a>
+            <form th:if="${!factura.anulada and !factura.entregada}" th:action="@{/facturas/entregar/{id}(id=${factura.id})}" method="post" data-swal-confirm data-swal-action="save" data-swal-title="¿Marcar como entregada?" data-swal-text="La factura dejará de aparecer como pendiente.">
+                <button class="btn btn-outline-success" type="submit">Marcar entregada</button>
+            </form>
+            <a th:if="${!factura.anulada}" class="btn btn-lavender" th:href="@{/facturas/editar/{id}(id=${factura.id})}">Editar factura</a>
+            <form th:if="${!factura.anulada}" th:action="@{/facturas/anular/{id}(id=${factura.id})}" method="post" data-swal-confirm data-swal-action="delete" data-swal-title="¿Anular factura?" data-swal-text="La factura y sus detalles se conservarán para consulta.">
+                <button class="btn btn-outline-warning" type="submit">Anular factura</button>
+            </form>
+            <form th:action="@{/facturas/eliminar/{id}(id=${factura.id})}" method="post" data-swal-confirm data-swal-action="delete" data-swal-title="¿Eliminar factura?" data-swal-text="También se eliminarán sus detalles.">
+                <button class="btn btn-outline-danger" type="submit">Eliminar factura</button>
+            </form>
         </div>
     </header>
 
@@ -23,7 +32,7 @@
                 <span class="invoice-summary-label">RESUMEN DE VENTA</span>
                 <div class="invoice-number" th:text="|#${factura.id}|">#0</div>
             </div>
-            <span class="invoice-status" th:classappend="${factura.anulada} ? ' invoice-status--void' : ' invoice-status--valid'" th:text="${factura.anulada ? 'Anulada' : 'Vigente'}">Vigente</span>
+            <span class="invoice-status" th:classappend="${factura.anulada ? ' invoice-status--void' : (factura.entregada ? ' invoice-status--delivered' : ' invoice-status--pending')}" th:text="${factura.anulada ? 'Anulada' : (factura.entregada ? 'Entregada' : 'Pendiente')}">Pendiente</span>
         </div>
         <div class="row g-3 invoice-meta">
             <div class="col-6 col-md-3"><span>Fecha</span><strong th:text="${factura.fecha != null ? #temporals.format(factura.fecha, 'dd/MM/yyyy HH:mm') : '—'}"></strong></div>
