@@ -10,6 +10,7 @@ import com.umoar.minisuperhub.servicios.CategoriaService;
 import com.umoar.minisuperhub.servicios.ClienteService;
 import com.umoar.minisuperhub.servicios.FacturaService;
 import com.umoar.minisuperhub.servicios.ProductoService;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,6 +22,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.ByteArrayInputStream;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -354,6 +356,10 @@ class ThymeleafViewsTests {
                 .andExpect(status().isOk());
         mockMvc.perform(get("/facturas/descargar/{id}", ajena.getId()).session(session))
                 .andExpect(status().isNotFound());
+        mockMvc.perform(get("/facturas/descargar-excel/{id}", propia.getId()).session(session))
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/facturas/descargar-excel/{id}", ajena.getId()).session(session))
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -429,6 +435,22 @@ class ThymeleafViewsTests {
             String textoPdf = new com.lowagie.text.pdf.parser.PdfTextExtractor(lector).getTextFromPage(1);
             assertTrue(textoPdf.contains("Minisúper"));
             assertTrue(textoPdf.contains("Dirección del minisúper"));
+        }
+
+        MvcResult resultadoExcel = mockMvc.perform(get("/facturas/descargar-excel/{id}", factura.getId())
+                        .session(iniciarSesion(adminUsername, adminPassword)))
+                .andExpect(status().isOk())
+                .andReturn();
+        assertEquals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                resultadoExcel.getResponse().getContentType());
+        assertTrue(resultadoExcel.getResponse().getHeader("Content-Disposition")
+                .contains("factura-" + factura.getId() + ".xlsx"));
+        try (var workbook = WorkbookFactory.create(new ByteArrayInputStream(
+                resultadoExcel.getResponse().getContentAsByteArray()))) {
+            var hoja = workbook.getSheetAt(0);
+            assertEquals("Factura #" + factura.getId(), hoja.getRow(0).getCell(0).getStringCellValue());
+            assertEquals("Producto PDF", hoja.getRow(7).getCell(1).getStringCellValue());
+            assertEquals(5.00, hoja.getRow(9).getCell(3).getNumericCellValue(), 0.001);
         }
     }
 

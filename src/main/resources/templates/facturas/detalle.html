@@ -13,6 +13,7 @@
         <div class="invoice-actions">
             <a class="btn btn-outline-light" th:href="@{/facturas}">← Volver a facturas</a>
             <a class="btn btn-gold" th:href="@{/facturas/descargar/{id}(id=${factura.id})}">Descargar PDF</a>
+            <a class="btn btn-outline-success" th:href="@{/facturas/descargar-excel/{id}(id=${factura.id})}">Descargar Excel</a>
             <form th:if="${!factura.anulada and !factura.entregada}" th:action="@{/facturas/entregar/{id}(id=${factura.id})}" method="post" data-swal-confirm data-swal-action="save" data-swal-title="¿Marcar como entregada?" data-swal-text="La factura dejará de aparecer como pendiente.">
                 <button class="btn btn-outline-success" type="submit">Marcar entregada</button>
             </form>
