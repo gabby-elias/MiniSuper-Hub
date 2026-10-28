@@ -1,1 +1,62 @@
 /* Estilos específicos de templates/dashboard/index.html. */
+.dashboard-hero {
+    max-width: 360px;
+    min-height: clamp(15rem, 30vw, 21rem);
+    margin: 0 auto 2rem;
+    border-radius: 1rem;
+    background: #ffffff;
+    box-shadow: 0 0.8rem 2rem rgba(22, 59, 39, 0.08);
+}
+
+.page-heading h2 {
+    margin: 0;
+    color: var(--app-text);
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+}
+
+.page-heading p {
+    margin: 0.3rem 0 0;
+    color: var(--app-muted);
+    font-size: 0.88rem;
+}
+
+.stat-card {
+    height: 100%;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0.7rem 1.6rem rgba(28, 77, 51, 0.11);
+}
+
+.stat-card .card-body {
+    padding: 1.2rem;
+}
+
+.stat-card .text-secondary {
+    font-size: 0.84rem;
+    font-weight: 550;
+}
+
+.content-card {
+    overflow: hidden;
+}
+
+.content-card > .d-flex {
+    padding: 1.2rem 1.25rem !important;
+}
+
+.content-card h2 {
+    color: var(--app-text);
+    font-weight: 700;
+}
+
+@media (max-width: 575px) {
+    .dashboard-hero {
+        min-height: 16rem;
+        margin-bottom: 1.5rem;
+    }
+}

@@ -1,13 +1,58 @@
 .login-page {
+    position: relative;
     min-height: 100vh;
-    background: radial-gradient(circle at top left, #e3efe7, transparent 38%), #edf1ee;
+    isolation: isolate;
+    background-image: linear-gradient(135deg, rgba(10, 27, 19, 0.76), rgba(10, 27, 19, 0.48)), url("https://static.vecteezy.com/system/resources/thumbnails/040/990/120/small_2x/ai-generated-grocery-store-produce-aisle-with-large-selection-of-fresh-fruits-and-vegetables-photo.jpg");
+    background-position: center;
+    background-size: cover;
+}
+
+.login-page::before {
+    position: fixed;
+    z-index: -1;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(10, 27, 19, 0.12), rgba(10, 27, 19, 0.38));
+    content: "";
 }
 
 .login-card {
     width: min(100%, 440px);
     color: var(--app-text);
-    background: var(--app-panel);
-    border: 1px solid var(--app-border);
+    background: rgba(255, 255, 255, 0.97);
+    border: 1px solid rgba(255, 255, 255, 0.72);
     border-radius: 1rem;
-    box-shadow: 0 1rem 2.5rem rgba(35, 65, 46, 0.1);
+    box-shadow: 0 1.25rem 3.5rem rgba(8, 24, 16, 0.28);
+    backdrop-filter: blur(10px);
+}
+
+.login-card .fs-1 {
+    display: grid;
+    width: 3.5rem;
+    height: 3.5rem;
+    margin: 0 auto 1rem;
+    place-items: center;
+    border-radius: 1rem;
+    background: var(--app-green-soft);
+    font-size: 1.65rem !important;
+}
+
+.login-card h1 {
+    color: #20352a;
+    letter-spacing: -0.035em;
+}
+
+.login-card form > .mb-3,
+.login-card form > .mb-4 {
+    width: min(100%, 320px);
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.login-card .form-control {
+    border-radius: 0.65rem;
+}
+
+.login-card .btn-primary {
+    border-radius: 0.65rem;
+    font-weight: 600;
 }

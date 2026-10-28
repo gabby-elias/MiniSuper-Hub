@@ -171,3 +171,176 @@ body.app-page > main a:not(.btn) {
 body.app-page > main a:not(.btn):hover {
     color: #7C739A;
 }
+
+.app-main > .content-card:has(> h1 ~ form) {
+    position: relative;
+    overflow: hidden;
+    padding: clamp(1.25rem, 3vw, 2rem) !important;
+    border-color: #dfe9e2;
+    border-top: 3px solid var(--app-green);
+    border-radius: 1rem;
+    box-shadow: 0 0.75rem 2rem rgba(25, 65, 43, 0.075);
+}
+
+.app-main > .content-card:has(> h1 ~ form) > h1 {
+    margin-bottom: 1.5rem !important;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #e8eee9;
+    color: #24372c;
+    font-size: clamp(1.25rem, 2vw, 1.5rem);
+    font-weight: 700;
+    letter-spacing: -0.035em;
+}
+
+.app-main > .mb-3 > a.text-decoration-none {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: #4d6b58;
+    font-size: 0.88rem;
+    font-weight: 600;
+    transition: color 0.15s ease, transform 0.15s ease;
+}
+
+.app-main > .mb-3 > a.text-decoration-none:hover {
+    color: var(--app-green-dark);
+    transform: translateX(-2px);
+}
+
+.app-main > .content-card:has(> h1 ~ form) .form-label,
+.invoice-panel .form-label {
+    margin-bottom: 0.45rem;
+    color: #394b3f;
+    font-size: 0.84rem;
+    font-weight: 650;
+}
+
+.app-main > .content-card:has(> h1 ~ form) .form-control,
+.app-main > .content-card:has(> h1 ~ form) .form-select,
+.invoice-panel .form-control,
+.invoice-panel .form-select {
+    min-height: 2.85rem;
+    padding: 0.68rem 0.85rem;
+    border: 1px solid #d7e2da;
+    border-radius: 0.68rem;
+    background-color: #ffffff;
+    color: var(--app-text);
+    transition: border-color 0.16s ease, box-shadow 0.16s ease, background-color 0.16s ease;
+}
+
+.app-main > .content-card:has(> h1 ~ form) textarea.form-control,
+.invoice-panel textarea.form-control {
+    min-height: 6.5rem;
+    resize: vertical;
+}
+
+.app-main > .content-card:has(> h1 ~ form) .form-control:hover,
+.app-main > .content-card:has(> h1 ~ form) .form-select:hover,
+.invoice-panel .form-control:hover,
+.invoice-panel .form-select:hover {
+    border-color: #b8cbbd;
+}
+
+.app-main > .content-card:has(> h1 ~ form) .form-control:focus,
+.app-main > .content-card:has(> h1 ~ form) .form-select:focus,
+.invoice-panel .form-control:focus,
+.invoice-panel .form-select:focus {
+    border-color: var(--app-green);
+    background-color: #ffffff;
+    box-shadow: 0 0 0 0.22rem rgba(25, 135, 84, 0.13);
+}
+
+.app-main > .content-card:has(> h1 ~ form) .form-control::placeholder,
+.invoice-panel .form-control::placeholder {
+    color: #9aa79e;
+}
+
+.app-main > .content-card:has(> h1 ~ form) .form-text,
+.invoice-panel .form-text {
+    margin-top: 0.45rem;
+    font-size: 0.78rem;
+    line-height: 1.5;
+}
+
+.app-main > .content-card:has(> h1 ~ form) .form-check,
+.invoice-panel .form-check {
+    display: flex;
+    min-height: 1.5rem;
+    align-items: center;
+    gap: 0.55rem;
+}
+
+.app-main > .content-card:has(> h1 ~ form) .form-check-input,
+.invoice-panel .form-check-input {
+    width: 1.15rem;
+    height: 1.15rem;
+    margin: 0;
+    border-color: #b8cbbd;
+    cursor: pointer;
+}
+
+.app-main > .content-card:has(> h1 ~ form) .form-check-input:checked,
+.invoice-panel .form-check-input:checked {
+    border-color: var(--app-green);
+    background-color: var(--app-green);
+}
+
+.app-main > .content-card:has(> h1 ~ form) .form-check-label,
+.invoice-panel .form-check-label {
+    color: #394b3f;
+    font-size: 0.86rem;
+    cursor: pointer;
+}
+
+.app-main > .content-card:has(> h1 ~ form) form > .d-flex:last-child {
+    margin-top: 1.65rem !important;
+    padding-top: 1.25rem;
+    border-top: 1px solid #e8eee9;
+}
+
+.app-main > .content-card:has(> h1 ~ form) form > .d-flex:last-child .btn,
+.invoice-panel .invoice-actions .btn {
+    min-height: 2.75rem;
+    padding-right: 1.15rem;
+    padding-left: 1.15rem;
+    border-radius: 0.68rem;
+    font-size: 0.86rem;
+    font-weight: 600;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.app-main > .content-card:has(> h1 ~ form) form > .d-flex:last-child .btn:hover,
+.invoice-panel .invoice-actions .btn:hover {
+    transform: translateY(-1px);
+}
+
+.app-main > .content-card:has(> h1 ~ form) form > .d-flex:last-child .btn-primary,
+.invoice-panel .invoice-actions .btn-light {
+    box-shadow: 0 0.35rem 0.8rem rgba(25, 135, 84, 0.18);
+}
+
+.app-main > .content-card:has(> h1 ~ form) form > .d-flex:last-child .btn-outline-light,
+.invoice-panel .invoice-actions .btn-outline-light {
+    --bs-btn-color: #52665a;
+    --bs-btn-border-color: #d7e2da;
+    --bs-btn-hover-color: #284532;
+    --bs-btn-hover-bg: #f2f7f3;
+    --bs-btn-hover-border-color: #b8cbbd;
+    --bs-btn-active-color: #284532;
+    --bs-btn-active-bg: #eaf3ec;
+    --bs-btn-active-border-color: #b8cbbd;
+}
+
+@media (max-width: 575.98px) {
+    .app-main > .content-card:has(> h1 ~ form) {
+        padding: 1.2rem !important;
+    }
+
+    .app-main > .content-card:has(> h1 ~ form) form > .d-flex:last-child {
+        flex-direction: column-reverse;
+    }
+
+    .app-main > .content-card:has(> h1 ~ form) form > .d-flex:last-child .btn {
+        width: 100%;
+    }
+}
