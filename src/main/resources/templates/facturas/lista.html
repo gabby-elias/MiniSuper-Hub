@@ -59,7 +59,7 @@
                     <td><span class="badge invoice-state-badge" th:classappend="${factura.anulada ? ' text-bg-danger' : (factura.entregada ? ' text-bg-success' : ' text-bg-warning')}" th:text="${factura.anulada ? 'Anulada' : (factura.entregada ? 'Entregada' : 'Pendiente')}"></span></td>
                     <td>
                         <div class="invoice-row-actions">
-                            <a class="btn btn-sm invoice-action-button" th:href="@{/facturas/ver/{id}(id=${factura.id})}" aria-label="Ver factura" title="Ver factura"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.3-6 9.5-6 9.5 6 9.5 6-3.3 6-9.5 6-9.5-6-9.5-6Z"/><circle cx="12" cy="12" r="2.5"/></svg></a>
+                            <a class="btn btn-sm invoice-action-button" th:href="@{/detalles-factura/nuevo(facturaId=${factura.id})}" aria-label="Ver detalle" title="Ver detalle"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.3-6 9.5-6 9.5 6 9.5 6-3.3 6-9.5 6-9.5-6-9.5-6Z"/><circle cx="12" cy="12" r="2.5"/></svg></a>
                             <form th:if="${!factura.anulada and !factura.entregada}" th:action="@{/facturas/entregar/{id}(id=${factura.id})}" method="post" data-swal-confirm data-swal-action="save" data-swal-title="¿Marcar como entregada?" data-swal-text="La factura dejará de aparecer como pendiente.">
                                 <button class="btn btn-sm invoice-action-button invoice-action-button--delivered" type="submit" aria-label="Marcar factura como entregada" title="Marcar entregada"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg></button>
                             </form>

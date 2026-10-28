@@ -27,7 +27,7 @@ public class DetalleFacturaController {
 
     @GetMapping
     public String listar(Model model) {
-        model.addAttribute("detalles", detalleFacturaService.listar());
+        model.addAttribute("facturas", facturaService.listar());
         return "detalles-factura/lista";
     }
 
