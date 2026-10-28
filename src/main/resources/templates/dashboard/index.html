@@ -4,7 +4,8 @@
 <body class="app-page">
 <nav th:replace="~{fragments/layout :: navbar('dashboard')}"></nav>
 <main class="app-main">
-    <div class="page-heading"><h1>Inicio</h1><p>Resumen de tu minisúper.</p></div>
+    <section class="dashboard-hero" aria-hidden="true"></section>
+    <div class="page-heading"><h2>Resumen general</h2><p>Indicadores de tu minisúper.</p></div>
     <div class="row g-3 mb-4">
         <div class="col-6 col-xl-3"><a class="text-decoration-none" th:href="@{/categorias}"><div class="card stat-card"><div class="card-body"><div class="text-secondary mb-2">Categorías</div><div class="h2 mb-0" th:text="${cantidadCategorias}">0</div></div></div></a></div>
         <div class="col-6 col-xl-3"><a class="text-decoration-none" th:href="@{/productos}"><div class="card stat-card"><div class="card-body"><div class="text-secondary mb-2">Productos</div><div class="h2 mb-0" th:text="${cantidadProductos}">0</div></div></div></a></div>
