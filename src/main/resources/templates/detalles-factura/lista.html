@@ -34,7 +34,7 @@
                 <td th:text="|$${#numbers.formatDecimal(factura.total, 1, 2)}|"></td>
                 <td class="text-end text-nowrap">
                     <a class="btn btn-sm btn-outline-light"
-                       th:href="@{/facturas/ver/{id}(id=${factura.id})}">Ver factura</a>
+                       th:href="@{/detalle/ver/{id}(id=${factura.id})}">Ver factura</a>
                 </td>
             </tr>
             <tr th:if="${#lists.isEmpty(facturas)}">
