@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="|Ticket de compra #${factura.id}|">Ticket de compra</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { margin: 0; padding: 24px; background: #f1f1f1; color: #111; font: 12px Arial, sans-serif; }
+        .ticket { width: 80mm; max-width: 100%; margin: 0 auto; padding: 2mm 4mm; background: white; box-shadow: 0 2px 14px #0002; }
+        .center { text-align: center; }
+        .store-name { margin: 0 0 5px; font-size: 21px; font-weight: 800; }
+        .store-info { margin: 2px 0; }
+        h1 { margin: 15px 0 8px; font-size: 17px; }
+        .divider { margin: 9px 0; border: 0; border-top: 1px dashed #222; }
+        .meta { display: flex; justify-content: space-between; gap: 8px; margin: 3px 0; }
+        .customer, .product { overflow-wrap: anywhere; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 4px 1px; text-align: left; vertical-align: top; }
+        th { border-bottom: 1px solid #222; }
+        .quantity { width: 12%; text-align: center; }
+        .amount { text-align: right; white-space: nowrap; }
+        .totals { width: 72%; margin: 8px 0 0 auto; }
+        .totals td { padding: 3px 1px; }
+        .grand-total { border-top: 1px solid #222; font-size: 14px; font-weight: 700; }
+        .thanks { margin: 16px 0 0; font-size: 13px; font-weight: 700; }
+        .controls { display: flex; justify-content: center; gap: 10px; margin: 20px auto; }
+        .controls button, .controls a { padding: 9px 14px; border: 0; border-radius: 5px; background: #173d6b; color: white; font: inherit; text-decoration: none; cursor: pointer; }
+        .controls a { background: #596579; }
+        @page { size: 80mm 200mm; margin: 0; }
+        @media print {
+            body { padding: 0; background: white; font-size: 12px; }
+            .ticket { width: 72mm; max-width: none; margin: 0; padding: 0; box-shadow: none; }
+            .controls { display: none; }
+        }
+        @media screen and (max-width: 420px) { body { padding: 10px; } .ticket { width: 100%; } }
+    </style>
+</head>
+<body>
+<main class="ticket">
+    <header class="center">
+        <p class="store-name" th:text="${nombreMinisuper}">Minisúper</p>
+        <p class="store-info" th:text="${direccionMinisuper}">Dirección del minisúper</p>
+        <p class="store-info" th:text="|Tel. ${telefonoMinisuper}|">Tel. 0000-0000</p>
+        <h1>TICKET DE COMPRA</h1>
+    </header>
+    <hr class="divider">
+    <div class="meta"><span>Factura:</span><strong th:text="|#${factura.id}|">#0</strong></div>
+    <div class="meta"><span>Fecha:</span><span th:text="${factura.fecha != null ? #temporals.format(factura.fecha, 'dd/MM/yyyy HH:mm') : '—'}">—</span></div>
+    <div class="meta customer"><span>Cliente:</span><span th:text="${factura.cliente != null ? factura.cliente.nombre : 'Consumidor final'}">Consumidor final</span></div>
+    <div class="meta" th:if="${factura.cliente != null and factura.cliente.documento != null and !#strings.isEmpty(factura.cliente.documento)}"><span>Documento:</span><span th:text="${factura.cliente.documento}"></span></div>
+    <div class="meta" th:if="${factura.cliente != null and factura.cliente.direccion != null and !#strings.isEmpty(factura.cliente.direccion)}"><span>Dirección:</span><span th:text="${factura.cliente.direccion}"></span></div>
+    <div class="meta" th:if="${factura.vendedor != null}"><span>Atendió:</span><span th:text="${factura.vendedor.nombre}"></span></div>
+    <hr class="divider">
+    <table>
+        <thead><tr><th>Descripción</th><th class="quantity">Cant.</th><th class="amount">Precio</th><th class="amount">Total</th></tr></thead>
+        <tbody>
+        <tr th:each="detalle : ${factura.detalles}">
+            <td class="product" th:text="${detalle.producto != null ? detalle.producto.nombre : 'Producto no disponible'}">Producto</td>
+            <td class="quantity" th:text="${detalle.cantidad}">1</td>
+            <td class="amount" th:text="|$${#numbers.formatDecimal(detalle.precioUnitario, 1, 2)}|">$0.00</td>
+            <td class="amount" th:text="|$${#numbers.formatDecimal(detalle.subtotal, 1, 2)}|">$0.00</td>
+        </tr>
+        </tbody>
+    </table>
+    <hr class="divider">
+    <table class="totals">
+        <tbody>
+        <tr><td>Subtotal:</td><td class="amount" th:text="|$${#numbers.formatDecimal(factura.total, 1, 2)}|">$0.00</td></tr>
+        <tr class="grand-total"><td>Total:</td><td class="amount" th:text="|$${#numbers.formatDecimal(factura.total, 1, 2)}|">$0.00</td></tr>
+        </tbody>
+    </table>
+    <p class="center thanks">¡Gracias por su compra!</p>
+</main>
+<div class="controls">
+    <button type="button" onclick="prepararImpresion()">Imprimir ticket</button>
+    <a th:href="@{/detalles-factura/{id}(id=${factura.id})}">Volver</a>
+</div>
+<script>
+    function prepararImpresion() {
+        const ticket = document.querySelector('.ticket');
+        const alturaMm = Math.ceil(ticket.scrollHeight * 25.4 / 96);
+        let estiloPagina = document.getElementById('ticket-page-size');
+        if (!estiloPagina) {
+            estiloPagina = document.createElement('style');
+            estiloPagina.id = 'ticket-page-size';
+            document.head.appendChild(estiloPagina);
+        }
+        estiloPagina.textContent = `@page { size: 80mm ${alturaMm}mm; margin: 0; }`;
+        window.print();
+    }
+    window.addEventListener('load', () => window.setTimeout(prepararImpresion, 300));
+</script>
+</body>
+</html>
