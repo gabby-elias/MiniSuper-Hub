@@ -1,22 +1,79 @@
 <!doctype html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/layout :: head('Detalle de factura', 'detalles-factura-formulario')}"></head>
-<body class="app-page">
+<head th:replace="~{fragments/layout :: head('Facturas generadas', 'detalles-factura-formulario')}"></head>
+<body class="app-page generated-invoices-page">
 <nav th:replace="~{fragments/layout :: navbar('detalles')}"></nav>
 <main class="app-main">
-    <div class="mb-3"><a class="text-decoration-none" th:href="@{/detalles-factura}">← Volver a detalles</a></div>
-    <section class="content-card mx-auto p-4" style="max-width:760px">
+    <section class="generated-invoices-view" th:if="${detalleFactura.id == 0}">
+        <header class="generated-invoices-heading page-heading">
+            <div>
+                <span class="generated-invoices-eyebrow">VENTAS · REGISTROS</span>
+                <h1>Facturas generadas</h1>
+                <p>Consulta las facturas registradas y sus datos.</p>
+            </div>
+            <a class="btn btn-outline-light" th:href="@{/detalles-factura}">Volver a detalles</a>
+        </header>
+        <section class="generated-invoices-card content-card table-responsive" aria-label="Facturas generadas">
+            <table class="table table-hover align-middle generated-invoices-table">
+                <thead>
+                <tr>
+                    <th>N.º</th><th>Fecha</th><th>Cliente</th><th>Vendedor</th>
+                    <th>Productos</th><th class="text-end">Total</th><th>Acción</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="factura : ${facturas}"
+                    th:classappend="${param.facturaId != null and param.facturaId[0] == #strings.toString(factura.id)} ? ' invoice-selected-row' : ''">
+                    <td class="generated-invoice-id" th:text="${factura.id}"></td>
+                    <td th:text="${factura.fecha != null ? #temporals.format(factura.fecha, 'dd/MM/yyyy HH:mm') : '—'}"></td>
+                    <td th:text="${factura.cliente != null ? factura.cliente.nombre : 'Consumidor final'}"></td>
+                    <td th:text="${factura.vendedor != null ? factura.vendedor.nombre : '—'}"></td>
+                    <td th:text="${factura.detalles != null ? #lists.size(factura.detalles) : 0}"></td>
+                    <td class="text-end generated-invoice-total" th:text="|$${#numbers.formatDecimal(factura.total, 1, 2)}|"></td>
+                    <td><a class="btn btn-sm btn-view-invoice" th:href="@{/facturas/ver/{id}(id=${factura.id})}">Ver factura</a></td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(facturas)}">
+                    <td colspan="7" class="text-center text-secondary py-5">Todavía no hay facturas registradas.</td>
+                </tr>
+                </tbody>
+            </table>
+        </section>
+    </section>
+
+    <section class="content-card mx-auto p-4" style="max-width:760px" th:unless="${detalleFactura.id == 0}">
+        <div class="mb-3"><a class="text-decoration-none" th:href="@{/detalles-factura/nuevo}">← Volver a facturas generadas</a></div>
         <h1 class="h4 fw-bold mb-4" th:text="${detalleFactura.id == 0 ? 'Nuevo detalle' : 'Editar detalle'}"></h1>
-        <form th:action="@{/detalles-factura/guardar}" th:object="${detalleFactura}" method="post" data-swal-confirm data-swal-action="save" data-swal-title="¿Guardar detalle?" data-swal-text="Confirma para guardar esta línea de factura." data-swal-confirm-text="Sí, guardar">
+        <form th:action="@{/detalles-factura/guardar}" th:object="${detalleFactura}" method="post"
+              data-swal-confirm data-swal-action="save" data-swal-title="¿Guardar detalle?"
+              data-swal-text="Confirma para guardar esta línea de factura." data-swal-confirm-text="Sí, guardar">
             <input type="hidden" th:field="*{id}">
-            <div class="mb-3"><label for="factura" class="form-label">Factura</label><select id="factura" name="factura.id" class="form-select" required><option value="">Selecciona una factura</option><option th:each="factura : ${facturas}" th:value="${factura.id}" th:text="|Factura #${factura.id} · ${factura.fecha ?: 'Sin fecha'}|" th:selected="${detalleFactura.factura != null and detalleFactura.factura.id == factura.id}"></option></select></div>
-            <div class="mb-3"><label for="producto" class="form-label">Producto</label><select id="producto" name="producto.id" class="form-select" required><option value="">Selecciona un producto</option><option th:each="producto : ${productos}" th:value="${producto.id}" th:text="|${producto.nombre} · $${producto.precioVenta}|" th:selected="${detalleFactura.producto != null and detalleFactura.producto.id == producto.id}"></option></select></div>
+            <div class="mb-3">
+                <label for="factura" class="form-label">Factura</label>
+                <select id="factura" name="factura.id" class="form-select" required>
+                    <option value="">Selecciona una factura</option>
+                    <option th:each="factura : ${facturas}" th:value="${factura.id}"
+                            th:text="|Factura #${factura.id} · ${factura.fecha ?: 'Sin fecha'}|"
+                            th:selected="${detalleFactura.factura != null and detalleFactura.factura.id == factura.id}"></option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="producto" class="form-label">Producto</label>
+                <select id="producto" name="producto.id" class="form-select" required>
+                    <option value="">Selecciona un producto</option>
+                    <option th:each="producto : ${productos}" th:value="${producto.id}"
+                            th:text="|${producto.nombre} · $${producto.precioVenta}|"
+                            th:selected="${detalleFactura.producto != null and detalleFactura.producto.id == producto.id}"></option>
+                </select>
+            </div>
             <div class="row g-3">
                 <div class="col-md-4"><label for="cantidad" class="form-label">Cantidad</label><input id="cantidad" class="form-control" type="number" min="1" th:field="*{cantidad}" required></div>
                 <div class="col-md-4"><label for="precioUnitario" class="form-label">Precio unitario</label><input id="precioUnitario" class="form-control" type="number" step="0.01" min="0" th:field="*{precioUnitario}" required></div>
                 <div class="col-md-4"><label for="subtotal" class="form-label">Subtotal</label><input id="subtotal" class="form-control" type="number" step="0.01" min="0" th:field="*{subtotal}" required></div>
             </div>
-            <div class="d-flex justify-content-end gap-2 mt-4"><a class="btn btn-outline-light" th:href="@{/detalles-factura}">Cancelar</a><button class="btn btn-primary" type="submit">Guardar detalle</button></div>
+            <div class="d-flex justify-content-end gap-2 mt-4">
+                <a class="btn btn-outline-light" th:href="@{/detalles-factura}">Cancelar</a>
+                <button class="btn btn-primary" type="submit">Guardar detalle</button>
+            </div>
         </form>
     </section>
 </main>

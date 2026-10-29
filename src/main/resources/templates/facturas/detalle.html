@@ -6,41 +6,27 @@
 <main class="app-main">
     <header class="invoice-heading page-heading">
         <div>
-            <span class="invoice-eyebrow">VENTAS · COMPROBANTE</span>
-            <h1 th:text="|Factura #${factura.id}|">Factura</h1>
-            <p>Detalle de los productos y datos de esta venta.</p>
+            <span class="invoice-eyebrow">COMPROBANTE DE VENTA</span>
+            <h1>Detalle de <span th:text="|Factura #${factura.id}|">Factura</span></h1>
         </div>
-        <div class="invoice-actions">
-            <a class="btn btn-outline-light" th:href="@{/facturas}">← Volver a facturas</a>
-            <a class="btn btn-gold" th:href="@{/facturas/descargar/{id}(id=${factura.id})}">Descargar PDF</a>
-            <a class="btn btn-outline-success" th:href="@{/facturas/descargar-excel/{id}(id=${factura.id})}">Descargar Excel</a>
-            <form th:if="${!factura.anulada and !factura.entregada}" th:action="@{/facturas/entregar/{id}(id=${factura.id})}" method="post" data-swal-confirm data-swal-action="save" data-swal-title="¿Marcar como entregada?" data-swal-text="La factura dejará de aparecer como pendiente.">
-                <button class="btn btn-outline-success" type="submit">Marcar entregada</button>
-            </form>
-            <a th:if="${!factura.anulada}" class="btn btn-lavender" th:href="@{/facturas/editar/{id}(id=${factura.id})}">Editar factura</a>
-            <form th:if="${!factura.anulada}" th:action="@{/facturas/anular/{id}(id=${factura.id})}" method="post" data-swal-confirm data-swal-action="delete" data-swal-title="¿Anular factura?" data-swal-text="La factura y sus detalles se conservarán para consulta.">
-                <button class="btn btn-outline-warning" type="submit">Anular factura</button>
-            </form>
-            <form th:action="@{/facturas/eliminar/{id}(id=${factura.id})}" method="post" data-swal-confirm data-swal-action="delete" data-swal-title="¿Eliminar factura?" data-swal-text="También se eliminarán sus detalles.">
-                <button class="btn btn-outline-danger" type="submit">Eliminar factura</button>
-            </form>
-        </div>
+        <span class="invoice-date" th:text="${factura.fecha != null ? #temporals.format(factura.fecha, 'dd/MM/yyyy HH:mm') : '—'}"></span>
     </header>
 
-    <section class="invoice-summary content-card mb-4" aria-label="Información de la factura">
-        <div class="invoice-summary-top">
-            <div>
-                <span class="invoice-summary-label">RESUMEN DE VENTA</span>
-                <div class="invoice-number" th:text="|#${factura.id}|">#0</div>
-            </div>
+    <section class="invoice-summary mb-4" aria-label="Información de la factura">
+        <article class="invoice-party">
+            <span class="invoice-summary-label">Cliente</span>
+            <strong th:text="${factura.cliente != null ? factura.cliente.nombre : 'Consumidor final'}"></strong>
+        </article>
+        <article class="invoice-party">
+            <span class="invoice-summary-label">Vendedor</span>
+            <strong th:text="${factura.vendedor != null ? factura.vendedor.nombre : '—'}"></strong>
+        </article>
+        <article class="invoice-total-card">
+            <span class="invoice-summary-label">Total</span>
+            <strong th:text="|$${#numbers.formatDecimal(factura.total, 1, 2)}|"></strong>
             <span class="invoice-status" th:classappend="${factura.anulada ? ' invoice-status--void' : (factura.entregada ? ' invoice-status--delivered' : ' invoice-status--pending')}" th:text="${factura.anulada ? 'Anulada' : (factura.entregada ? 'Entregada' : 'Pendiente')}">Pendiente</span>
-        </div>
-        <div class="row g-3 invoice-meta">
-            <div class="col-6 col-md-3"><span>Fecha</span><strong th:text="${factura.fecha != null ? #temporals.format(factura.fecha, 'dd/MM/yyyy HH:mm') : '—'}"></strong></div>
-            <div class="col-6 col-md-3"><span>Cliente</span><strong th:text="${factura.cliente != null ? factura.cliente.nombre : 'Consumidor final'}"></strong></div>
-            <div class="col-6 col-md-3"><span>Vendedor</span><strong th:text="${factura.vendedor != null ? factura.vendedor.nombre : '—'}"></strong></div>
-            <div class="col-6 col-md-3"><span>Artículos</span><strong th:text="${factura.detalles != null ? #lists.size(factura.detalles) : 0}"></strong></div>
-        </div>
+        </article>
+        <div class="invoice-meta-count"><span>Artículos</span><strong th:text="${factura.detalles != null ? #lists.size(factura.detalles) : 0}"></strong></div>
     </section>
 
     <section class="invoice-lines content-card">
@@ -50,20 +36,41 @@
         </div>
         <div class="table-responsive">
             <table class="table invoice-table align-middle">
-                <thead><tr><th>Producto</th><th class="text-end">Cantidad</th><th class="text-end">Precio unitario</th><th class="text-end">Subtotal</th></tr></thead>
+                <thead><tr><th>N.º</th><th>Producto</th><th class="text-end">Cantidad</th><th class="text-end">Precio unitario</th><th class="text-end">Total</th></tr></thead>
                 <tbody>
-                <tr th:each="detalle : ${factura.detalles}">
+                <tr class="invoice-item-row" th:each="detalle : ${factura.detalles}">
+                    <td class="invoice-row-number"></td>
                     <td><span class="product-name" th:text="${detalle.producto != null ? detalle.producto.nombre : 'Producto no disponible'}"></span></td>
                     <td class="text-end" th:text="${detalle.cantidad}"></td>
                     <td class="text-end" th:text="|$${#numbers.formatDecimal(detalle.precioUnitario, 1, 2)}|"></td>
                     <td class="text-end invoice-subtotal" th:text="|$${#numbers.formatDecimal(detalle.subtotal, 1, 2)}|"></td>
                 </tr>
-                <tr th:if="${factura.detalles == null or #lists.isEmpty(factura.detalles)}"><td colspan="4" class="text-center text-secondary py-5">Esta factura no tiene productos registrados.</td></tr>
+                <tr th:if="${factura.detalles == null or #lists.isEmpty(factura.detalles)}"><td colspan="5" class="text-center text-secondary py-5">Esta factura no tiene productos registrados.</td></tr>
                 </tbody>
-                <tfoot><tr><th colspan="3" class="text-end">Total de factura</th><th class="text-end invoice-total" th:text="|$${#numbers.formatDecimal(factura.total, 1, 2)}|"></th></tr></tfoot>
+                <tfoot><tr><th colspan="4" class="text-end">Total de factura</th><th class="text-end invoice-total" th:text="|$${#numbers.formatDecimal(factura.total, 1, 2)}|"></th></tr></tfoot>
             </table>
         </div>
     </section>
+
+    <div class="invoice-actions">
+        <a class="btn btn-outline-light" th:href="@{/facturas}">← Volver a facturas</a>
+        <a class="btn btn-gold" th:href="@{/facturas/descargar/{id}(id=${factura.id})}">Descargar PDF</a>
+        <a class="btn btn-outline-success" th:href="@{/facturas/descargar-excel/{id}(id=${factura.id})}">Descargar Excel</a>
+        <form th:if="${!factura.anulada and !factura.entregada}" th:action="@{/facturas/entregar/{id}(id=${factura.id})}" method="post" data-swal-confirm data-swal-action="save" data-swal-title="¿Marcar como entregada?" data-swal-text="La factura dejará de aparecer como pendiente.">
+            <button class="btn btn-outline-success" type="submit">Marcar entregada</button>
+        </form>
+        <a th:if="${!factura.anulada}" class="btn btn-lavender" th:href="@{/facturas/editar/{id}(id=${factura.id})}">Editar factura</a>
+        <form th:if="${!factura.anulada}" th:action="@{/facturas/anular/{id}(id=${factura.id})}" method="post" data-swal-confirm data-swal-action="delete" data-swal-title="¿Anular factura?" data-swal-text="La factura y sus detalles se conservarán para consulta.">
+            <button class="btn btn-outline-warning" type="submit">Anular factura</button>
+        </form>
+        <form th:action="@{/facturas/eliminar/{id}(id=${factura.id})}" method="post" data-swal-confirm data-swal-action="delete" data-swal-title="¿Eliminar factura?" data-swal-text="También se eliminarán sus detalles.">
+            <button class="btn btn-outline-danger" type="submit">Eliminar factura</button>
+        </form>
+        <button class="btn btn-print" type="button" onclick="window.print()">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 8V3h10v5M7 17H5a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2M7 14h10v7H7z"/><path d="M18 11h.01"/></svg>
+            Imprimir factura
+        </button>
+    </div>
 </main>
 <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
 </body>
