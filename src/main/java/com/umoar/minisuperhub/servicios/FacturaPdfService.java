@@ -4,9 +4,9 @@ import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.Element;
 import com.lowagie.text.Font;
-import com.lowagie.text.PageSize;
 import com.lowagie.text.Paragraph;
 import com.lowagie.text.Phrase;
+import com.lowagie.text.Rectangle;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
@@ -26,10 +26,14 @@ import java.util.Locale;
 @Service
 public class FacturaPdfService {
 
+    private static final float ANCHO_TICKET = 226.77f;
     private static final DateTimeFormatter FORMATO_FECHA = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-    private static final Font TITULO = new Font(Font.HELVETICA, 18, Font.BOLD, new Color(30, 45, 65));
-    private static final Font NORMAL = new Font(Font.HELVETICA, 10);
-    private static final Font ENCABEZADO_TABLA = new Font(Font.HELVETICA, 10, Font.BOLD, Color.WHITE);
+    private static final Font NOMBRE_TIENDA = new Font(Font.HELVETICA, 17, Font.BOLD);
+    private static final Font TITULO = new Font(Font.HELVETICA, 11, Font.BOLD);
+    private static final Font NORMAL = new Font(Font.HELVETICA, 8);
+    private static final Font PEQUENA = new Font(Font.HELVETICA, 7);
+    private static final Font NEGRITA = new Font(Font.HELVETICA, 8, Font.BOLD);
+    private static final Font SEPARADOR = new Font(Font.COURIER, 7, Font.NORMAL, Color.DARK_GRAY);
 
     @Value("${app.minisuper.nombre:Minisúper}")
     private String nombreMinisuper;
@@ -42,61 +46,67 @@ public class FacturaPdfService {
 
     public byte[] generar(Factura factura) {
         try (ByteArrayOutputStream salida = new ByteArrayOutputStream()) {
-            Document documento = new Document(PageSize.LETTER, 42, 42, 42, 42);
+            Document documento = new Document(new Rectangle(ANCHO_TICKET, calcularAltura(factura)), 16, 16, 16, 16);
             PdfWriter.getInstance(documento, salida);
             documento.open();
 
-            Paragraph titulo = new Paragraph(nombreMinisuper, TITULO);
-            titulo.setAlignment(Element.ALIGN_CENTER);
-            documento.add(titulo);
-            Paragraph contacto = new Paragraph(direccionMinisuper + " · Tel. " + telefonoMinisuper, NORMAL);
-            contacto.setAlignment(Element.ALIGN_CENTER);
-            documento.add(contacto);
-            documento.add(new Paragraph(" "));
+            agregarParrafo(documento, nombreMinisuper, NOMBRE_TIENDA, Element.ALIGN_CENTER, 0, 1);
+            agregarParrafo(documento, direccionMinisuper, PEQUENA, Element.ALIGN_CENTER, 0, 1);
+            agregarParrafo(documento, "Tel. " + telefonoMinisuper, PEQUENA, Element.ALIGN_CENTER, 0, 4);
+            agregarParrafo(documento, "TICKET DE COMPRA", TITULO, Element.ALIGN_CENTER, 0, 3);
+            agregarSeparador(documento);
 
-            Paragraph numero = new Paragraph("FACTURA #" + factura.getId(), new Font(Font.HELVETICA, 14, Font.BOLD));
-            numero.setAlignment(Element.ALIGN_RIGHT);
-            documento.add(numero);
-            documento.add(new Paragraph("Fecha: " + (factura.getFecha() == null
-                    ? "—" : factura.getFecha().format(FORMATO_FECHA)), NORMAL));
-            documento.add(new Paragraph("Cliente: " + (factura.getCliente() == null
-                    || factura.getCliente().getNombre() == null
-                    || factura.getCliente().getNombre().isBlank()
-                    ? "Consumidor final" : factura.getCliente().getNombre()), NORMAL));
-            documento.add(new Paragraph("Atendió: " + (factura.getVendedor() == null
-                    ? "—" : factura.getVendedor().getNombre()), NORMAL));
-            documento.add(new Paragraph(" "));
+            agregarParrafo(documento, "Factura: #" + factura.getId(), NEGRITA, Element.ALIGN_LEFT, 0, 2);
+            agregarParrafo(documento, "Fecha: " + (factura.getFecha() == null
+                    ? "—" : factura.getFecha().format(FORMATO_FECHA)), NORMAL, Element.ALIGN_LEFT, 0, 2);
+            agregarParrafo(documento, "Cliente: " + nombreCliente(factura), NORMAL, Element.ALIGN_LEFT, 0, 2);
+            if (factura.getCliente() != null && tieneTexto(factura.getCliente().getDocumento())) {
+                agregarParrafo(documento, "Documento: " + factura.getCliente().getDocumento(), NORMAL, Element.ALIGN_LEFT, 0, 2);
+            }
+            if (factura.getCliente() != null && tieneTexto(factura.getCliente().getDireccion())) {
+                agregarParrafo(documento, "Dirección: " + factura.getCliente().getDireccion(), NORMAL, Element.ALIGN_LEFT, 0, 2);
+            }
+            agregarParrafo(documento, "Atendió: " + (factura.getVendedor() == null
+                    ? "—" : factura.getVendedor().getNombre()), NORMAL, Element.ALIGN_LEFT, 0, 3);
+            agregarSeparador(documento);
 
-            PdfPTable tabla = new PdfPTable(new float[]{1, 4, 1.5f, 1.5f});
-            tabla.setWidthPercentage(100);
-            agregarCeldaEncabezado(tabla, "Cantidad");
-            agregarCeldaEncabezado(tabla, "Descripción");
-            agregarCeldaEncabezado(tabla, "Precio unitario");
-            agregarCeldaEncabezado(tabla, "Total por línea");
+            PdfPTable productos = new PdfPTable(new float[]{3.3f, 0.55f, 1.05f, 1.15f});
+            productos.setWidthPercentage(100);
+            productos.setWidths(new float[]{3.3f, 0.55f, 1.05f, 1.15f});
+            productos.setSpacingBefore(2);
+            productos.setSpacingAfter(2);
+            agregarCelda(productos, "Descripción", NEGRITA, Element.ALIGN_LEFT);
+            agregarCelda(productos, "Cant.", NEGRITA, Element.ALIGN_CENTER);
+            agregarCelda(productos, "Precio", NEGRITA, Element.ALIGN_RIGHT);
+            agregarCelda(productos, "Total", NEGRITA, Element.ALIGN_RIGHT);
 
-            BigDecimal subtotal = BigDecimal.ZERO;
             if (factura.getDetalles() != null) {
                 for (DetalleFactura detalle : factura.getDetalles()) {
-                    BigDecimal totalLinea = BigDecimal.valueOf(detalle.getSubtotal()).setScale(2, RoundingMode.HALF_UP);
-                    subtotal = subtotal.add(totalLinea);
-                    tabla.addCell(celda(String.valueOf(detalle.getCantidad()), Element.ALIGN_RIGHT));
-                    tabla.addCell(celda(detalle.getProducto() == null ? "Producto eliminado"
-                            : detalle.getProducto().getNombre(), Element.ALIGN_LEFT));
-                    tabla.addCell(celda(moneda(detalle.getPrecioUnitario()), Element.ALIGN_RIGHT));
-                    tabla.addCell(celda(moneda(totalLinea.doubleValue()), Element.ALIGN_RIGHT));
+                    agregarCelda(productos, detalle.getProducto() == null
+                            ? "Producto no disponible" : detalle.getProducto().getNombre(), NORMAL, Element.ALIGN_LEFT);
+                    agregarCelda(productos, String.valueOf(detalle.getCantidad()), PEQUENA, Element.ALIGN_CENTER);
+                    agregarCelda(productos, moneda(detalle.getPrecioUnitario()), PEQUENA, Element.ALIGN_RIGHT);
+                    agregarCelda(productos, moneda(detalle.getSubtotal()), NORMAL, Element.ALIGN_RIGHT);
                 }
             }
-            documento.add(tabla);
+            documento.add(productos);
+            agregarSeparador(documento);
 
+            BigDecimal subtotal = factura.getDetalles() == null ? BigDecimal.ZERO : factura.getDetalles().stream()
+                    .map(detalle -> BigDecimal.valueOf(detalle.getSubtotal()))
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
             BigDecimal total = BigDecimal.valueOf(factura.getTotal()).setScale(2, RoundingMode.HALF_UP);
-            documento.add(new Paragraph(" "));
-            PdfPTable totales = new PdfPTable(new float[]{3, 1});
-            totales.setWidthPercentage(42);
-            totales.setHorizontalAlignment(Element.ALIGN_RIGHT);
-            agregarTotal(totales, "Subtotal", subtotal);
-            agregarTotal(totales, "Total", total);
+            PdfPTable totales = new PdfPTable(new float[]{1, 1});
+            totales.setWidthPercentage(100);
+            agregarCelda(totales, "Subtotal:", NORMAL, Element.ALIGN_RIGHT);
+            agregarCelda(totales, moneda(subtotal.doubleValue()), NORMAL, Element.ALIGN_RIGHT);
+            agregarCelda(totales, "Total:", NEGRITA, Element.ALIGN_RIGHT);
+            agregarCelda(totales, moneda(total.doubleValue()), NEGRITA, Element.ALIGN_RIGHT);
             documento.add(totales);
-            documento.add(new Paragraph("Total en letras: " + totalEnLetras(total), NORMAL));
+
+            agregarParrafo(documento, "Total en letras: " + totalEnLetras(total), PEQUENA, Element.ALIGN_LEFT, 5, 0);
+            agregarSeparador(documento);
+            agregarParrafo(documento, "¡Gracias por su compra!", TITULO, Element.ALIGN_CENTER, 3, 0);
             documento.close();
             return salida.toByteArray();
         } catch (DocumentException | java.io.IOException exception) {
@@ -104,26 +114,50 @@ public class FacturaPdfService {
         }
     }
 
-    private void agregarCeldaEncabezado(PdfPTable tabla, String texto) {
-        PdfPCell celda = new PdfPCell(new Phrase(texto, ENCABEZADO_TABLA));
-        celda.setBackgroundColor(new Color(30, 45, 65));
-        celda.setPadding(7);
-        celda.setHorizontalAlignment(Element.ALIGN_CENTER);
+    private float calcularAltura(Factura factura) {
+        float altura = 350;
+        if (factura.getDetalles() != null) {
+            for (DetalleFactura detalle : factura.getDetalles()) {
+                String nombre = detalle.getProducto() == null ? "Producto no disponible" : detalle.getProducto().getNombre();
+                altura += 28 + Math.max(0, nombre == null ? 0 : nombre.length() - 20) / 24f * 9;
+            }
+        }
+        if (factura.getCliente() != null) {
+            if (tieneTexto(factura.getCliente().getDocumento())) altura += 12;
+            if (tieneTexto(factura.getCliente().getDireccion())) altura += 20;
+        }
+        return Math.max(altura, 430);
+    }
+
+    private void agregarCelda(PdfPTable tabla, String texto, Font fuente, int alineacion) {
+        PdfPCell celda = new PdfPCell(new Phrase(texto == null ? "—" : texto, fuente));
+        celda.setBorder(Rectangle.NO_BORDER);
+        celda.setPadding(2);
+        celda.setHorizontalAlignment(alineacion);
+        celda.setVerticalAlignment(Element.ALIGN_TOP);
         tabla.addCell(celda);
     }
 
-    private PdfPCell celda(String texto, int alineacion) {
-        PdfPCell celda = new PdfPCell(new Phrase(texto == null ? "—" : texto, NORMAL));
-        celda.setPadding(6);
-        celda.setHorizontalAlignment(alineacion);
-        return celda;
+    private void agregarParrafo(Document documento, String texto, Font fuente, int alineacion,
+                                float antes, float despues) throws DocumentException {
+        Paragraph parrafo = new Paragraph(texto == null ? "—" : texto, fuente);
+        parrafo.setAlignment(alineacion);
+        parrafo.setSpacingBefore(antes);
+        parrafo.setSpacingAfter(despues);
+        documento.add(parrafo);
     }
 
-    private void agregarTotal(PdfPTable tabla, String etiqueta, BigDecimal cantidad) {
-        tabla.addCell(celda(etiqueta, Element.ALIGN_RIGHT));
-        PdfPCell importe = celda(moneda(cantidad.doubleValue()), Element.ALIGN_RIGHT);
-        importe.setPhrase(new Phrase(moneda(cantidad.doubleValue()), new Font(Font.HELVETICA, 10, Font.BOLD)));
-        tabla.addCell(importe);
+    private void agregarSeparador(Document documento) throws DocumentException {
+        agregarParrafo(documento, "-------------------------------------", SEPARADOR, Element.ALIGN_CENTER, 2, 2);
+    }
+
+    private String nombreCliente(Factura factura) {
+        return factura.getCliente() == null || !tieneTexto(factura.getCliente().getNombre())
+                ? "Consumidor final" : factura.getCliente().getNombre();
+    }
+
+    private boolean tieneTexto(String texto) {
+        return texto != null && !texto.isBlank();
     }
 
     private String moneda(double cantidad) {

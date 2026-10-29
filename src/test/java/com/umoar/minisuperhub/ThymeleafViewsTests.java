@@ -33,6 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -83,6 +84,8 @@ class ThymeleafViewsTests {
             mockMvc.perform(get(ruta).session(session))
                     .andExpect(status().isOk());
         }
+        mockMvc.perform(get("/detalles-factura").session(session))
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -231,6 +234,8 @@ class ThymeleafViewsTests {
                 .andExpect(status().isOk())
                 .andReturn();
         assertTrue(detalle.getResponse().getContentAsString().contains("Entregada"));
+        mockMvc.perform(get("/detalles-factura/{id}", factura.getId()).session(session))
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -315,11 +320,11 @@ class ThymeleafViewsTests {
     @Test
     void empleadoPuedeConsultarCatalogosPeroNoAdministrarNiVerFacturasAjena() throws Exception {
         MockHttpSession session = iniciarSesion(employeeUsername, employeePassword);
-        for (String ruta : List.of("/dashboard", "/categorias", "/productos", "/clientes", "/facturas", "/facturas/nuevo")) {
+        for (String ruta : List.of("/dashboard", "/categorias", "/productos", "/clientes", "/facturas", "/facturas/nuevo", "/detalles-factura")) {
             mockMvc.perform(get(ruta).session(session)).andExpect(status().isOk());
         }
         for (String ruta : List.of("/categorias/nuevo", "/productos/nuevo", "/clientes/editar/1",
-                "/detalles-factura", "/usuarios", "/reportes")) {
+                "/detalles-factura/nuevo", "/usuarios", "/reportes")) {
             mockMvc.perform(get(ruta).session(session)).andExpect(status().isForbidden());
         }
     }
@@ -350,7 +355,11 @@ class ThymeleafViewsTests {
 
         mockMvc.perform(get("/facturas/ver/{id}", propia.getId()).session(session))
                 .andExpect(status().isOk());
+        mockMvc.perform(get("/detalles-factura/{id}", propia.getId()).session(session))
+                .andExpect(status().isOk());
         mockMvc.perform(get("/facturas/ver/{id}", ajena.getId()).session(session))
+                .andExpect(status().isNotFound());
+        mockMvc.perform(get("/detalles-factura/{id}", ajena.getId()).session(session))
                 .andExpect(status().isNotFound());
         mockMvc.perform(get("/facturas/descargar/{id}", propia.getId()).session(session))
                 .andExpect(status().isOk());

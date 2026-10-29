@@ -17,7 +17,7 @@
         <div class="table-responsive"><table class="table table-hover align-middle">
             <thead><tr><th>N.º</th><th>Fecha</th><th>Cliente</th><th>Total</th><th></th></tr></thead>
             <tbody>
-            <tr th:each="factura : ${ultimasFacturas}"><td th:text="${factura.id}"></td><td th:text="${factura.fecha != null ? factura.fecha : '—'}"></td><td th:text="${factura.cliente != null ? factura.cliente.nombre : 'Consumidor final'}"></td><td th:text="|$${#numbers.formatDecimal(factura.total, 1, 2)}|"></td><td><a class="btn btn-sm btn-outline-light" th:href="@{/facturas/ver/{id}(id=${factura.id})}">Ver</a></td></tr>
+            <tr th:each="factura : ${ultimasFacturas}"><td th:text="${factura.id}"></td><td th:text="${factura.fecha != null ? factura.fecha : '—'}"></td><td th:text="${factura.cliente != null ? factura.cliente.nombre : 'Consumidor final'}"></td><td th:text="|$${#numbers.formatDecimal(factura.total, 1, 2)}|"></td><td><a class="btn btn-sm btn-outline-light" th:href="@{/detalles-factura/{id}(id=${factura.id})}">Ver</a></td></tr>
             <tr th:if="${#lists.isEmpty(ultimasFacturas)}"><td colspan="5" class="text-center text-secondary py-4">Todavía no hay facturas registradas.</td></tr>
             </tbody>
         </table></div>
