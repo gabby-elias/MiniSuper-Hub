@@ -126,6 +126,29 @@ body.app-page.details-page {
     font-weight: 750;
 }
 
+.details-page .details-invoice-id,
+.details-page .details-invoice-total {
+    color: var(--details-purple);
+    font-weight: 750;
+    font-variant-numeric: tabular-nums;
+}
+
+.details-page .details-view-button {
+    border: 1px solid var(--details-purple);
+    border-radius: .55rem;
+    background: var(--details-purple);
+    color: #fff;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.details-page .details-view-button:hover,
+.details-page .details-view-button:focus-visible {
+    border-color: #543a6e;
+    background: #543a6e;
+    color: #fff;
+}
+
 .details-page .details-table .btn-outline-light {
     --bs-btn-color: #5B2C83;
     --bs-btn-border-color: rgba(91, 44, 131, .35);

@@ -4,62 +4,183 @@
 <body class="app-page invoice-form-page">
 <nav th:replace="~{fragments/layout :: navbar('facturas')}"></nav>
 <main class="invoice-shell">
-    <form id="invoiceForm" th:action="@{/facturas/guardar}" th:object="${factura}" method="post" class="invoice-panel" data-swal-confirm data-swal-action="save" data-swal-title="¿Guardar factura?" data-swal-text="Se guardarán el cliente seleccionado (si aplica), los productos y el total calculado." data-swal-confirm-text="Sí, guardar factura">
+    <form id="invoiceForm" th:action="@{/facturas/guardar}" th:object="${factura}" method="post" class="invoice-form-layout"
+          data-swal-confirm data-swal-action="save" data-swal-title="¿Guardar factura?"
+          data-swal-text="Se guardarán el cliente seleccionado (si aplica), los productos y el total calculado."
+          data-swal-confirm-text="Sí, guardar factura">
         <input type="hidden" th:field="*{id}">
         <input type="hidden" th:field="*{fecha}">
-        <div class="d-flex align-items-start justify-content-between gap-3 mb-3">
-            <h1 class="h5 fw-semibold mb-0" th:text="${factura.id == 0 ? 'Nueva factura' : 'Editar factura'}"></h1>
-            <span class="invoice-date">Fecha: <span th:text="${factura.fecha != null ? #temporals.format(factura.fecha, 'dd/MM/yyyy') : '—'}">30/09/2026</span></span>
-        </div>
-        <div class="alert alert-danger py-2" role="alert" th:if="${error}" th:text="${error}"></div>
-        <div class="mb-3">
-            <label for="clienteId" class="form-label">Cliente <span class="text-secondary">(opcional)</span></label>
-            <select id="clienteId" name="clienteId" class="form-select">
-                <option value="" th:selected="${factura.cliente == null}">Consumidor final (sin registro)</option>
-                <option th:each="cliente : ${clientes}" th:value="${cliente.id}" th:text="${cliente.nombre}" th:selected="${factura.cliente != null and factura.cliente.id == cliente.id}"></option>
-            </select>
-            <div class="form-text">Si no eliges un cliente, la factura se emitirá a nombre de consumidor final.</div>
-        </div>
-        <div class="invoice-entry-grid mb-4">
-            <div><label for="productoSelect" class="form-label">Producto</label>
-                <select id="productoSelect" class="form-select">
-                    <option value="">Selecciona un producto</option>
-                    <option th:each="producto : ${productos}" th:value="${producto.id}" th:attr="data-name=${producto.nombre},data-price=${producto.precioVenta}" th:text="|${producto.nombre} · $${#numbers.formatDecimal(producto.precioVenta, 1, 2)}|"></option>
-                </select>
+
+        <header class="invoice-form-heading">
+            <div>
+                <span class="invoice-form-eyebrow">VENTAS · COMPROBANTE</span>
+                <h1 th:text="${factura.id == 0 ? 'Nueva factura' : 'Editar factura'}">Nueva factura</h1>
+                <p>Agrega los productos y revisa el resumen antes de guardar.</p>
             </div>
-            <div><label for="cantidadInput" class="form-label">Cantidad</label><input id="cantidadInput" class="form-control" type="number" min="1" step="1" value="1"></div>
-            <button id="agregarProducto" type="button" class="btn btn-outline-light">Agregar</button>
-        </div>
-        <div class="table-responsive">
-            <table class="table invoice-lines align-middle">
-                <thead><tr><th>Producto</th><th class="text-end">Cantidad</th><th class="text-end">Precio</th><th class="text-end">Subtotal</th><th></th></tr></thead>
-                <tbody id="invoiceLines">
-                <tr th:each="detalle : ${factura.detalles}" class="invoice-line" th:attr="data-product-id=${detalle.producto.id},data-name=${detalle.producto.nombre},data-price=${detalle.precioUnitario},data-quantity=${detalle.cantidad}">
-                    <td><span class="line-product-name" th:text="${detalle.producto.nombre}"></span><input type="hidden" name="productoIds" th:value="${detalle.producto.id}"><input type="hidden" name="cantidades" th:value="${detalle.cantidad}"></td>
-                    <td class="text-end line-quantity" th:text="${detalle.cantidad}"></td>
-                    <td class="text-end line-price" th:text="|$${#numbers.formatDecimal(detalle.precioUnitario, 1, 2)}|"></td>
-                    <td class="text-end line-subtotal" th:text="|$${#numbers.formatDecimal(detalle.subtotal, 1, 2)}|"></td>
-                    <td class="text-end"><button type="button" class="btn btn-sm btn-outline-secondary remove-line" aria-label="Quitar producto">×</button></td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="invoice-actions d-flex flex-wrap justify-content-end align-items-center gap-3">
-            <span class="text-secondary">Total</span><span id="invoiceTotal" class="invoice-total">$0.00</span>
-            <a class="btn btn-outline-light" th:href="@{/facturas}">Cancelar</a>
-            <button class="btn btn-light px-3" type="submit" th:text="${factura.id == 0 ? 'Guardar factura' : 'Guardar cambios'}">Guardar factura</button>
+            <span class="invoice-date"><strong>Fecha</strong><span th:text="${factura.fecha != null ? #temporals.format(factura.fecha, 'dd/MM/yyyy') : '—'}">30/09/2026</span></span>
+        </header>
+
+        <div class="alert alert-danger py-2" role="alert" th:if="${error}" th:text="${error}"></div>
+
+        <div class="invoice-form-grid">
+            <section class="invoice-workspace" aria-label="Productos de la factura">
+                <div class="invoice-client-field">
+                    <label for="clienteId" class="form-label">Cliente <span>(opcional)</span></label>
+                    <select id="clienteId" name="clienteId" class="form-select">
+                        <option value="" th:selected="${factura.cliente == null}">Consumidor final (sin registro)</option>
+                        <option th:each="cliente : ${clientes}" th:value="${cliente.id}" th:text="${cliente.nombre}" th:selected="${factura.cliente != null and factura.cliente.id == cliente.id}"></option>
+                    </select>
+                    <div class="form-text">Si no eliges un cliente, la factura se emitirá a nombre de consumidor final.</div>
+                </div>
+
+                <div class="invoice-entry-grid">
+                    <div class="invoice-product-field">
+                        <label for="productoSearch" class="form-label">Producto</label>
+                        <div class="invoice-product-search">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"></circle><path d="m16 16 5 5"></path></svg>
+                            <input id="productoSearch" class="form-control" type="search" autocomplete="off" placeholder="Buscar producto por nombre" aria-describedby="invoiceEntryFeedback" aria-controls="productSuggestions" aria-expanded="false" role="combobox">
+                        </div>
+                        <div id="productSuggestions" class="invoice-product-suggestions" role="listbox" aria-label="Productos encontrados" hidden></div>
+                        <select id="productosDisponibles" class="d-none" tabindex="-1" aria-hidden="true">
+                            <option th:each="producto : ${productos}" th:value="${producto.id}"
+                                    th:attr="data-name=${producto.nombre},data-price=${producto.precioVenta}"
+                                    th:text="${producto.nombre}"></option>
+                        </select>
+                    </div>
+                    <div class="invoice-quantity-field">
+                        <label for="cantidadInput" class="form-label">Cantidad</label>
+                        <div class="invoice-quantity-stepper">
+                            <button type="button" data-quantity-step="-1" aria-label="Disminuir cantidad">−</button>
+                            <input id="cantidadInput" class="form-control" type="number" min="1" step="1" value="1" inputmode="numeric" required aria-describedby="quantityFeedback">
+                            <button type="button" data-quantity-step="1" aria-label="Aumentar cantidad">+</button>
+                        </div>
+                        <div id="quantityFeedback" class="invalid-feedback">Ingresa una cantidad entera igual o mayor que 1.</div>
+                    </div>
+                    <button id="agregarProducto" type="button" class="btn btn-outline-light">Agregar</button>
+                </div>
+                <p id="invoiceEntryFeedback" class="invoice-entry-feedback" role="alert" aria-live="polite" hidden></p>
+
+                <div class="table-responsive invoice-lines-wrap">
+                    <table class="table invoice-lines align-middle">
+                        <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Cantidad</th>
+                            <th>Precio</th>
+                            <th>Subtotal</th>
+                            <th><span class="visually-hidden">Acciones</span></th>
+                        </tr>
+                        </thead>
+                        <tbody id="invoiceLines">
+                        <tr th:each="detalle : ${factura.detalles}" class="invoice-line"
+                            th:attr="data-product-id=${detalle.producto.id},data-name=${detalle.producto.nombre},data-price=${detalle.precioUnitario},data-quantity=${detalle.cantidad}">
+                            <td><span class="line-product-name" th:text="${detalle.producto.nombre}"></span><input type="hidden" name="productoIds" th:value="${detalle.producto.id}"><input type="hidden" name="cantidades" th:value="${detalle.cantidad}"></td>
+                            <td class="line-quantity" th:text="${detalle.cantidad}"></td>
+                            <td class="line-price" th:text="|$${#numbers.formatDecimal(detalle.precioUnitario, 1, 2)}|"></td>
+                            <td class="line-subtotal" th:text="|$${#numbers.formatDecimal(detalle.subtotal, 1, 2)}|"></td>
+                            <td><button type="button" class="btn btn-sm btn-outline-secondary remove-line" aria-label="Quitar producto" title="Quitar producto">×</button></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <aside class="invoice-summary-panel" aria-label="Resumen de factura">
+                <h2>Resumen</h2>
+                <div class="invoice-summary-row"><span>Artículos</span><strong id="invoiceItemCount">0</strong></div>
+                <div class="invoice-summary-row"><span>Subtotal</span><strong id="invoiceSubtotal">$0.00</strong></div>
+                <div class="invoice-total-row"><span>Total</span><strong id="invoiceTotal">$0.00</strong></div>
+                <p id="invoiceSaveHint" class="invoice-save-hint" aria-live="polite">Agrega al menos un producto para poder guardar.</p>
+                <button id="saveInvoice" class="btn btn-light invoice-save-button" type="submit"
+                        th:text="${factura.id == 0 ? 'Guardar factura' : 'Guardar cambios'}"
+                        th:disabled="${factura.detalles == null or #lists.isEmpty(factura.detalles)}">Guardar factura</button>
+                <a id="cancelInvoice" class="btn btn-outline-light invoice-cancel-button" th:href="@{/facturas}">Cancelar</a>
+            </aside>
         </div>
     </form>
 </main>
 <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
 <script>
 (() => {
-    const select = document.getElementById('productoSelect');
+    const productSearch = document.getElementById('productoSearch');
+    const products = document.getElementById('productosDisponibles');
+    const suggestions = document.getElementById('productSuggestions');
     const quantityInput = document.getElementById('cantidadInput');
     const lines = document.getElementById('invoiceLines');
+    const subtotalLabel = document.getElementById('invoiceSubtotal');
     const totalLabel = document.getElementById('invoiceTotal');
+    const itemCount = document.getElementById('invoiceItemCount');
+    const saveButton = document.getElementById('saveInvoice');
+    const saveHint = document.getElementById('invoiceSaveHint');
+    const entryFeedback = document.getElementById('invoiceEntryFeedback');
+    const quantityFeedback = document.getElementById('quantityFeedback');
     const form = document.getElementById('invoiceForm');
+    const cancelLink = document.getElementById('cancelInvoice');
     const currency = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+    let selectedProduct = null;
+
+    function closeSuggestions() {
+        suggestions.hidden = true;
+        productSearch.setAttribute('aria-expanded', 'false');
+    }
+
+    function renderSuggestions() {
+        const query = productSearch.value.trim().toLocaleLowerCase();
+        selectedProduct = null;
+        suggestions.replaceChildren();
+        if (!query) {
+            closeSuggestions();
+            return;
+        }
+
+        const matches = [...products.options]
+            .filter(product => product.dataset.name.toLocaleLowerCase().includes(query))
+            .slice(0, 8);
+        if (!matches.length) {
+            const emptyMessage = document.createElement('div');
+            emptyMessage.className = 'invoice-product-no-results';
+            emptyMessage.textContent = 'No se encontraron productos.';
+            suggestions.appendChild(emptyMessage);
+        } else {
+            matches.forEach((product, index) => {
+                const option = document.createElement('button');
+                option.type = 'button';
+                option.id = `product-suggestion-${index}`;
+                option.className = 'invoice-product-suggestion';
+                option.setAttribute('role', 'option');
+                option.setAttribute('aria-selected', 'false');
+                const name = document.createElement('span');
+                name.textContent = product.dataset.name;
+                const price = document.createElement('strong');
+                price.textContent = currency.format(Number(product.dataset.price));
+                option.append(name, price);
+                option.addEventListener('click', () => {
+                    selectedProduct = product;
+                    productSearch.value = product.dataset.name;
+                    closeSuggestions();
+                    productSearch.classList.remove('is-invalid');
+                    if (!entryFeedback.hidden) clearEntryFeedback();
+                    quantityInput.focus();
+                });
+                suggestions.appendChild(option);
+            });
+        }
+        suggestions.hidden = false;
+        productSearch.setAttribute('aria-expanded', 'true');
+    }
+
+    function showEntryFeedback(message) {
+        entryFeedback.textContent = message;
+        entryFeedback.hidden = false;
+    }
+
+    function clearEntryFeedback() {
+        entryFeedback.textContent = '';
+        entryFeedback.hidden = true;
+        productSearch.classList.remove('is-invalid');
+        quantityInput.classList.remove('is-invalid');
+        quantityFeedback.classList.remove('d-block');
+    }
 
     function renderEmptyState() {
         if (lines.querySelector('.invoice-line')) return;
@@ -67,21 +188,30 @@
         row.className = 'empty-lines';
         const cell = document.createElement('td');
         cell.colSpan = 5;
-        cell.className = 'text-center text-secondary py-3';
-        cell.textContent = 'Agrega productos para completar la factura.';
+        cell.className = 'empty-lines-cell';
+        cell.innerHTML = '<div class="invoice-empty-state"><span class="invoice-empty-icon" aria-hidden="true">🛒</span><strong>Todavía no hay productos</strong><span>Busca y agrega productos para empezar a facturar.</span></div>';
         row.appendChild(cell);
         lines.appendChild(row);
     }
 
     function updateTotal() {
+        const rows = [...lines.querySelectorAll('.invoice-line')];
         let total = 0;
-        lines.querySelectorAll('.invoice-line').forEach((row) => {
-            const subtotal = Number(row.dataset.price) * Number(row.dataset.quantity);
+        let articulos = 0;
+        rows.forEach((row) => {
+            const cantidad = Number(row.dataset.quantity);
+            const subtotal = Number(row.dataset.price) * cantidad;
             total += subtotal;
+            articulos += cantidad;
             row.querySelector('.line-subtotal').textContent = currency.format(subtotal);
         });
+        subtotalLabel.textContent = currency.format(total);
         totalLabel.textContent = currency.format(total);
-        if (lines.querySelector('.invoice-line')) lines.querySelector('.empty-lines')?.remove();
+        itemCount.textContent = `${articulos} ${articulos === 1 ? 'artículo' : 'artículos'}`;
+        saveButton.disabled = rows.length === 0;
+        saveHint.textContent = rows.length ? 'Revisa el total y guarda la factura.' : 'Agrega al menos un producto para poder guardar.';
+        saveHint.classList.toggle('invoice-save-hint--ready', rows.length > 0);
+        if (rows.length) lines.querySelector('.empty-lines')?.remove();
         else renderEmptyState();
     }
 
@@ -110,20 +240,20 @@
         productCell.appendChild(quantityInputHidden);
 
         const quantityCell = document.createElement('td');
-        quantityCell.className = 'text-end line-quantity';
+        quantityCell.className = 'line-quantity';
         quantityCell.textContent = quantity;
         const priceCell = document.createElement('td');
-        priceCell.className = 'text-end line-price';
+        priceCell.className = 'line-price';
         priceCell.textContent = currency.format(price);
         const subtotalCell = document.createElement('td');
-        subtotalCell.className = 'text-end line-subtotal';
+        subtotalCell.className = 'line-subtotal';
         subtotalCell.textContent = currency.format(price * quantity);
         const actionCell = document.createElement('td');
-        actionCell.className = 'text-end';
         const removeButton = document.createElement('button');
         removeButton.type = 'button';
         removeButton.className = 'btn btn-sm btn-outline-secondary remove-line';
         removeButton.setAttribute('aria-label', 'Quitar producto');
+        removeButton.title = 'Quitar producto';
         removeButton.textContent = '×';
         actionCell.appendChild(removeButton);
 
@@ -134,18 +264,66 @@
     }
 
     document.getElementById('agregarProducto').addEventListener('click', () => {
-        const option = select.selectedOptions[0];
-        const quantity = Number.parseInt(quantityInput.value, 10);
-        if (!option || !option.value || !Number.isInteger(quantity) || quantity < 1) return;
+        const option = selectedProduct;
+        const quantity = quantityInput.valueAsNumber;
+        clearEntryFeedback();
+        if (!option) {
+            productSearch.classList.add('is-invalid');
+            showEntryFeedback('Selecciona un producto de las sugerencias para agregarlo.');
+            productSearch.focus();
+            return;
+        }
+        if (!Number.isInteger(quantity) || quantity < 1) {
+            quantityInput.classList.add('is-invalid');
+            quantityFeedback.classList.add('d-block');
+            showEntryFeedback('La cantidad debe ser un número entero igual o mayor que 1.');
+            quantityInput.focus();
+            return;
+        }
         addLine(option.value, option.dataset.name, Number(option.dataset.price), quantity);
-        select.value = '';
+        selectedProduct = null;
+        productSearch.value = '';
         quantityInput.value = '1';
-        select.focus();
+        productSearch.focus();
+    });
+
+    productSearch.addEventListener('input', () => {
+        productSearch.classList.remove('is-invalid');
+        if (!entryFeedback.hidden) clearEntryFeedback();
+        renderSuggestions();
+    });
+    productSearch.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') closeSuggestions();
+        if (event.key === 'Enter' && !suggestions.hidden) {
+            const firstOption = suggestions.querySelector('.invoice-product-suggestion');
+            if (firstOption) {
+                event.preventDefault();
+                firstOption.click();
+            }
+        }
+    });
+    document.addEventListener('click', (event) => {
+        if (!event.target.closest('.invoice-product-field')) closeSuggestions();
+    });
+    quantityInput.addEventListener('input', () => {
+        quantityInput.classList.remove('is-invalid');
+        quantityFeedback.classList.remove('d-block');
+        if (!entryFeedback.hidden) clearEntryFeedback();
+    });
+
+    document.querySelectorAll('[data-quantity-step]').forEach((button) => {
+        button.addEventListener('click', () => {
+            let quantity = quantityInput.valueAsNumber;
+            if (!Number.isInteger(quantity) || quantity < 1) quantity = 1;
+            quantityInput.value = String(Math.max(1, quantity + Number(button.dataset.quantityStep)));
+            quantityInput.dispatchEvent(new Event('input', { bubbles: true }));
+        });
     });
 
     lines.addEventListener('click', (event) => {
-        if (event.target.closest('.remove-line')) {
-            event.target.closest('.invoice-line').remove();
+        const removeButton = event.target.closest('.remove-line');
+        if (removeButton) {
+            removeButton.closest('.invoice-line').remove();
             updateTotal();
         }
     });
@@ -153,8 +331,32 @@
     form.addEventListener('submit', (event) => {
         if (!lines.querySelector('.invoice-line')) {
             event.preventDefault();
-            window.alert('Agrega al menos un producto a la factura.');
+            saveHint.textContent = 'Agrega al menos un producto antes de guardar.';
+            saveHint.classList.add('invoice-save-hint--error');
         }
+    });
+
+    cancelLink.addEventListener('click', (event) => {
+        if (!lines.querySelector('.invoice-line')) return;
+        event.preventDefault();
+        const confirmarCancelacion = () => {
+            if (window.Swal) {
+                window.Swal.fire({
+                    title: '¿Cancelar factura?',
+                    text: 'Se perderán los productos que agregaste a esta factura.',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Sí, cancelar factura',
+                    cancelButtonText: 'Seguir editando',
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) window.location.assign(cancelLink.href);
+                });
+            } else if (window.confirm('Se perderán los productos agregados. ¿Deseas cancelar?')) {
+                window.location.assign(cancelLink.href);
+            }
+        };
+        confirmarCancelacion();
     });
 
     updateTotal();

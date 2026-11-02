@@ -7,6 +7,9 @@ import com.umoar.minisuperhub.servicios.DetalleFacturaService;
 import com.umoar.minisuperhub.servicios.FacturaService;
 import com.umoar.minisuperhub.servicios.ProductoService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -25,10 +29,41 @@ public class DetalleFacturaController {
     private final FacturaService facturaService;
     private final ProductoService productoService;
 
+    @Value("${app.minisuper.nombre:Minisúper}")
+    private String nombreMinisuper;
+
+    @Value("${app.minisuper.direccion:Dirección del minisúper}")
+    private String direccionMinisuper;
+
+    @Value("${app.minisuper.telefono:Teléfono del minisúper}")
+    private String telefonoMinisuper;
+
     @GetMapping
-    public String listar(Model model) {
-        model.addAttribute("detalles", detalleFacturaService.listar());
-        return "detalles-factura/lista";
+    public String listar(Authentication authentication, Model model) {
+        boolean admin = authentication.getAuthorities().stream()
+                .anyMatch(authority -> "ROLE_ADMIN".equals(authority.getAuthority()));
+        var facturas = admin ? facturaService.listar()
+                : facturaService.listarPorVendedor(authentication.getName());
+        model.addAttribute("facturas", facturas);
+        model.addAttribute("esAdmin", admin);
+        return "detalles-factura/lista-facturas";
+    }
+
+    @GetMapping("/{id:[0-9]+}")
+    public String verFactura(@PathVariable Long id, Authentication authentication, Model model) {
+        boolean admin = authentication.getAuthorities().stream()
+                .anyMatch(authority -> "ROLE_ADMIN".equals(authority.getAuthority()));
+        Factura factura = (admin
+                ? facturaService.buscarCompletaPorId(id)
+                : facturaService.buscarCompletaPorIdYVendedor(id, authentication.getName()))
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        model.addAttribute("factura", factura);
+        model.addAttribute("nombreMinisuper", nombreMinisuper);
+        model.addAttribute("direccionMinisuper", direccionMinisuper);
+        model.addAttribute("telefonoMinisuper", telefonoMinisuper);
+        model.addAttribute("seccionActiva", "detalles");
+        return "facturas/detalle";
     }
 
     @GetMapping("/nuevo")

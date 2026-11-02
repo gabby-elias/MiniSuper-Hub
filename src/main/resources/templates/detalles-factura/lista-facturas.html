@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Detalles de factura', 'detalles-factura-lista')}"></head>
+<body class="app-page details-page">
+<nav th:replace="~{fragments/layout :: navbar('detalles')}"></nav>
+<main class="app-main">
+    <div class="page-heading details-heading">
+        <div>
+            <span class="details-eyebrow">VENTAS · CONSULTA</span>
+            <h1>Detalles de factura</h1>
+            <p>Selecciona una factura para consultar sus productos, cantidades y totales.</p>
+        </div>
+    </div>
+
+    <section class="content-card details-table-card table-responsive" aria-label="Facturas registradas">
+        <table class="table table-hover align-middle details-table">
+            <thead>
+            <tr>
+                <th>N.º</th>
+                <th>Fecha</th>
+                <th>Cliente</th>
+                <th th:if="${esAdmin}">Vendedor</th>
+                <th>Productos</th>
+                <th>Total</th>
+                <th>Estado</th>
+                <th>Detalle</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="factura : ${facturas}">
+                <td class="details-invoice-id" th:text="${factura.id}">0</td>
+                <td th:text="${factura.fecha != null ? #temporals.format(factura.fecha, 'dd/MM/yyyy HH:mm') : '—'}">—</td>
+                <td th:text="${factura.cliente != null ? factura.cliente.nombre : 'Consumidor final'}">Consumidor final</td>
+                <td th:if="${esAdmin}" th:text="${factura.vendedor != null ? factura.vendedor.nombre : '—'}">—</td>
+                <td th:text="${factura.detalles != null ? #lists.size(factura.detalles) : 0}">0</td>
+                <td class="details-invoice-total" th:text="|$${#numbers.formatDecimal(factura.total, 1, 2)}|">$0.00</td>
+                <td>
+                    <span class="badge invoice-state-badge"
+                          th:classappend="${factura.anulada ? ' text-bg-danger' : (factura.entregada ? ' text-bg-success' : ' text-bg-warning')}"
+                          th:text="${factura.anulada ? 'Anulada' : (factura.entregada ? 'Entregada' : 'Pendiente')}">Pendiente</span>
+                </td>
+                <td>
+                    <a class="btn btn-sm details-view-button" th:href="@{/detalles-factura/{id}(id=${factura.id})}">Ver detalle</a>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(facturas)}">
+                <td th:colspan="${esAdmin ? 8 : 7}" class="details-empty text-center py-5">
+                    <span>Aún no hay facturas para consultar.</span>
+                    <small>Cuando registres una venta, podrás ver aquí sus detalles.</small>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+</main>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

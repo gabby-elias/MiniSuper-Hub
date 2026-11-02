@@ -11,6 +11,7 @@ import com.umoar.minisuperhub.servicios.FacturaService;
 import com.umoar.minisuperhub.servicios.ProductoService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
@@ -39,6 +40,15 @@ public class FacturaController {
     private final ClienteService clienteService;
     private final ProductoService productoService;
     private final UsuarioRepository usuarioRepository;
+
+    @Value("${app.minisuper.nombre:Minisúper}")
+    private String nombreMinisuper;
+
+    @Value("${app.minisuper.direccion:Dirección del minisúper}")
+    private String direccionMinisuper;
+
+    @Value("${app.minisuper.telefono:Teléfono del minisúper}")
+    private String telefonoMinisuper;
 
     @GetMapping
     public String listar(Authentication authentication, Model model) {
@@ -86,6 +96,10 @@ public class FacturaController {
     @GetMapping("/ver/{id}")
     public String ver(@PathVariable Long id, Authentication authentication, Model model) {
         model.addAttribute("factura", buscarFacturaAutorizada(id, authentication));
+        model.addAttribute("nombreMinisuper", nombreMinisuper);
+        model.addAttribute("direccionMinisuper", direccionMinisuper);
+        model.addAttribute("telefonoMinisuper", telefonoMinisuper);
+        model.addAttribute("seccionActiva", "facturas");
         return "facturas/detalle";
     }
 
