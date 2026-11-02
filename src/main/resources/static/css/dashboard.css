@@ -1,6 +1,4 @@
-<<<<<<< Updated upstream
-/* Estilos específicos de templates/dashboard/index.html. */
-=======
+
 body.app-page.dashboard-page {
     background: #F5F3F9;
 }
@@ -354,7 +352,7 @@ body.app-page.dashboard-page {
     text-align: center;
 }
 
-@media (max-width: 1100px) {
+@media (max-width: 960px) {
     .dashboard-stat-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
@@ -420,4 +418,4 @@ body.app-page.dashboard-page {
         grid-row: 1 / span 2;
     }
 }
->>>>>>> Stashed changes
+
