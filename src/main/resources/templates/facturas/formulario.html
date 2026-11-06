@@ -6,7 +6,7 @@
 <main class="invoice-shell">
     <form id="invoiceForm" th:action="@{/facturas/guardar}" th:object="${factura}" method="post" class="invoice-form-layout"
           data-swal-confirm data-swal-action="save" data-swal-title="¿Guardar factura?"
-          data-swal-text="Se guardarán el cliente seleccionado (si aplica), los productos y el total calculado."
+          data-swal-text="Se guardarán el cliente seleccionado (si aplica), los productos y el total calculado. Las existencias se descontarán automáticamente."
           data-swal-confirm-text="Sí, guardar factura">
         <input type="hidden" th:field="*{id}">
         <input type="hidden" th:field="*{fecha}">
@@ -43,7 +43,7 @@
                         <div id="productSuggestions" class="invoice-product-suggestions" role="listbox" aria-label="Productos encontrados" hidden></div>
                         <select id="productosDisponibles" class="d-none" tabindex="-1" aria-hidden="true">
                             <option th:each="producto : ${productos}" th:value="${producto.id}"
-                                    th:attr="data-name=${producto.nombre},data-price=${producto.precioVenta}"
+                                    th:attr="data-name=${producto.nombre},data-price=${producto.precioVenta},data-stock=${producto.stock}"
                                     th:text="${producto.nombre}"></option>
                         </select>
                     </div>
@@ -149,11 +149,38 @@
                 option.className = 'invoice-product-suggestion';
                 option.setAttribute('role', 'option');
                 option.setAttribute('aria-selected', 'false');
+                
                 const name = document.createElement('span');
                 name.textContent = product.dataset.name;
+                
+                const metaWrap = document.createElement('div');
+                metaWrap.className = 'd-flex align-items-center gap-2';
+                
+                const stockVal = Number(product.dataset.stock || 0);
+                const stockBadge = document.createElement('small');
+                stockBadge.style.fontSize = '0.74rem';
+                stockBadge.style.padding = '0.15rem 0.45rem';
+                stockBadge.style.borderRadius = '999px';
+                if (stockVal <= 0) {
+                    stockBadge.style.background = '#fce3e3';
+                    stockBadge.style.color = '#ab2828';
+                    stockBadge.textContent = 'Agotado (0)';
+                } else if (stockVal <= 5) {
+                    stockBadge.style.background = '#fef0d2';
+                    stockBadge.style.color = '#925c04';
+                    stockBadge.textContent = `Stock bajo (${stockVal})`;
+                } else {
+                    stockBadge.style.background = '#def4e6';
+                    stockBadge.style.color = '#13693e';
+                    stockBadge.textContent = `Stock: ${stockVal}`;
+                }
+                
                 const price = document.createElement('strong');
                 price.textContent = currency.format(Number(product.dataset.price));
-                option.append(name, price);
+                
+                metaWrap.append(stockBadge, price);
+                option.append(name, metaWrap);
+
                 option.addEventListener('click', () => {
                     selectedProduct = product;
                     productSearch.value = product.dataset.name;
@@ -280,6 +307,22 @@
             quantityInput.focus();
             return;
         }
+
+        const stock = Number(option.dataset.stock || 0);
+        if (stock <= 0) {
+            productSearch.classList.add('is-invalid');
+            showEntryFeedback(`El producto '${option.dataset.name}' está agotado (0 en existencia).`);
+            productSearch.focus();
+            return;
+        }
+        if (quantity > stock) {
+            quantityInput.classList.add('is-invalid');
+            quantityFeedback.classList.add('d-block');
+            showEntryFeedback(`Existencias insuficientes: solo hay ${stock} unidad(es) de '${option.dataset.name}'.`);
+            quantityInput.focus();
+            return;
+        }
+
         addLine(option.value, option.dataset.name, Number(option.dataset.price), quantity);
         selectedProduct = null;
         productSearch.value = '';

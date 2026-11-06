@@ -4,22 +4,142 @@
 <body class="app-page">
 <nav th:replace="~{fragments/layout :: navbar('productos')}"></nav>
 <main class="app-main">
-    <div class="mb-3"><a class="text-decoration-none" th:href="@{/productos}">← Volver a productos</a></div>
-    <section class="content-card mx-auto p-4" style="max-width:720px">
-        <h1 class="h4 fw-bold mb-4" th:text="${producto.id == 0 ? 'Nuevo producto' : 'Editar producto'}"></h1>
-        <form th:action="@{/productos/guardar}" th:object="${producto}" method="post" data-swal-confirm data-swal-action="save" data-swal-title="¿Guardar producto?" data-swal-text="Confirma para guardar los datos y existencias del producto." data-swal-confirm-text="Sí, guardar">
-            <input type="hidden" th:field="*{id}">
-            <div class="mb-3"><label for="nombre" class="form-label">Nombre del producto</label><input id="nombre" class="form-control" type="text" th:field="*{nombre}" maxlength="150" required autofocus></div>
-            <div class="mb-3"><label for="unidadMedida" class="form-label">Unidad de medida</label><input id="unidadMedida" class="form-control" type="text" th:field="*{unidadMedida}" maxlength="50" placeholder="Ej.: unidad, kg, litro"></div>
-            <div class="row g-3">
-                <div class="col-md-6"><label for="stock" class="form-label">Existencias</label><input id="stock" class="form-control" type="number" min="0" step="1" th:field="*{stock}" required></div>
-                <div class="col-md-6"><label for="precioVenta" class="form-label">Precio de venta</label><div class="input-group"><span class="input-group-text">$</span><input id="precioVenta" class="form-control" type="number" step="0.01" min="0" th:field="*{precioVenta}" required></div></div>
-            </div>
-            <div class="mb-3 mt-3"><label for="categoria" class="form-label">Categoría</label><select id="categoria" name="categoria.id" class="form-select" required><option value="">Selecciona una categoría</option><option th:each="categoria : ${categorias}" th:value="${categoria.id}" th:text="${categoria.nombreCategoria}" th:selected="${producto.categoria != null and producto.categoria.id == categoria.id}"></option></select><div class="form-text" th:if="${#lists.isEmpty(categorias)}">Primero registra una categoría.</div></div>
-            <div class="d-flex justify-content-end gap-2 mt-4"><a class="btn btn-outline-light" th:href="@{/productos}">Cancelar</a><button class="btn btn-primary" type="submit">Guardar producto</button></div>
-        </form>
-    </section>
+    <div class="product-form-wrapper">
+        <a class="product-form-back" th:href="@{/productos}">
+            <span aria-hidden="true">←</span> Volver al catálogo de productos
+        </a>
+
+        <section class="product-form-card">
+            <header class="product-form-header">
+                <span class="product-form-icon" aria-hidden="true">📦</span>
+                <div>
+                    <h1 th:text="${producto.id == 0 ? 'Registrar Nuevo Producto' : 'Editar Información del Producto'}">Producto</h1>
+                    <p th:text="${producto.id == 0 ? 'Ingresa los datos generales, categoría y existencias iniciales.' : 'Modifica los datos, precio y existencias del producto.'}">Formulario de producto.</p>
+                </div>
+            </header>
+
+            <form class="product-form-body" th:action="@{/productos/guardar}" th:object="${producto}" method="post"
+                  data-swal-confirm data-swal-action="save"
+                  data-swal-title="¿Guardar producto?"
+                  data-swal-text="Confirma para guardar los datos y existencias del producto."
+                  data-swal-confirm-text="Sí, guardar">
+                <input type="hidden" th:field="*{id}">
+
+                <!-- Sección: Información básica -->
+                <div class="product-form-section-title">
+                    <span aria-hidden="true">📋</span>
+                    <span>Información General</span>
+                </div>
+
+                <div class="mb-3">
+                    <label for="nombre" class="form-label">Nombre del producto <span class="required-star">*</span></label>
+                    <input id="nombre" class="form-control" type="text" th:field="*{nombre}" maxlength="150"
+                           placeholder="Ej.: Leche Entera 1L, Arroz Blanco..." required autofocus>
+                </div>
+
+                <div class="mb-3">
+                    <label for="categoria" class="form-label">Categoría <span class="required-star">*</span></label>
+                    <select id="categoria" name="categoria.id" class="form-select" required>
+                        <option value="">-- Selecciona una categoría --</option>
+                        <option th:each="categoria : ${categorias}"
+                                th:value="${categoria.id}"
+                                th:text="${categoria.nombreCategoria}"
+                                th:selected="${producto.categoria != null and producto.categoria.id == categoria.id}">
+                        </option>
+                    </select>
+                    <div class="form-text text-danger mt-1" th:if="${#lists.isEmpty(categorias)}">
+                        ⚠️ No hay categorías registradas. Primero debes registrar una categoría para asociar este producto.
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label for="unidadMedida" class="form-label">Unidad de medida</label>
+                    <input id="unidadMedida" class="form-control" type="text" th:field="*{unidadMedida}" maxlength="50"
+                           placeholder="Ej.: Unidad, Litro, Libra, Kilogramo...">
+                    <div class="unit-quick-picks" aria-label="Sugerencias rápidas de unidad">
+                        <span class="text-secondary small me-1 align-self-center">Sugerencias:</span>
+                        <button type="button" class="unit-tag-btn" onclick="setUnidad('Unidad')">Unidad</button>
+                        <button type="button" class="unit-tag-btn" onclick="setUnidad('Libra')">Libra</button>
+                        <button type="button" class="unit-tag-btn" onclick="setUnidad('Kilogramo')">Kilogramo</button>
+                        <button type="button" class="unit-tag-btn" onclick="setUnidad('Litro')">Litro</button>
+                        <button type="button" class="unit-tag-btn" onclick="setUnidad('Bolsa')">Bolsa</button>
+                        <button type="button" class="unit-tag-btn" onclick="setUnidad('Caja')">Caja</button>
+                        <button type="button" class="unit-tag-btn" onclick="setUnidad('Lata')">Lata</button>
+                    </div>
+                </div>
+
+                <!-- Sección: Inventario y Precios -->
+                <div class="product-form-section-title">
+                    <span aria-hidden="true">🏷️</span>
+                    <span>Inventario y Precios</span>
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label for="stock" class="form-label">Existencias (Stock) <span class="required-star">*</span></label>
+                        <input id="stock" class="form-control" type="number" min="0" step="1" th:field="*{stock}" required>
+                        <div class="form-text">Cantidad actual disponible en mostrador o bodega.</div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="precioVenta" class="form-label">Precio de venta <span class="required-star">*</span></label>
+                        <div class="input-group">
+                            <span class="input-group-text fw-bold">$</span>
+                            <input id="precioVenta" class="form-control fw-semibold" type="number" step="0.01" min="0" th:field="*{precioVenta}" placeholder="0.00" required>
+                        </div>
+                        <div class="form-text">Precio unitario que se cobrará en caja.</div>
+                    </div>
+                </div>
+
+                <div class="product-live-feedback">
+                    <span>Estado según existencias:</span>
+                    <span id="stockStatusBadge" class="stock-badge stock-available">Disponible</span>
+                </div>
+
+                <!-- Botones de acción -->
+                <div class="product-form-actions">
+                    <a class="btn btn-outline-secondary" th:href="@{/productos}">Cancelar</a>
+                    <button class="btn btn-submit-product" type="submit">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                        Guardar producto
+                    </button>
+                </div>
+            </form>
+        </section>
+    </div>
 </main>
 <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+<script>
+    function setUnidad(val) {
+        const input = document.getElementById('unidadMedida');
+        if (input) {
+            input.value = val;
+            input.focus();
+        }
+    }
+
+    (() => {
+        const stockInput = document.getElementById('stock');
+        const badge = document.getElementById('stockStatusBadge');
+
+        function updateStockBadge() {
+            if (!stockInput || !badge) return;
+            const val = parseInt(stockInput.value, 10);
+            badge.className = 'stock-badge';
+            if (isNaN(val) || val <= 0) {
+                badge.classList.add('stock-empty');
+                badge.textContent = 'Agotado (0)';
+            } else if (val <= 5) {
+                badge.classList.add('stock-low');
+                badge.textContent = `Stock bajo (${val})`;
+            } else {
+                badge.classList.add('stock-available');
+                badge.textContent = `Disponible (${val})`;
+            }
+        }
+
+        stockInput?.addEventListener('input', updateStockBadge);
+        updateStockBadge();
+    })();
+</script>
 </body>
 </html>

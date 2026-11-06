@@ -1,48 +1,187 @@
 <!doctype html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/layout :: head('Reportes', 'reportes')}"></head>
+<head th:replace="~{fragments/layout :: head('Reportes y Cuadre de Caja', 'reportes')}"></head>
 <body class="app-page report-page">
 <nav th:replace="~{fragments/layout :: navbar('reportes')}"></nav>
 <main class="app-main reports-dashboard">
     <header class="report-heading page-heading">
         <div>
-            <span class="report-eyebrow">MINISÚPER · ANÁLISIS</span>
-            <h1>Reportes</h1>
-            <p>Consulta y analiza la información de tu negocio.</p>
+            <span class="report-eyebrow">MINISÚPER · ANÁLISIS & CUADRE</span>
+            <h1>Reportes y Cuadre de Caja</h1>
+            <p>Monitorea las ventas diarias, arqueo de caja y productos de mayor demanda.</p>
         </div>
-        <div class="report-heading-mark" aria-hidden="true">R</div>
+        <div class="report-heading-mark" aria-hidden="true">📊</div>
     </header>
 
-    <section class="report-total content-card" aria-label="Total de ventas vigentes">
-        <div class="report-total-copy">
-            <span class="report-label">TOTAL DE VENTAS VIGENTES</span>
-            <h2 th:text="|$${#numbers.formatDecimal(totalVentas, 1, 2)}|">$0.00</h2>
-            <p>Ingresos registrados en facturas no anuladas</p>
-        </div>
-        <div class="report-total-icon" aria-hidden="true">$</div>
+    <!-- Barra de Filtros por Período y Exportación -->
+    <section class="report-filter-bar content-card p-3 mb-4">
+        <form th:action="@{/reportes}" method="get" class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+            <div class="d-flex flex-wrap align-items-center gap-2">
+                <span class="fw-semibold text-secondary small me-1">Período:</span>
+                <div class="btn-group btn-group-sm" role="group" aria-label="Selector de período">
+                    <a th:href="@{/reportes(periodo='hoy')}"
+                       class="btn btn-outline-primary"
+                       th:classappend="${periodo == 'hoy' ? 'active' : ''}">Hoy (Cierre)</a>
+                    <a th:href="@{/reportes(periodo='7dias')}"
+                       class="btn btn-outline-primary"
+                       th:classappend="${periodo == '7dias' ? 'active' : ''}">Últimos 7 días</a>
+                    <a th:href="@{/reportes(periodo='mes')}"
+                       class="btn btn-outline-primary"
+                       th:classappend="${periodo == 'mes' ? 'active' : ''}">Este mes</a>
+                </div>
+            </div>
+
+            <!-- Filtro personalizado -->
+            <div class="d-flex flex-wrap align-items-center gap-2">
+                <input type="hidden" name="periodo" value="personalizado">
+                <div class="d-flex align-items-center gap-1">
+                    <label for="fechaInicio" class="small text-secondary">Desde:</label>
+                    <input id="fechaInicio" name="fechaInicio" type="date" class="form-control form-control-sm"
+                           th:value="${fechaInicio}">
+                </div>
+                <div class="d-flex align-items-center gap-1">
+                    <label for="fechaFin" class="small text-secondary">Hasta:</label>
+                    <input id="fechaFin" name="fechaFin" type="date" class="form-control form-control-sm"
+                           th:value="${fechaFin}">
+                </div>
+                <button type="submit" class="btn btn-sm btn-primary">Filtrar</button>
+
+                <a th:href="@{/reportes/excel(periodo=${periodo}, fechaInicio=${fechaInicio}, fechaFin=${fechaFin})}"
+                   class="btn btn-sm btn-success d-inline-flex align-items-center gap-1"
+                   title="Exportar reporte detallado a formato Excel">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    Exportar Excel
+                </a>
+            </div>
+        </form>
     </section>
 
-    <section class="report-metrics-section" aria-label="Resumen general">
+    <!-- Indicador Principal del Período -->
+    <section class="report-total content-card mb-4" aria-label="Total de ventas del período">
+        <div class="report-total-copy">
+            <span class="report-label" th:text="|VENTAS EN EL PERÍODO (${#temporals.format(fechaInicio, 'dd/MM/yyyy')} — ${#temporals.format(fechaFin, 'dd/MM/yyyy')})|">VENTAS DEL PERÍODO</span>
+            <h2 th:text="|$${#numbers.formatDecimal(totalVentasPeriodo, 1, 2)}|">$0.00</h2>
+            <p>Ingresos netos correspondientes a operaciones vigentes registradas en caja.</p>
+        </div>
+        <div class="report-total-icon" aria-hidden="true">💵</div>
+    </section>
+
+    <!-- Métricas del Cuadre de Caja -->
+    <section class="row g-3 mb-4" aria-label="Métricas del cuadre de caja">
+        <div class="col-12 col-md-4">
+            <article class="report-stat report-stat--gold">
+                <span class="report-stat-icon" aria-hidden="true">💳</span>
+                <span class="report-stat-label">Ticket promedio</span>
+                <strong class="report-stat-value" th:text="|$${#numbers.formatDecimal(ticketPromedio, 1, 2)}|">$0.00</strong>
+                <span class="report-stat-note">Promedio de gasto por venta</span>
+            </article>
+        </div>
+        <div class="col-6 col-md-4">
+            <article class="report-stat report-stat--lavender">
+                <span class="report-stat-icon" aria-hidden="true">✅</span>
+                <span class="report-stat-label">Facturas vigentes</span>
+                <strong class="report-stat-value" th:text="${cantidadFacturasPeriodo}">0</strong>
+                <span class="report-stat-note">Ventas concretadas</span>
+            </article>
+        </div>
+        <div class="col-6 col-md-4">
+            <article class="report-stat report-stat--lavender">
+                <span class="report-stat-icon" aria-hidden="true">❌</span>
+                <span class="report-stat-label">Facturas anuladas</span>
+                <strong class="report-stat-value" th:text="${cantidadAnuladasPeriodo}">0</strong>
+                <span class="report-stat-note">Canceladas en el período</span>
+            </article>
+        </div>
+    </section>
+
+    <!-- Tablas: Top Productos y Ventas por Vendedor -->
+    <div class="row g-4 mb-4">
+        <!-- Top Productos -->
+        <div class="col-12 col-lg-7">
+            <section class="content-card h-100 p-3">
+                <div class="d-flex align-items-center justify-content-between mb-3 border-bottom pb-2">
+                    <div>
+                        <h2 class="h5 fw-bold mb-0 text-dark">Top 5 Productos Más Vendidos</h2>
+                        <small class="text-secondary">Artículos de mayor demanda en el período</small>
+                    </div>
+                    <span class="badge bg-primary-subtle text-primary border">Rotación</span>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead>
+                        <tr>
+                            <th style="width: 40px;">#</th>
+                            <th>Producto</th>
+                            <th class="text-center">Unidades</th>
+                            <th class="text-end">Recaudado</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="prod, iter : ${topProductos}">
+                            <td><span class="badge bg-light text-dark border" th:text="${iter.count}">1</span></td>
+                            <td><strong th:text="${prod.nombre}">Producto</strong></td>
+                            <td class="text-center"><span class="badge bg-success-subtle text-success fw-bold" th:text="|${prod.cantidad} uds|">0 uds</span></td>
+                            <td class="text-end fw-bold text-success" th:text="|$${#numbers.formatDecimal(prod.totalRecaudado, 1, 2)}|">$0.00</td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(topProductos)}">
+                            <td colspan="4" class="text-center text-secondary py-4">No se registraron ventas de productos en este período.</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+
+        <!-- Rendimiento por Vendedor / Cajero -->
+        <div class="col-12 col-lg-5">
+            <section class="content-card h-100 p-3">
+                <div class="d-flex align-items-center justify-content-between mb-3 border-bottom pb-2">
+                    <div>
+                        <h2 class="h5 fw-bold mb-0 text-dark">Ventas por Cajero / Vendedor</h2>
+                        <small class="text-secondary">Arqueo individual por usuario</small>
+                    </div>
+                    <span class="badge bg-info-subtle text-info border">Cajas</span>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead>
+                        <tr>
+                            <th>Vendedor</th>
+                            <th class="text-center">Ventas</th>
+                            <th class="text-end">Total</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="v : ${ventasPorVendedor}">
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="badge bg-primary text-white rounded-circle p-1" style="width:24px;height:24px;display:inline-grid;place-items:center;">👤</span>
+                                    <strong th:text="${v.nombre}">Vendedor</strong>
+                                </div>
+                            </td>
+                            <td class="text-center" th:text="${v.cantidadFacturas}">0</td>
+                            <td class="text-end fw-bold text-dark" th:text="|$${#numbers.formatDecimal(v.totalVendido, 1, 2)}|">$0.00</td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(ventasPorVendedor)}">
+                            <td colspan="3" class="text-center text-secondary py-4">Sin actividad de cajeros en el rango.</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Resumen Histórico Global del Catálogo -->
+    <section class="report-metrics-section" aria-label="Resumen histórico general">
         <div class="report-section-heading">
             <div>
-                <h2>Resumen general</h2>
-                <p>Conteo actual de registros</p>
+                <h2>Inventario y Catálogo Histórico</h2>
+                <p>Estadísticas acumuladas del sistema</p>
             </div>
-            <span>Actividad del negocio</span>
+            <span>Base de datos general</span>
         </div>
         <div class="report-metrics-grid">
-            <article class="report-stat report-stat--gold">
-                <span class="report-stat-icon" aria-hidden="true">▤</span>
-                <span class="report-stat-label">Facturas vigentes</span>
-                <strong class="report-stat-value" th:text="${cantidadFacturas}">0</strong>
-                <span class="report-stat-note">Ventas activas</span>
-            </article>
-            <article class="report-stat report-stat--lavender">
-                <span class="report-stat-icon" aria-hidden="true">↗</span>
-                <span class="report-stat-label">Facturas anuladas</span>
-                <strong class="report-stat-value" th:text="${cantidadAnuladas}">0</strong>
-                <span class="report-stat-note">Operaciones anuladas</span>
-            </article>
             <article class="report-stat report-stat--gold">
                 <span class="report-stat-icon" aria-hidden="true">▦</span>
                 <span class="report-stat-label">Productos</span>
@@ -53,13 +192,19 @@
                 <span class="report-stat-icon" aria-hidden="true">◇</span>
                 <span class="report-stat-label">Categorías</span>
                 <strong class="report-stat-value" th:text="${cantidadCategorias}">0</strong>
-                <span class="report-stat-note">Para organizar productos</span>
+                <span class="report-stat-note">Para clasificar</span>
             </article>
             <article class="report-stat report-stat--gold">
                 <span class="report-stat-icon" aria-hidden="true">◎</span>
                 <span class="report-stat-label">Clientes</span>
                 <strong class="report-stat-value" th:text="${cantidadClientes}">0</strong>
-                <span class="report-stat-note">Registrados en el sistema</span>
+                <span class="report-stat-note">Registrados</span>
+            </article>
+            <article class="report-stat report-stat--lavender">
+                <span class="report-stat-icon" aria-hidden="true">▤</span>
+                <span class="report-stat-label">Total histórico</span>
+                <strong class="report-stat-value" th:text="|$${#numbers.formatDecimal(totalVentas, 1, 2)}|">$0.00</strong>
+                <span class="report-stat-note">Recaudación acumulada</span>
             </article>
         </div>
     </section>
