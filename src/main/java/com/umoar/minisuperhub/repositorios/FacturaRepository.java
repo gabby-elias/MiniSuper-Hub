@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,6 +16,8 @@ public interface FacturaRepository extends JpaRepository<Factura, Long> {
     List<Factura> findByVendedorUsernameOrderByIdDesc(String username);
 
     Optional<Factura> findByIdAndVendedorUsername(Long id, String username);
+
+    List<Factura> findByFechaBetweenOrderByIdDesc(LocalDateTime inicio, LocalDateTime fin);
 
     @Query("select distinct f from Factura f " +
             "left join fetch f.cliente " +
@@ -32,4 +35,14 @@ public interface FacturaRepository extends JpaRepository<Factura, Long> {
             "where f.id = :id and f.vendedor.username = :username")
     Optional<Factura> buscarCompletaPorIdYVendedor(@Param("id") Long id,
                                                     @Param("username") String username);
+
+    @Query("select distinct f from Factura f " +
+            "left join fetch f.cliente " +
+            "left join fetch f.vendedor " +
+            "left join fetch f.detalles d " +
+            "left join fetch d.producto " +
+            "where f.fecha between :inicio and :fin " +
+            "order by f.id desc")
+    List<Factura> buscarCompletasPorFechaBetween(@Param("inicio") LocalDateTime inicio,
+                                                @Param("fin") LocalDateTime fin);
 }

@@ -4,55 +4,171 @@
 <body class="app-page">
 <nav th:replace="~{fragments/layout :: navbar('productos')}"></nav>
 <main class="app-main">
-    <section class="row g-3 mb-3" aria-label="Resumen de productos">
-        <div class="col-12 col-md-4">
-            <div class="card stat-card h-100"><div class="card-body">
-                <div class="text-secondary mb-1" th:text="${esAdmin ? 'Ventas de hoy' : 'Mis ventas de hoy'}">Ventas de hoy</div>
-                <div class="h2 mb-0 stat-value-green" th:text="|$${#numbers.formatDecimal(ventasHoy, 1, 2)}|">$0.00</div>
-            </div></div>
+    <header class="product-list-heading">
+        <div class="product-list-title">
+            <span class="product-title-icon" aria-hidden="true">📦</span>
+            <div>
+                <h1>Catálogo de Productos</h1>
+                <p th:text="${esAdmin ? 'Gestiona el inventario, existencias y precios de venta.' : 'Consulta los productos disponibles y sus precios.'}">Catálogo de productos.</p>
+            </div>
         </div>
-        <div class="col-6 col-md-4">
-            <div class="card stat-card h-100"><div class="card-body">
-                <div class="text-secondary mb-1">Productos</div>
-                <div class="h2 mb-0" th:text="${cantidadProductos}">0</div>
-            </div></div>
+        <a th:if="${esAdmin}" class="btn product-new-button" th:href="@{/productos/nuevo}">
+            <span aria-hidden="true">＋</span> Nuevo producto
+        </a>
+    </header>
+
+    <section class="row g-3 product-stat-grid" aria-label="Resumen de inventario">
+        <div class="col-6 col-xl-4">
+            <article class="product-stat-card product-stat-card--blue">
+                <span class="product-stat-icon" aria-hidden="true">📦</span>
+                <div>
+                    <span>Total productos</span>
+                    <strong th:text="${cantidadProductos}">0</strong>
+                </div>
+            </article>
         </div>
-        <div class="col-6 col-md-4">
-            <div class="card stat-card h-100"><div class="card-body">
-                <div class="text-secondary mb-1">Stock bajo</div>
-                <div class="h2 mb-0 stat-value-warning" th:text="${cantidadStockBajo}">0</div>
-            </div></div>
+        <div class="col-6 col-xl-4">
+            <article class="product-stat-card product-stat-card--green">
+                <span class="product-stat-icon" aria-hidden="true">$</span>
+                <div>
+                    <span th:text="${esAdmin ? 'Ventas del día' : 'Mis ventas de hoy'}">Ventas del día</span>
+                    <strong th:text="|$${#numbers.formatDecimal(ventasHoy, 1, 2)}|">$0.00</strong>
+                </div>
+            </article>
+        </div>
+        <div class="col-12 col-xl-4">
+            <article class="product-stat-card product-stat-card--amber">
+                <span class="product-stat-icon" aria-hidden="true">⚠️</span>
+                <div>
+                    <span>Artículos con stock bajo (&le; 5)</span>
+                    <strong th:text="${cantidadStockBajo}">0</strong>
+                </div>
+            </article>
         </div>
     </section>
-    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 page-heading">
-        <div><h1>Productos</h1><p th:text="${esAdmin ? 'Administra el catálogo, las existencias y los precios.' : 'Consulta los productos y sus precios.'}">Productos</p></div>
-        <a th:if="${esAdmin}" class="btn btn-primary" th:href="@{/productos/nuevo}">＋ Nuevo producto</a>
-    </div>
-    <section class="content-card table-responsive">
-        <table class="table table-hover align-middle">
-            <thead><tr><th>Producto</th><th>Categoría</th><th>Precio</th><th>Estado</th><th th:if="${esAdmin}" class="text-end">Acciones</th></tr></thead>
-            <tbody>
-            <tr th:each="producto : ${productos}">
-                <td th:text="${producto.nombre}"></td>
-                <td th:text="${producto.categoria != null ? producto.categoria.nombreCategoria : '—'}"></td>
-                <td th:text="|$${#numbers.formatDecimal(producto.precioVenta, 1, 2)}|"></td>
-                <td>
-                    <span class="stock-badge" th:classappend="${producto.stock == 0 ? ' stock-empty' : (producto.stock <= 5 ? ' stock-low' : ' stock-available')}"
-                          th:title="|Existencias: ${producto.stock}|"
-                          th:text="${producto.stock == 0 ? 'Agotado' : (producto.stock <= 5 ? 'Stock bajo' : 'Disponible')}">Disponible</span>
-                </td>
-                <td th:if="${esAdmin}" class="text-end text-nowrap">
-                    <a class="btn btn-sm btn-outline-light" th:href="@{/productos/editar/{id}(id=${producto.id})}">Editar</a>
-                    <form class="d-inline" th:action="@{/productos/eliminar/{id}(id=${producto.id})}" method="post" data-swal-confirm data-swal-action="delete" data-swal-title="¿Eliminar producto?" data-swal-text="Los detalles de factura podrían impedir su eliminación.">
-                        <button class="btn btn-sm btn-outline-danger" type="submit">Eliminar</button>
-                    </form>
-                </td>
-            </tr>
-            <tr th:if="${#lists.isEmpty(productos)}"><td th:colspan="${esAdmin ? 5 : 4}" class="text-center text-secondary py-5">No hay productos registrados.</td></tr>
-            </tbody>
-        </table>
+
+    <section class="product-table-card">
+        <div class="product-toolbar">
+            <label class="product-filter-search">
+                <span aria-hidden="true">⌕</span>
+                <input type="search" placeholder="Buscar por producto o categoría..." aria-label="Buscar productos" data-table-search>
+                <kbd>Ctrl K</kbd>
+            </label>
+            <label class="product-status-filter">
+                <span>Existencias:</span>
+                <select aria-label="Filtrar por nivel de stock" data-product-stock-filter>
+                    <option value="">Todos los niveles</option>
+                    <option value="disponible">Disponibles</option>
+                    <option value="bajo">Stock bajo (&le; 5)</option>
+                    <option value="agotado">Agotados (0)</option>
+                </select>
+            </label>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table product-list-table align-middle">
+                <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Categoría</th>
+                    <th>Precio de Venta</th>
+                    <th>Existencias</th>
+                    <th>Estado</th>
+                    <th th:if="${esAdmin}" class="text-end">Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="producto : ${productos}"
+                    data-product-row
+                    data-search-row
+                    th:attr="data-stock-status=${producto.stock == 0 ? 'agotado' : (producto.stock <= 5 ? 'bajo' : 'disponible')}">
+                    <td>
+                        <div class="product-name-cell">
+                            <span class="product-avatar-icon" th:text="${#strings.substring(producto.nombre, 0, 1)}">P</span>
+                            <div class="product-name-info">
+                                <strong th:text="${producto.nombre}">Nombre</strong>
+                                <span class="product-unit-pill" th:if="${producto.unidadMedida != null and !#strings.isEmpty(producto.unidadMedida)}" th:text="${producto.unidadMedida}">unidad</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="product-category-tag">
+                            <span aria-hidden="true">🏷️</span>
+                            <span th:text="${producto.categoria != null ? producto.categoria.nombreCategoria : 'Sin categoría'}">Categoría</span>
+                        </span>
+                    </td>
+                    <td>
+                        <span class="product-price-val" th:text="|$${#numbers.formatDecimal(producto.precioVenta, 1, 2)}|">$0.00</span>
+                    </td>
+                    <td>
+                        <span class="product-stock-count" th:text="${producto.stock}">0</span>
+                    </td>
+                    <td>
+                        <span class="stock-badge"
+                              th:classappend="${producto.stock == 0 ? ' stock-empty' : (producto.stock <= 5 ? ' stock-low' : ' stock-available')}"
+                              th:title="|Existencias: ${producto.stock}|"
+                              th:text="${producto.stock == 0 ? 'Agotado' : (producto.stock <= 5 ? 'Stock bajo' : 'Disponible')}">Disponible</span>
+                    </td>
+                    <td th:if="${esAdmin}">
+                        <div class="product-row-actions">
+                            <a class="product-action-button" th:href="@{/productos/editar/{id}(id=${producto.id})}" aria-label="Editar producto" title="Editar producto">
+                                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 5 4 4M4 20l4-.8L19.2 8a2.1 2.1 0 0 0-3-3L5 16.2 4 20Z"/></svg>
+                            </a>
+                            <form th:action="@{/productos/eliminar/{id}(id=${producto.id})}" method="post" class="d-inline"
+                                  data-swal-confirm data-swal-action="delete"
+                                  data-swal-title="¿Eliminar producto?"
+                                  data-swal-text="Si el producto tiene detalles de factura registrados, no podrá ser eliminado.">
+                                <button class="product-action-button product-action-button--delete" type="submit" aria-label="Eliminar producto" title="Eliminar producto">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M10 11v6m4-6v6M6 7l1 14h10l1-14M9 7V4h6v3"/></svg>
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(productos)}" class="product-empty-row">
+                    <td th:colspan="${esAdmin ? 6 : 5}" class="text-center">No hay productos registrados en el catálogo.</td>
+                </tr>
+                <tr data-product-no-results hidden class="product-empty-row">
+                    <td th:colspan="${esAdmin ? 6 : 5}" class="text-center">No se encontraron productos que coincidan con la búsqueda o filtro.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <footer class="product-table-footer">
+            <span id="productResultCount" th:text="|Mostrando ${#lists.size(productos)} productos|">Mostrando productos</span>
+        </footer>
     </section>
 </main>
 <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+<script>
+    (() => {
+        const searchInput = document.querySelector('[data-table-search]');
+        const stockFilter = document.querySelector('[data-product-stock-filter]');
+        const rows = [...document.querySelectorAll('[data-product-row]')];
+        const noResults = document.querySelector('[data-product-no-results]');
+        const counter = document.getElementById('productResultCount');
+        const total = rows.length;
+
+        function applyFilters() {
+            const query = (searchInput?.value || '').trim().toLowerCase();
+            const stock = stockFilter?.value || '';
+            let visible = 0;
+
+            rows.forEach(row => {
+                const textMatches = !query || row.textContent.toLowerCase().includes(query);
+                const stockMatches = !stock || row.getAttribute('data-stock-status') === stock;
+                const show = textMatches && stockMatches;
+                row.hidden = !show;
+                if (show) visible++;
+            });
+
+            if (noResults) noResults.hidden = (visible > 0 || total === 0);
+            if (counter) counter.textContent = `Mostrando ${visible} de ${total} productos`;
+        }
+
+        searchInput?.addEventListener('input', applyFilters);
+        stockFilter?.addEventListener('change', applyFilters);
+    })();
+</script>
 </body>
 </html>

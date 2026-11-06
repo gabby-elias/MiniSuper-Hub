@@ -12,7 +12,6 @@ import com.umoar.minisuperhub.servicios.ProductoService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -23,7 +22,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
@@ -47,7 +45,7 @@ public class FacturaController {
     @Value("${app.minisuper.direccion:Dirección del minisúper}")
     private String direccionMinisuper;
 
-    @Value("${app.minisuper.telefono:Teléfono del minisúper}")
+    @Value("${app.minisuper.telefono:0000-0000}")
     private String telefonoMinisuper;
 
     @GetMapping
@@ -56,7 +54,6 @@ public class FacturaController {
         var facturas = admin ? facturaService.listar()
                 : facturaService.listarPorVendedor(authentication.getName());
         LocalDate hoy = LocalDate.now(ZoneId.of("America/El_Salvador"));
-
         model.addAttribute("facturas", facturas);
         model.addAttribute("totalFacturas", facturas.size());
         model.addAttribute("ventasHoy", facturas.stream()
@@ -75,7 +72,6 @@ public class FacturaController {
     public String nuevo(Model model) {
         Factura factura = new Factura();
         factura.setFecha(java.time.LocalDateTime.now());
-
         factura.setDetalles(new ArrayList<>());
         model.addAttribute("factura", factura);
         cargarClientes(model);
@@ -156,7 +152,13 @@ public class FacturaController {
         factura.setTotal(total);
         Usuario vendedor = usuarioRepository.findByUsername(authentication.getName())
                 .orElseThrow(() -> new EntityNotFoundException("No se encontró el usuario autenticado."));
-        facturaService.guardarConDetalles(factura, detalles, vendedor);
+
+        try {
+            facturaService.guardarConDetalles(factura, detalles, vendedor);
+        } catch (IllegalStateException ex) {
+            return volverAlFormulario(factura, redirectAttributes, ex.getMessage());
+        }
+
         redirectAttributes.addFlashAttribute("alertType", "success");
         redirectAttributes.addFlashAttribute("alertMessage", nueva
                 ? "Factura guardada correctamente."
@@ -183,33 +185,19 @@ public class FacturaController {
     @PostMapping("/anular/{id}")
     public String anular(@PathVariable Long id, Authentication authentication,
                          RedirectAttributes redirectAttributes) {
-        buscarFacturaAutorizada(id, authentication);
-        facturaService.anular(id);
+        Factura factura = buscarFacturaAutorizada(id, authentication);
+        facturaService.anular(factura.getId());
         redirectAttributes.addFlashAttribute("alertType", "success");
-        redirectAttributes.addFlashAttribute("alertMessage", "Factura anulada correctamente.");
+        redirectAttributes.addFlashAttribute("alertMessage", "Factura anulada y existencias reintegradas al inventario.");
         return "redirect:/facturas";
     }
 
     @PostMapping("/eliminar/{id}")
-    public String eliminar(@PathVariable Long id, Authentication authentication,
-                           RedirectAttributes redirectAttributes) {
-        buscarFacturaAutorizada(id, authentication);
+    public String eliminar(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         facturaService.eliminar(id);
         redirectAttributes.addFlashAttribute("alertType", "success");
         redirectAttributes.addFlashAttribute("alertMessage", "Factura eliminada correctamente.");
         return "redirect:/facturas";
-    }
-
-    private Factura buscarFacturaAutorizada(Long id, Authentication authentication) {
-        return (esAdmin(authentication)
-                ? facturaService.buscarPorId(id)
-                : facturaService.buscarPorIdYVendedor(id, authentication.getName()))
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-    }
-
-    private boolean esAdmin(Authentication authentication) {
-        return authentication.getAuthorities().stream()
-                .anyMatch(authority -> "ROLE_ADMIN".equals(authority.getAuthority()));
     }
 
     private void cargarClientes(Model model) {
@@ -217,14 +205,26 @@ public class FacturaController {
         model.addAttribute("productos", productoService.listar());
     }
 
-    private String volverAlFormulario(Factura factura,
-                                      RedirectAttributes redirectAttributes,
-                                      String mensaje) {
+    private Factura buscarFacturaAutorizada(Long id, Authentication authentication) {
+        boolean admin = esAdmin(authentication);
+        return (admin
+                ? facturaService.buscarPorId(id)
+                : facturaService.buscarPorIdYVendedor(id, authentication.getName()))
+                .orElseThrow(() -> new EntityNotFoundException("Factura no encontrada: " + id));
+    }
+
+    private boolean esAdmin(Authentication authentication) {
+        return authentication.getAuthorities().stream()
+                .anyMatch(authority -> "ROLE_ADMIN".equals(authority.getAuthority()));
+    }
+
+    private String volverAlFormulario(Factura factura, RedirectAttributes redirectAttributes, String mensajeError) {
+        redirectAttributes.addFlashAttribute("error", mensajeError);
         redirectAttributes.addFlashAttribute("alertType", "error");
-        redirectAttributes.addFlashAttribute("alertMessage", mensaje);
-        if (factura.getId() == 0) {
-            return "redirect:/facturas/nuevo";
+        redirectAttributes.addFlashAttribute("alertMessage", mensajeError);
+        if (factura.getId() != 0) {
+            return "redirect:/facturas/editar/" + factura.getId();
         }
-        return "redirect:/facturas/editar/" + factura.getId();
+        return "redirect:/facturas/nuevo";
     }
 }

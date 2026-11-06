@@ -1,1 +1,136 @@
-/* Estilos específicos de templates/categorias/formulario.html. */
+body.app-page > main.app-main {
+    width: calc(100% - var(--sidebar-width));
+    margin: var(--topbar-height) 0 0 var(--sidebar-width);
+    padding: 1.45rem clamp(1.25rem, 2.3vw, 2.5rem) 2.5rem;
+}
+
+@media (max-width: 720px) {
+    body.app-page > main.app-main {
+        width: 100%;
+        margin-left: 0;
+        padding: 1rem 0.85rem 2rem;
+    }
+}
+
+.category-form-wrapper {
+    max-width: 680px;
+    margin: 0 auto;
+}
+
+.category-form-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-bottom: 1.15rem;
+    padding: 0.35rem 0.75rem;
+    border-radius: 0.5rem;
+    color: #198754 !important;
+    background: #edf6f1;
+    font-size: 0.84rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.15s ease;
+}
+
+.category-form-back:hover {
+    background: #e0f0e7;
+    color: #146c43 !important;
+    transform: translateX(-2px);
+}
+
+.category-form-card {
+    border: 1px solid #dce8e0;
+    border-radius: 0.95rem;
+    background: #ffffff;
+    box-shadow: 0 0.4rem 1.4rem rgba(28, 77, 51, 0.05);
+    overflow: hidden;
+}
+
+.category-form-header {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    padding: 1.35rem 1.6rem;
+    border-bottom: 1px solid #edf4f0;
+    background: linear-gradient(180deg, #fafcfb, #ffffff);
+}
+
+.category-form-icon {
+    display: grid;
+    width: 3.1rem;
+    height: 3.1rem;
+    flex: 0 0 3.1rem;
+    place-items: center;
+    border: 1px solid #ccebe1;
+    border-radius: 0.85rem;
+    background: #eef7f3;
+    color: #12815f;
+    font-size: 1.55rem;
+}
+
+.category-form-header h1 {
+    margin: 0;
+    color: #173b2c;
+    font-size: 1.45rem;
+    font-weight: 760;
+    letter-spacing: -0.025em;
+}
+
+.category-form-header p {
+    margin: 0.2rem 0 0;
+    color: #6a8274;
+    font-size: 0.84rem;
+}
+
+.category-form-body {
+    padding: 1.6rem;
+}
+
+.category-tips-banner {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.9rem 1.1rem;
+    margin-top: 1.25rem;
+    border: 1px solid #d5e8dd;
+    border-radius: 0.75rem;
+    background: #f4f9f6;
+    color: #215137;
+    font-size: 0.84rem;
+}
+
+.category-tips-banner span {
+    font-size: 1.25rem;
+    line-height: 1;
+}
+
+.category-form-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: 1.75rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid #edf4f0;
+}
+
+.btn-submit-category {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.65rem 1.4rem;
+    border: none;
+    border-radius: 0.6rem;
+    background: #198754;
+    color: #ffffff;
+    font-size: 0.88rem;
+    font-weight: 650;
+    box-shadow: 0 0.3rem 0.75rem rgba(25, 135, 84, 0.2);
+    transition: all 0.15s ease;
+}
+
+.btn-submit-category:hover {
+    background: #146c43;
+    color: #ffffff;
+    transform: translateY(-1px);
+}
