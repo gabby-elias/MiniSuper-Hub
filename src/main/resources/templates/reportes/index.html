@@ -4,64 +4,95 @@
 <body class="app-page report-page">
 <nav th:replace="~{fragments/layout :: navbar('reportes')}"></nav>
 <main class="app-main reports-dashboard">
-    <header class="report-heading page-heading">
-        <div>
-            <span class="report-eyebrow">MINISÚPER · ANÁLISIS</span>
+    <header class="report-heading">
+        <div class="report-title">
+            <span class="report-eyebrow">MINISÚPER · ANALÍTICA</span>
             <h1>Reportes</h1>
-            <p>Consulta y analiza la información de tu negocio.</p>
+            <p>Revisa el rendimiento de tu negocio en el periodo seleccionado.</p>
         </div>
-        <div class="report-heading-mark" aria-hidden="true">R</div>
+        <form class="report-date-form" method="get" th:action="@{/reportes}">
+            <label>
+                <span>Desde</span>
+                <input type="date" name="fechaInicio" th:value="${fechaInicio}" required>
+            </label>
+            <label>
+                <span>Hasta</span>
+                <input type="date" name="fechaFin" th:value="${fechaFin}" required>
+            </label>
+            <button type="submit">Generar reporte</button>
+            <button class="report-download-button" type="submit" th:formaction="@{/reportes/pdf}">Descargar PDF</button>
+        </form>
     </header>
 
-    <section class="report-total content-card" aria-label="Total de ventas vigentes">
-        <div class="report-total-copy">
-            <span class="report-label">TOTAL DE VENTAS VIGENTES</span>
-            <h2 th:text="|$${#numbers.formatDecimal(totalVentas, 1, 2)}|">$0.00</h2>
-            <p>Ingresos registrados en facturas no anuladas</p>
-        </div>
-        <div class="report-total-icon" aria-hidden="true">$</div>
-    </section>
+    <div class="report-alert" role="alert" th:if="${!rangoValido}">
+        La fecha de inicio debe ser anterior o igual a la fecha de fin. Selecciona un rango válido.
+    </div>
 
-    <section class="report-metrics-section" aria-label="Resumen general">
+    <section class="report-panel products-panel" aria-labelledby="products-heading">
         <div class="report-section-heading">
             <div>
-                <h2>Resumen general</h2>
-                <p>Conteo actual de registros</p>
+                <span class="report-label">RENDIMIENTO DE PRODUCTOS</span>
+                <h2 id="products-heading">Productos más vendidos</h2>
+                <p>Los cinco productos con más unidades vendidas en el periodo.</p>
             </div>
-            <span>Actividad del negocio</span>
+            <span class="report-period" th:text="|${#temporals.format(fechaInicio, 'dd/MM/yyyy')} — ${#temporals.format(fechaFin, 'dd/MM/yyyy')}|">Periodo</span>
+        </div>
+
+        <div class="product-ranking" th:if="${!#lists.isEmpty(productosMasVendidos)}">
+            <div class="product-row" th:each="producto, estado : ${productosMasVendidos}">
+                <span class="product-rank" th:text="${estado.count}">1</span>
+                <div class="product-info">
+                    <div class="product-meta">
+                        <strong th:text="${producto.nombre}">Producto</strong>
+                        <span th:text="|${producto.unidades} unidades|">0 unidades</span>
+                    </div>
+                    <div class="product-track" role="progressbar" aria-valuemin="0" aria-valuemax="100"
+                         th:attr="aria-valuenow=${producto.porcentaje}, aria-label=|Ventas de ${producto.nombre}|">
+                        <span class="product-bar" th:style="|width: ${producto.porcentaje}%;|"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <p class="report-empty" th:if="${#lists.isEmpty(productosMasVendidos)}">No hay ventas de productos para este periodo.</p>
+    </section>
+
+    <section class="report-metrics-section" aria-label="Indicadores del periodo">
+        <div class="report-section-heading">
+            <div>
+                <span class="report-label">RESUMEN DEL PERIODO</span>
+                <h2>Indicadores clave</h2>
+            </div>
         </div>
         <div class="report-metrics-grid">
-            <article class="report-stat report-stat--gold">
+            <article class="report-stat">
+                <span class="report-stat-icon" aria-hidden="true">$</span>
+                <span class="report-stat-label">Total de ventas</span>
+                <strong class="report-stat-value" th:text="|$${#numbers.formatDecimal(totalVentas, 1, 2)}|">$0.00</strong>
+                <span class="report-stat-note" th:if="${variacionVentas != null}"
+                      th:classappend="${variacionVentas >= 0} ? ' is-positive' : ' is-negative'"
+                      th:text="|${variacionVentas >= 0 ? '↑' : '↓'} ${#numbers.formatDecimal(T(java.lang.Math).abs(variacionVentas), 1, 1)}% frente al periodo anterior|">0% frente al periodo anterior</span>
+                <span class="report-stat-note" th:if="${variacionVentas == null}">Sin datos del periodo anterior para comparar</span>
+            </article>
+            <article class="report-stat report-stat--purple">
                 <span class="report-stat-icon" aria-hidden="true">▤</span>
-                <span class="report-stat-label">Facturas vigentes</span>
-                <strong class="report-stat-value" th:text="${cantidadFacturas}">0</strong>
-                <span class="report-stat-note">Ventas activas</span>
+                <span class="report-stat-label">Facturas emitidas</span>
+                <strong class="report-stat-value" th:text="${totalFacturas}">0</strong>
+                <span class="report-stat-note" th:if="${variacionFacturas != null}"
+                      th:classappend="${variacionFacturas >= 0} ? ' is-positive' : ' is-negative'"
+                      th:text="|${variacionFacturas >= 0 ? '↑' : '↓'} ${#numbers.formatDecimal(T(java.lang.Math).abs(variacionFacturas), 1, 1)}% frente al periodo anterior|">0% frente al periodo anterior</span>
+                <span class="report-stat-note" th:if="${variacionFacturas == null}">Sin datos del periodo anterior para comparar</span>
             </article>
-            <article class="report-stat report-stat--lavender">
+            <article class="report-stat">
                 <span class="report-stat-icon" aria-hidden="true">↗</span>
-                <span class="report-stat-label">Facturas anuladas</span>
-                <strong class="report-stat-value" th:text="${cantidadAnuladas}">0</strong>
-                <span class="report-stat-note">Operaciones anuladas</span>
-            </article>
-            <article class="report-stat report-stat--gold">
-                <span class="report-stat-icon" aria-hidden="true">▦</span>
-                <span class="report-stat-label">Productos</span>
-                <strong class="report-stat-value" th:text="${cantidadProductos}">0</strong>
-                <span class="report-stat-note">En el catálogo</span>
-            </article>
-            <article class="report-stat report-stat--lavender">
-                <span class="report-stat-icon" aria-hidden="true">◇</span>
-                <span class="report-stat-label">Categorías</span>
-                <strong class="report-stat-value" th:text="${cantidadCategorias}">0</strong>
-                <span class="report-stat-note">Para organizar productos</span>
-            </article>
-            <article class="report-stat report-stat--gold">
-                <span class="report-stat-icon" aria-hidden="true">◎</span>
-                <span class="report-stat-label">Clientes</span>
-                <strong class="report-stat-value" th:text="${cantidadClientes}">0</strong>
-                <span class="report-stat-note">Registrados en el sistema</span>
+                <span class="report-stat-label">Ingresos registrados</span>
+                <strong class="report-stat-value" th:text="|$${#numbers.formatDecimal(ingresos, 1, 2)}|">$0.00</strong>
+                <span class="report-stat-note" th:if="${variacionIngresos != null}"
+                      th:classappend="${variacionIngresos >= 0} ? ' is-positive' : ' is-negative'"
+                      th:text="|${variacionIngresos >= 0 ? '↑' : '↓'} ${#numbers.formatDecimal(T(java.lang.Math).abs(variacionIngresos), 1, 1)}% frente al periodo anterior|">0% frente al periodo anterior</span>
+                <span class="report-stat-note" th:if="${variacionIngresos == null}">Sin datos del periodo anterior para comparar</span>
             </article>
         </div>
+        <p class="report-disclaimer">Los ingresos se calculan a partir del total de facturas no anuladas; el sistema no registra cobros por separado.</p>
     </section>
 </main>
 <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
