@@ -59,6 +59,7 @@ public class DetalleFacturaController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         model.addAttribute("factura", factura);
+        model.addAttribute("productos", productoService.listar());
         model.addAttribute("nombreMinisuper", nombreMinisuper);
         model.addAttribute("direccionMinisuper", direccionMinisuper);
         model.addAttribute("telefonoMinisuper", telefonoMinisuper);

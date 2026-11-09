@@ -96,6 +96,36 @@
             <div><span class="invoice-summary-label">DESGLOSE</span><h2>Productos facturados</h2></div>
             <span class="invoice-lines-count" th:text="${factura.detalles != null ? #lists.size(factura.detalles) + ' líneas' : '0 líneas'}">0 líneas</span>
         </div>
+        <form class="invoice-add-product" method="post"
+              th:action="@{/facturas/agregar-producto/{id}(id=${factura.id})}"
+              th:if="${!factura.anulada}" aria-label="Agregar producto a la factura">
+            <h3 th:text="|Agregar producto a la factura #${factura.id}|">Agregar producto a la factura</h3>
+            <div class="invoice-add-product-fields">
+                <label class="invoice-add-product-select">
+                    <span>Producto</span>
+                    <select id="detalleProducto" name="productoId" required>
+                        <option value="" selected disabled>Selecciona un producto</option>
+                        <option th:each="producto : ${productos}" th:value="${producto.id}"
+                                th:attr="data-price=${producto.precioVenta}"
+                                th:text="${producto.nombre}">Producto</option>
+                    </select>
+                </label>
+                <label>
+                    <span>Cantidad</span>
+                    <input id="detalleCantidad" type="number" name="cantidad" min="1" step="1" value="1" required>
+                </label>
+                <label>
+                    <span>Precio unitario</span>
+                    <input id="detallePrecio" type="text" value="$0.00" readonly>
+                </label>
+                <label>
+                    <span>Subtotal</span>
+                    <input id="detalleSubtotal" type="text" value="$0.00" readonly>
+                </label>
+                <button type="submit">Agregar a la factura</button>
+            </div>
+            <p>El precio se obtiene del producto y el subtotal se calcula automáticamente.</p>
+        </form>
         <div class="table-responsive">
             <table class="table invoice-table align-middle">
                 <thead><tr><th>Producto</th><th class="text-end">Cantidad</th><th class="text-end">Precio unitario</th><th class="text-end">Subtotal</th></tr></thead>
@@ -114,5 +144,26 @@
     </section>
 </main>
 <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+<script>
+(() => {
+    const producto = document.getElementById('detalleProducto');
+    const cantidad = document.getElementById('detalleCantidad');
+    const precio = document.getElementById('detallePrecio');
+    const subtotal = document.getElementById('detalleSubtotal');
+    if (!producto || !cantidad || !precio || !subtotal) return;
+
+    const moneda = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+    const actualizar = () => {
+        const opcion = producto.selectedOptions[0];
+        const valor = Number(opcion?.dataset.price || 0);
+        const unidades = Math.max(1, Number.parseInt(cantidad.value, 10) || 1);
+        precio.value = moneda.format(valor);
+        subtotal.value = moneda.format(valor * unidades);
+    };
+    producto.addEventListener('change', actualizar);
+    cantidad.addEventListener('input', actualizar);
+    actualizar();
+})();
+</script>
 </body>
 </html>
