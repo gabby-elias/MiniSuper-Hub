@@ -1,1 +1,91 @@
-/* Estilos específicos de templates/detalles-factura/formulario.html. */
+/* Vista de consulta de facturas generadas y edición de detalles existentes. */
+.generated-invoices-page .generated-invoices-heading {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+}
+
+.generated-invoices-eyebrow {
+    color: #2b68a7;
+    font-size: 0.75rem;
+    font-weight: 750;
+    letter-spacing: 0.08em;
+}
+
+.generated-invoices-heading h1 {
+    margin: 0.25rem 0 0;
+    color: #193858;
+    font-size: clamp(1.45rem, 2.4vw, 2rem);
+    font-weight: 750;
+}
+
+.generated-invoices-heading p {
+    margin: 0.35rem 0 0;
+    color: var(--app-muted);
+}
+
+.generated-invoices-card {
+    overflow: hidden;
+    border: 1px solid #dce6f1;
+    border-radius: 0.75rem;
+    background: #ffffff;
+    box-shadow: 0 0.35rem 1rem rgba(35, 65, 46, 0.045);
+}
+
+.generated-invoices-table {
+    --bs-table-bg: #ffffff;
+    --bs-table-color: #26384d;
+    --bs-table-border-color: #e8edf3;
+    --bs-table-hover-bg: #f5f9fd;
+    --bs-table-hover-color: #26384d;
+    margin: 0;
+}
+
+.generated-invoices-table > :not(caption) > * > * {
+    padding: 0.8rem 0.9rem;
+    vertical-align: middle;
+}
+
+.generated-invoices-table thead th {
+    background: #eaf0f7;
+    color: #294767;
+    font-size: 0.75rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.generated-invoice-id,
+.generated-invoice-total {
+    color: #173d6b !important;
+    font-weight: 700;
+}
+
+.generated-invoices-table tbody tr.invoice-selected-row > * {
+    background: #edf5ff;
+}
+
+.btn-view-invoice {
+    border: 1px solid #c9d9ec;
+    color: #1e5b9b;
+    font-weight: 650;
+}
+
+.btn-view-invoice:hover {
+    border-color: #1e5b9b;
+    background: #edf5ff;
+    color: #173d6b;
+}
+
+@media (max-width: 700px) {
+    .generated-invoices-page .generated-invoices-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .generated-invoices-table > :not(caption) > * > * {
+        padding: 0.65rem 0.6rem;
+        font-size: 0.82rem;
+    }
+}

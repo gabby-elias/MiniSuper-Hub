@@ -12,8 +12,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.util.Set;
-
 @Component
 @RequiredArgsConstructor
 public class empleadosUsersInitializer implements ApplicationRunner {
@@ -69,14 +67,14 @@ public class empleadosUsersInitializer implements ApplicationRunner {
                 .username(username)
                 .nombre(nombre)
                 .password(passwordEncoder.encode(password))
-                .roles(Set.of(rol))
                 .activo(true)
                 .build());
 
         if (!passwordEncoder.matches(password, usuario.getPassword())) {
             usuario.setPassword(passwordEncoder.encode(password));
         }
-        usuario.setRoles(Set.of(rol));
+        usuario.getRoles().clear();
+        usuario.getRoles().add(rol);
         usuarioRepository.save(usuario);
     }
 }

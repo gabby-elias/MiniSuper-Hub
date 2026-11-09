@@ -1,114 +1,172 @@
-/* Estilos locales de la vista de clientes.
-   Usan la misma paleta que la vista de facturas (variables de app.css). */
+/* Estilos de la vista de Clientes (Paleta Morada unificada) */
 
-body.app-page.client-page {
-    --client-accent: var(--app-green);
-    --client-accent-dark: var(--app-green-dark);
-    --client-accent-soft: #e8f2eb;
-
-    width: calc(100% - 2.5rem);
-    max-width: none;
-    min-height: calc(100vh - 2rem);
-    margin: 1rem auto;
-    display: flex;
-    flex-direction: column;
-    border-color: #d4dfd7;
+:root {
+    --purple-primary: #6B4C8A;
+    --purple-hover: #583c74;
+    --purple-active: #4d3366;
+    --purple-soft: #eee9f4;
+    --purple-border: #ded7e9;
+    --purple-focus: rgba(107, 76, 138, 0.15);
 }
 
-/* Barra superior */
-.client-page .top-nav {
-    flex: 0 0 auto;
-    background: var(--client-accent);
-}
-
-.client-page .app-main {
-    width: 100%;
-    max-width: none;
-    flex: 1;
-    padding: clamp(1.5rem, 3vw, 3.25rem);
-}
-
-/* Encabezado */
 .client-page .page-heading {
-    margin-bottom: clamp(1.5rem, 3vw, 2.25rem);
+    margin-bottom: 1.5rem;
 }
 
 .client-page .page-heading h1 {
-    color: var(--app-text);
-    margin: .45rem 0 0;
-    font-size: clamp(1.8rem, 3vw, 2.5rem);
-    font-weight: 750;
-    letter-spacing: -.04em;
+    color: #1E1B3A;
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin: 0;
 }
 
 .client-page .page-heading p {
-    color: var(--app-muted);
+    color: #7C739A;
+    font-size: 0.9rem;
+    margin: 0.25rem 0 0;
 }
 
-/* Tarjeta principal */
-.client-page .content-card {
-    border: 1px solid var(--app-border);
-    border-radius: 1rem;
-    background: #fff;
-    box-shadow: 0 .5rem 1.5rem rgba(35, 65, 46, .07);
-    overflow: hidden;
-}
-
-/* Encabezado de la tabla */
-.client-page .table thead th {
-    color: var(--client-accent);
-    background: var(--client-accent-soft);
-    border-bottom: 1px solid var(--app-border);
-    font-weight: 700;
-}
-
-/* Filas */
-.client-page .table tbody tr {
-    transition: background-color .18s ease;
-}
-
-.client-page .table tbody tr:hover {
-    background: #f7faf8;
-}
-
-/* Botón principal (+ Nuevo cliente) */
 .client-page .btn-primary {
-    --bs-btn-bg: var(--client-accent);
-    --bs-btn-border-color: var(--client-accent);
-    --bs-btn-hover-bg: var(--client-accent-dark);
-    --bs-btn-hover-border-color: var(--client-accent-dark);
-    --bs-btn-active-bg: var(--client-accent-dark);
-    --bs-btn-active-border-color: var(--client-accent-dark);
+    background-color: var(--purple-primary);
+    border-color: var(--purple-primary);
+    color: #ffffff;
+    font-weight: 600;
+    border-radius: 0.6rem;
+    padding: 0.55rem 1.25rem;
+    box-shadow: 0 4px 12px rgba(107, 76, 138, 0.2);
+    transition: all 0.2s ease;
 }
 
-/* Contenedor de acciones */
-.client-page .client-actions {
+.client-page .btn-primary:hover {
+    background-color: var(--purple-hover);
+    border-color: var(--purple-hover);
+    transform: translateY(-1px);
+}
+
+.client-page .content-card {
+    background: #ffffff;
+    border: 1px solid var(--purple-border);
+    border-radius: 1rem;
+    box-shadow: 0 4px 20px rgba(30, 27, 58, 0.04);
+    padding: 1.5rem;
+}
+
+.client-page .table {
+    margin-bottom: 0;
+}
+
+.client-page .table thead th {
+    color: #7C739A;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: none;
+    background: transparent;
+    border-bottom: 1px solid #f0edf5;
+    padding: 0.85rem 1rem;
+}
+
+.client-page .table tbody td {
+    padding: 1rem;
+    color: #2E2A3B;
+    font-size: 0.9rem;
+    border-bottom: 1px solid #f6f4f9;
+    vertical-align: middle;
+}
+
+.client-page .table tbody tr:hover td {
+    background-color: #faf9fc;
+}
+
+/* Avatar de cliente */
+.client-avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 50%;
+    background-color: var(--purple-soft);
+    color: var(--purple-primary);
+    font-weight: 700;
+    font-size: 0.9rem;
+    margin-right: 0.75rem;
+    flex-shrink: 0;
+}
+
+/* Botones de acción */
+.client-page .btn-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.38rem 0.75rem;
+    font-size: 0.82rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    transition: all 0.15s ease;
+}
+
+.client-page .btn-action-view,
+.client-page .btn-action-edit {
+    color: #384252;
+    background: #ffffff;
+    border: 1px solid var(--purple-border);
+}
+
+.client-page .btn-action-view:hover,
+.client-page .btn-action-edit:hover {
+    color: var(--purple-primary);
+    border-color: var(--purple-primary);
+    background: var(--purple-soft);
+}
+
+.client-page .btn-action-delete {
+    color: #dc3545;
+    background: #fff8f8;
+    border: 1px solid #fed7d7;
+}
+
+.client-page .btn-action-delete:hover {
+    color: #ffffff;
+    background: #dc3545;
+    border-color: #dc3545;
+}
+
+/* Paginación */
+.table-footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 1rem;
-    margin-bottom: 1rem;
+    margin-top: 1.25rem;
+    padding-top: 1rem;
+    border-top: 1px solid #f0edf5;
+    color: #7C739A;
+    font-size: 0.84rem;
 }
 
-/* Responsive */
-@media (max-width: 767.98px) {
+.pagination-pills {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+}
 
-    body.app-page.client-page {
-        width: calc(100% - 1rem);
-        min-height: calc(100vh - 1rem);
-        margin: .5rem auto;
-    }
+.pagination-pills .page-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.85rem;
+    height: 1.85rem;
+    padding: 0 0.4rem;
+    border-radius: 0.45rem;
+    font-size: 0.8rem;
+    color: #7C739A;
+    background: #ffffff;
+    border: 1px solid var(--purple-border);
+    text-decoration: none;
+}
 
-    .client-page .app-main {
-        padding: 1.25rem;
-    }
-
-    .client-page .client-actions {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .client-page .table {
-        font-size: .9rem;
-    }
+.pagination-pills .page-pill.active {
+    background: var(--purple-primary);
+    border-color: var(--purple-primary);
+    color: #ffffff;
+    font-weight: 600;
 }

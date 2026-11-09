@@ -16,8 +16,10 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/", "/login", "/css/**", "/js/**", "/images/**", "/webjars/**", "/error").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/detalles-factura", "/detalles-factura/{id:[0-9]+}")
+                        .hasAnyRole("ADMIN", "EMPLEADO")
                         .requestMatchers("/usuarios/**", "/reportes/**", "/detalles-factura/**").hasRole("ADMIN")
-                        .requestMatchers("/facturas/anular/**", "/facturas/editar/**", "/facturas/eliminar/**").hasRole("ADMIN")
+
                         .requestMatchers("/categorias/nuevo", "/categorias/editar/**", "/productos/nuevo", "/productos/editar/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/categorias/**", "/productos/**").hasRole("ADMIN")
                         .requestMatchers("/clientes/editar/**").hasRole("ADMIN")

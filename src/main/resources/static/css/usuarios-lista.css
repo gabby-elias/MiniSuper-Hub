@@ -1,141 +1,202 @@
-/* Estilos locales de la vista de usuarios.
-   Usan la misma paleta que la vista de facturas (variables de app.css). */
+/* Estilos de la vista de Usuarios (Paleta Morada unificada) */
 
-body.app-page.user-page {
-    --user-accent: var(--app-green);
-    --user-accent-dark: var(--app-green-dark);
-    --user-accent-soft: #e8f2eb;
-
-    width: calc(100% - 2.5rem);
-    max-width: none;
-    min-height: calc(100vh - 2rem);
-    margin: 1rem auto;
-    display: flex;
-    flex-direction: column;
-    border-color: #d4dfd7;
+:root {
+    --purple-primary: #6B4C8A;
+    --purple-hover: #583c74;
+    --purple-active: #4d3366;
+    --purple-soft: #eee9f4;
+    --purple-border: #ded7e9;
+    --purple-focus: rgba(107, 76, 138, 0.15);
 }
 
-/* Barra superior */
-.user-page .top-nav {
-    flex: 0 0 auto;
-    background: var(--user-accent);
-}
-
-.user-page .app-main {
-    width: 100%;
-    max-width: none;
-    flex: 1;
-    padding: clamp(1.5rem, 3vw, 3.25rem);
-}
-
-/* Encabezado */
 .user-page .page-heading {
-    margin-bottom: clamp(1.5rem, 3vw, 2.25rem);
+    margin-bottom: 1.5rem;
 }
 
 .user-page .page-heading h1 {
-    color: var(--app-text);
-    margin: .45rem 0 0;
-    font-size: clamp(1.8rem, 3vw, 2.5rem);
-    font-weight: 750;
-    letter-spacing: -.04em;
+    color: #1E1B3A;
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin: 0;
 }
 
 .user-page .page-heading p {
-    color: var(--app-muted);
+    color: #7C739A;
+    font-size: 0.9rem;
+    margin: 0.25rem 0 0;
 }
 
-/* Tarjeta */
-.user-page .content-card {
-    border: 1px solid var(--app-border);
-    border-radius: 1rem;
-    background: #fff;
-    box-shadow: 0 .5rem 1.5rem rgba(35, 65, 46, .07);
-    overflow: hidden;
-}
-
-/* Tabla */
-.user-page .table thead th {
-    color: var(--user-accent);
-    background: var(--user-accent-soft);
-    border-bottom: 1px solid var(--app-border);
-    font-weight: 700;
-}
-
-.user-page .table tbody tr {
-    transition: background-color .18s ease;
-}
-
-.user-page .table tbody tr:hover {
-    background: #f7faf8;
-}
-
-/* Estados */
-.user-page .badge {
-    padding: .4em .75em;
-    border-radius: 999px;
-    font-weight: 650;
-}
-
-.user-page .badge.text-bg-success {
-    color: var(--user-accent-dark) !important;
-    background-color: var(--user-accent-soft) !important;
-    border: 1px solid #c6dfce;
-}
-
-.user-page .badge.text-bg-secondary {
-    color: #5b6760 !important;
-    background-color: #eef1ef !important;
-    border: 1px solid #d4dfd7;
-}
-
-/* Botón principal (+ Nuevo usuario) */
 .user-page .btn-primary {
-    --bs-btn-bg: var(--user-accent);
-    --bs-btn-border-color: var(--user-accent);
-    --bs-btn-hover-bg: var(--user-accent-dark);
-    --bs-btn-hover-border-color: var(--user-accent-dark);
-    --bs-btn-active-bg: var(--user-accent-dark);
-    --bs-btn-active-border-color: var(--user-accent-dark);
+    background-color: var(--purple-primary);
+    border-color: var(--purple-primary);
+    color: #ffffff;
+    font-weight: 600;
+    border-radius: 0.6rem;
+    padding: 0.55rem 1.25rem;
+    box-shadow: 0 4px 12px rgba(107, 76, 138, 0.2);
+    transition: all 0.2s ease;
 }
 
-/* Botón Activar */
-.user-page .btn-outline-success {
-    --bs-btn-color: var(--user-accent);
-    --bs-btn-border-color: var(--user-accent);
-    --bs-btn-hover-bg: var(--user-accent);
-    --bs-btn-hover-border-color: var(--user-accent);
-    --bs-btn-active-bg: var(--user-accent-dark);
-    --bs-btn-active-border-color: var(--user-accent-dark);
+.user-page .btn-primary:hover {
+    background-color: var(--purple-hover);
+    border-color: var(--purple-hover);
+    transform: translateY(-1px);
 }
 
-.user-page .user-actions {
+.user-page .content-card {
+    background: #ffffff;
+    border: 1px solid var(--purple-border);
+    border-radius: 1rem;
+    box-shadow: 0 4px 20px rgba(30, 27, 58, 0.04);
+    padding: 1.5rem;
+}
+
+.user-page .table {
+    margin-bottom: 0;
+}
+
+.user-page .table thead th {
+    color: #7C739A;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: none;
+    background: transparent;
+    border-bottom: 1px solid #f0edf5;
+    padding: 0.85rem 1rem;
+}
+
+.user-page .table tbody td {
+    padding: 1rem;
+    color: #2E2A3B;
+    font-size: 0.9rem;
+    border-bottom: 1px solid #f6f4f9;
+    vertical-align: middle;
+}
+
+.user-page .table tbody tr:hover td {
+    background-color: #faf9fc;
+}
+
+/* Avatar de usuario */
+.user-avatar-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 50%;
+    background-color: var(--purple-soft);
+    color: var(--purple-primary);
+    font-weight: 700;
+    font-size: 0.9rem;
+    margin-right: 0.75rem;
+    flex-shrink: 0;
+}
+
+/* Badges de estado */
+.user-page .badge-state {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.35rem 0.85rem;
+    border-radius: 2rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+}
+
+.user-page .badge-active {
+    background-color: #1b8755;
+    color: #ffffff;
+}
+
+.user-page .badge-inactive {
+    background-color: #b02a37;
+    color: #ffffff;
+}
+
+/* Botones de acción */
+.user-page .btn-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.38rem 0.75rem;
+    font-size: 0.82rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    transition: all 0.15s ease;
+}
+
+.user-page .btn-action-edit {
+    color: #384252;
+    background: #ffffff;
+    border: 1px solid var(--purple-border);
+}
+
+.user-page .btn-action-edit:hover {
+    color: var(--purple-primary);
+    border-color: var(--purple-primary);
+    background: var(--purple-soft);
+}
+
+.user-page .btn-action-deactivate {
+    color: #dc3545;
+    background: #fff8f8;
+    border: 1px solid #fed7d7;
+}
+
+.user-page .btn-action-deactivate:hover {
+    color: #ffffff;
+    background: #dc3545;
+    border-color: #dc3545;
+}
+
+.user-page .btn-action-activate {
+    color: var(--purple-primary);
+    background: var(--purple-soft);
+    border: 1px solid var(--purple-border);
+}
+
+.user-page .btn-action-activate:hover {
+    color: #ffffff;
+    background: var(--purple-primary);
+    border-color: var(--purple-primary);
+}
+
+/* Paginación */
+.table-footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 1rem;
-    margin-bottom: 1rem;
+    margin-top: 1.25rem;
+    padding-top: 1rem;
+    border-top: 1px solid #f0edf5;
+    color: #7C739A;
+    font-size: 0.84rem;
 }
 
-/* Responsive */
-@media (max-width: 767.98px) {
+.pagination-pills {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+}
 
-    body.app-page.user-page {
-        width: calc(100% - 1rem);
-        min-height: calc(100vh - 1rem);
-        margin: .5rem auto;
-    }
+.pagination-pills .page-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.85rem;
+    height: 1.85rem;
+    padding: 0 0.4rem;
+    border-radius: 0.45rem;
+    font-size: 0.8rem;
+    color: #7C739A;
+    background: #ffffff;
+    border: 1px solid var(--purple-border);
+    text-decoration: none;
+}
 
-    .user-page .app-main {
-        padding: 1.25rem;
-    }
-
-    .user-page .user-actions {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .user-page .table {
-        font-size: .9rem;
-    }
+.pagination-pills .page-pill.active {
+    background: var(--purple-primary);
+    border-color: var(--purple-primary);
+    color: #ffffff;
+    font-weight: 600;
 }

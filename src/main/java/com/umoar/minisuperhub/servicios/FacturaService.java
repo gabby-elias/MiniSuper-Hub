@@ -76,6 +76,17 @@ public class FacturaService {
     }
 
     @Transactional
+    public Factura marcarEntregada(Long id) {
+        Factura factura = facturaRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("No se encontró la factura con id " + id));
+        if (factura.isAnulada()) {
+            throw new IllegalStateException("No se puede entregar una factura anulada.");
+        }
+        factura.setEntregada(true);
+        return facturaRepository.save(factura);
+    }
+
+    @Transactional
     public Factura anular(Long id) {
         Factura factura = facturaRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("No se encontró la factura con id " + id));
