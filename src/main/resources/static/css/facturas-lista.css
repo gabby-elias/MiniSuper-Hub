@@ -86,10 +86,10 @@ body.app-page.invoice-list-page > main.app-main {
 }
 
 .invoice-stat-card--green {
-    --stat-border: #ccebe1;
-    --stat-background: #f0faf6;
-    --stat-icon-background: #d6f3e8;
-    --stat-icon-color: #12815f;
+    --stat-border: #ded7e9;
+    --stat-background: #f7f4fb;
+    --stat-icon-background: #eee7f5;
+    --stat-icon-color: #6B4C8A;
 }
 
 .invoice-stat-card--amber {
@@ -327,8 +327,8 @@ body.app-page.invoice-list-page > main.app-main {
 
 .invoice-action-button--delivered:hover {
     border-color: #C9C3D9;
-    background: #e2f4eb;
-    color: #146c43;
+    background: #f0ebf8;
+    color: #6B4C8A;
 }
 
 .invoice-action-button--void {

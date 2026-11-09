@@ -43,7 +43,26 @@ body {
 }
 
 .stat-card .stat-value-green {
-    color: #16825f;
+    color: #6B4C8A;
+}
+
+.text-bg-success,
+.badge.text-bg-success,
+.btn-success {
+    background-color: #6B4C8A !important;
+    border-color: #6B4C8A !important;
+    color: #ffffff !important;
+}
+
+.btn-outline-success {
+    color: #6B4C8A !important;
+    border-color: #ded7e9 !important;
+}
+
+.btn-outline-success:hover {
+    background-color: #6B4C8A !important;
+    border-color: #6B4C8A !important;
+    color: #ffffff !important;
 }
 
 .stat-card .stat-value-warning {

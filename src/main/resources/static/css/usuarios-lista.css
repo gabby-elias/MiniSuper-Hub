@@ -104,7 +104,7 @@
 }
 
 .user-page .badge-active {
-    background-color: #1b8755;
+    background-color: var(--purple-primary);
     color: #ffffff;
 }
 
