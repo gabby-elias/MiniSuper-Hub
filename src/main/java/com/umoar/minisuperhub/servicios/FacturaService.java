@@ -76,6 +76,22 @@ public class FacturaService {
     }
 
     @Transactional
+    public Factura agregarDetalle(Long facturaId, DetalleFactura detalle) {
+        Factura factura = facturaRepository.buscarCompletaPorId(facturaId)
+                .orElseThrow(() -> new EntityNotFoundException("No se encontró la factura con id " + facturaId));
+        if (factura.isAnulada()) {
+            throw new IllegalStateException("No se puede modificar una factura anulada.");
+        }
+        if (factura.getDetalles() == null) {
+            factura.setDetalles(new ArrayList<>());
+        }
+        detalle.setFactura(factura);
+        factura.getDetalles().add(detalle);
+        factura.setTotal(factura.getTotal() + detalle.getSubtotal());
+        return facturaRepository.save(factura);
+    }
+
+    @Transactional
     public Factura marcarEntregada(Long id) {
         Factura factura = facturaRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("No se encontró la factura con id " + id));
