@@ -1,1 +1,126 @@
-/* Estilos específicos de templates/usuarios/formulario.html. */
+/* Estilos del formulario de usuarios (Paleta Morada unificada) */
+
+:root {
+    --purple-primary: #6B4C8A;
+    --purple-hover: #583c74;
+    --purple-active: #4d3366;
+    --purple-soft: #eee9f4;
+    --purple-border: #ded7e9;
+    --purple-focus: rgba(107, 76, 138, 0.15);
+}
+
+.btn-back {
+    color: var(--purple-primary);
+    font-weight: 500;
+    font-size: 0.92rem;
+    display: inline-block;
+    margin-bottom: 1.5rem;
+    transition: color 0.15s ease;
+}
+
+.btn-back:hover {
+    color: var(--purple-hover);
+}
+
+.user-form-card {
+    background: #ffffff;
+    border: 1px solid var(--purple-border);
+    border-radius: 1.25rem;
+    box-shadow: 0 4px 24px rgba(30, 27, 58, 0.05);
+    padding: 2.5rem;
+    max-width: 620px;
+    margin: 0 auto;
+}
+
+.user-form-card h1 {
+    color: #1E1B3A;
+    font-size: 1.65rem;
+    font-weight: 700;
+    margin-bottom: 1.75rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #f0edf5;
+}
+
+.user-form-card .form-label {
+    color: #1E1B3A;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 0.45rem;
+}
+
+.user-form-card .form-label .optional {
+    color: #7C739A;
+    font-weight: normal;
+    font-size: 0.82rem;
+}
+
+.user-form-card .form-control,
+.user-form-card .form-select {
+    border: 1px solid var(--purple-border);
+    border-radius: 0.65rem;
+    padding: 0.7rem 0.95rem;
+    font-size: 0.9rem;
+    color: #1E1B3A;
+    background-color: #ffffff;
+}
+
+.user-form-card .form-control:focus,
+.user-form-card .form-select:focus {
+    border-color: #8A5AA8;
+    box-shadow: 0 0 0 0.2rem var(--purple-focus);
+}
+
+.user-form-card .form-check-input {
+    width: 1.15rem;
+    height: 1.15rem;
+    border-color: var(--purple-border);
+    cursor: pointer;
+}
+
+.user-form-card .form-check-input:checked {
+    background-color: var(--purple-primary);
+    border-color: var(--purple-primary);
+}
+
+.user-form-card .form-check-input:focus {
+    box-shadow: 0 0 0 0.2rem var(--purple-focus);
+}
+
+.user-form-card .form-check-label {
+    color: #1E1B3A;
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding-left: 0.35rem;
+    cursor: pointer;
+}
+
+.user-form-card .btn-primary {
+    background-color: var(--purple-primary);
+    border-color: var(--purple-primary);
+    color: #ffffff;
+    font-weight: 600;
+    border-radius: 0.6rem;
+    padding: 0.6rem 1.4rem;
+    box-shadow: 0 4px 12px rgba(107, 76, 138, 0.2);
+    transition: all 0.2s ease;
+}
+
+.user-form-card .btn-primary:hover {
+    background-color: var(--purple-hover);
+    border-color: var(--purple-hover);
+}
+
+.user-form-card .btn-secondary {
+    background: #ffffff;
+    border: 1px solid var(--purple-border);
+    color: #384252;
+    font-weight: 500;
+    border-radius: 0.6rem;
+    padding: 0.6rem 1.4rem;
+    transition: all 0.15s ease;
+}
+
+.user-form-card .btn-secondary:hover {
+    background: #f7f5fa;
+    color: #1E1B3A;
+}

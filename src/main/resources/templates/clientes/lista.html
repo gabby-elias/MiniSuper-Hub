@@ -5,24 +5,59 @@
 <nav th:replace="~{fragments/layout :: navbar('clientes')}"></nav>
 <main class="app-main">
     <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 page-heading">
-        <div><h1>Clientes</h1><p th:text="${esAdmin ? 'Administra la información de tus clientes.' : 'Consulta la información de tus clientes.'}">Clientes</p></div>
-        <a class="btn btn-primary" th:href="@{/clientes/nuevo}">＋ Nuevo cliente</a>
+        <div>
+            <h1>Clientes</h1>
+            <p>Gestiona la información de tus clientes.</p>
+        </div>
+        <a class="btn btn-primary" th:href="@{/clientes/nuevo}">+ Nuevo cliente</a>
     </div>
-    <section class="content-card table-responsive">
-        <table class="table table-hover align-middle">
-            <thead><tr><th>ID</th><th>Nombre</th><th>Documento</th><th>Dirección</th><th class="text-end">Acciones</th></tr></thead>
-            <tbody>
-            <tr th:each="cliente : ${clientes}">
-                <td th:text="${cliente.id}"></td><td th:text="${cliente.nombre}"></td><td th:text="${cliente.documento}"></td><td th:text="${cliente.direccion}"></td>
-                <td class="text-end text-nowrap">
-                    <button class="btn btn-sm btn-outline-light" type="button">Ver</button>
-                    <th:block th:if="${esAdmin}"><a class="btn btn-sm btn-outline-light" th:href="@{/clientes/editar/{id}(id=${cliente.id})}">Editar</a>
-                    <form class="d-inline" th:action="@{/clientes/eliminar/{id}(id=${cliente.id})}" method="post" data-swal-confirm data-swal-action="delete" data-swal-title="¿Eliminar cliente?" data-swal-text="Si tiene facturas asociadas, no podrá eliminarse."><button class="btn btn-sm btn-outline-danger" type="submit">Eliminar</button></form></th:block>
-                </td>
-            </tr>
-            <tr th:if="${#lists.isEmpty(clientes)}"><td colspan="5" class="text-center text-secondary py-5">No hay clientes registrados.</td></tr>
-            </tbody>
-        </table>
+    <section class="content-card">
+        <div class="table-responsive">
+            <table class="table align-middle">
+                <thead>
+                <tr>
+                    <th style="width: 60px;">N.°</th>
+                    <th>Nombre</th>
+                    <th>Documento</th>
+                    <th>Dirección</th>
+                    <th class="text-end" style="width: 220px;">Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="cliente, stat : ${clientes}">
+                    <td class="text-secondary" th:text="${cliente.id}">1</td>
+                    <td>
+                        <div class="d-inline-flex align-items-center">
+                            <span class="client-avatar" th:text="${#strings.substring(cliente.nombre, 0, 1).toUpperCase()}">E</span>
+                            <strong th:text="${cliente.nombre}">elias</strong>
+                        </div>
+                    </td>
+                    <td th:text="${cliente.documento != null and !cliente.documento.isEmpty() ? cliente.documento : '—'}">—</td>
+                    <td th:text="${cliente.direccion != null and !cliente.direccion.isEmpty() ? cliente.direccion : '—'}">—</td>
+                    <td class="text-end text-nowrap">
+                        <button class="btn btn-action btn-action-view" type="button"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg> Ver</button>
+                        <th:block th:if="${esAdmin}">
+                            <a class="btn btn-action btn-action-edit" th:href="@{/clientes/editar/{id}(id=${cliente.id})}"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> Editar</a>
+                            <form class="d-inline" th:action="@{/clientes/eliminar/{id}(id=${cliente.id})}" method="post" data-swal-confirm data-swal-action="delete" data-swal-title="¿Eliminar cliente?" data-swal-text="Si tiene facturas asociadas, no podrá eliminarse.">
+                                <button class="btn btn-action btn-action-delete" type="submit"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg> Eliminar</button>
+                            </form>
+                        </th:block>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(clientes)}">
+                    <td colspan="5" class="text-center text-secondary py-5">No hay clientes registrados.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <footer class="table-footer">
+            <span>Mostrando <span th:text="${#lists.size(clientes)}">0</span> de <span th:text="${#lists.size(clientes)}">0</span> clientes</span>
+            <div class="pagination-pills">
+                <span class="page-pill">‹</span>
+                <span class="page-pill active">1</span>
+                <span class="page-pill">›</span>
+            </div>
+        </footer>
     </section>
 </main>
 <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
