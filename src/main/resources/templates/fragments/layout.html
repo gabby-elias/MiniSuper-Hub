@@ -11,7 +11,7 @@
 </head>
 <body>
 <th:block th:fragment="navbar(active)">
-    <aside class="app-sidebar" th:classappend="${active == 'facturas'} ? ' invoice-theme' : (${active == 'categorias' or active == 'productos' or active == 'clientes' or active == 'usuarios'} ? ' green-theme' : '')">
+    <aside class="app-sidebar invoice-theme">
         <a class="sidebar-brand" th:href="@{/dashboard}">
             <span class="sidebar-brand-icon" aria-hidden="true">🛒</span>
             <span class="sidebar-brand-copy"><strong>Mini Súper</strong><small>Tu súper, más cerca</small></span>
@@ -28,10 +28,14 @@
         </nav>
 
     </aside>
-    <header class="app-topbar" th:classappend="${active == 'facturas'} ? ' invoice-theme' : (${active == 'categorias' or active == 'productos' or active == 'clientes' or active == 'usuarios'} ? ' green-theme' : '')">
+    <header class="app-topbar invoice-theme">
         <button class="sidebar-toggle" type="button" aria-label="Abrir menú" aria-expanded="false" data-sidebar-toggle><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+        <div class="topbar-search">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            <input type="search" th:placeholder="${active == 'clientes' ? 'Buscar clientes...' : (active == 'usuarios' ? 'Buscar usuarios...' : 'Buscar...')}" aria-label="Buscar" data-table-search>
+        </div>
         <div class="topbar-spacer"></div>
-
+        <button class="topbar-notifications" type="button" aria-label="Notificaciones"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0"/></svg><span></span></button>
         <div class="topbar-user"><span class="user-avatar" th:text="${esAdmin ? 'A' : 'E'}">A</span><span class="user-copy"><strong th:text="${esAdmin ? 'Administrador' : 'Empleado'}">Administrador</strong><small th:text="${nombreUsuario}">admin</small></span></div>
         <form th:action="@{/logout}" method="post" class="topbar-logout"><button type="submit" aria-label="Cerrar sesión" title="Cerrar sesión"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 17l5-5-5-5M15 12H3M12 3h6a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-6"/></svg></button></form>
     </header>

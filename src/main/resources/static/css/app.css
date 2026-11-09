@@ -6,9 +6,9 @@
     --app-border: #e5dfed;
     --app-text: #2E2A3B;
     --app-muted: #7C739A;
-    --app-green: #174b88;
-    --app-green-dark: #113b70;
-    --app-green-soft: #e8f0fb;
+    --app-green: #6B4C8A;
+    --app-green-dark: #583c74;
+    --app-green-soft: #eee9f4;
     --app-blue: #1d5ca8;
     --app-blue-light: #eaf2ff;
     --bs-body-color: var(--app-text);
@@ -131,14 +131,14 @@ body {
 }
 
 .btn-outline-light {
-    --bs-btn-color: #405979;
-    --bs-btn-border-color: #cad8e9;
-    --bs-btn-hover-color: var(--app-green-dark);
-    --bs-btn-hover-bg: #eaf2fc;
-    --bs-btn-hover-border-color: #a9c2e0;
-    --bs-btn-active-color: var(--app-green-dark);
-    --bs-btn-active-bg: #e2edf9;
-    --bs-btn-active-border-color: #a9c2e0;
+    --bs-btn-color: #55475A;
+    --bs-btn-border-color: #ded7e9;
+    --bs-btn-hover-color: #ffffff;
+    --bs-btn-hover-bg: #6B4C8A;
+    --bs-btn-hover-border-color: #6B4C8A;
+    --bs-btn-active-color: #ffffff;
+    --bs-btn-active-bg: #583c74;
+    --bs-btn-active-border-color: #583c74;
 }
 
 .btn-outline-warning {
@@ -247,7 +247,7 @@ body.app-page > main a:not(.btn):hover {
 .invoice-panel .form-select:focus {
     border-color: var(--app-green);
     background-color: #ffffff;
-    box-shadow: 0 0 0 0.22rem rgba(25, 135, 84, 0.13);
+    box-shadow: 0 0 0 0.22rem rgba(107, 76, 138, 0.15);
 }
 
 .app-main > .content-card:has(> h1 ~ form) .form-control::placeholder,
