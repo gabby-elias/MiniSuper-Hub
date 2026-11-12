@@ -1,0 +1,312 @@
+openapi: 3.0.3
+info:
+  title: MiniSuper Hub - Rutas web
+  version: 1.0.0
+  description: >-
+    Inventario de las rutas MVC de la aplicación. La mayoría devuelve páginas
+    HTML o redirige después de procesar formularios; esto no es una API REST
+    ni sus respuestas son objetos JSON. Las operaciones POST requieren una
+    sesión autenticada y el token CSRF que incluyen los formularios de la web.
+servers:
+  - url: /
+    description: Servidor actual
+security:
+  - sessionCookie: []
+paths:
+  /:
+    get:
+      operationId: loginRoot
+      summary: Abrir inicio de sesión
+      security: []
+      responses:
+        '200':
+          $ref: '#/components/responses/HtmlPage'
+  /login:
+    get:
+      operationId: loginPage
+      summary: Mostrar inicio de sesión
+      security: []
+      parameters:
+        - name: error
+          in: query
+          description: Presente cuando falla el inicio de sesión.
+          schema:
+            type: string
+        - name: logout
+          in: query
+          description: Presente después de cerrar sesión.
+          schema:
+            type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/HtmlPage'
+    post:
+      operationId: submitLogin
+      summary: Enviar credenciales del formulario
+      description: Spring Security procesa este formulario y redirige al dashboard o al login.
+      security: []
+      requestBody:
+        $ref: '#/components/requestBodies/Form'
+      responses:
+        '302':
+          $ref: '#/components/responses/Redirect'
+  /logout:
+    post:
+      operationId: logout
+      summary: Cerrar sesión
+      responses:
+        '302':
+          $ref: '#/components/responses/Redirect'
+  /dashboard:
+    get:
+      operationId: dashboard
+      summary: Ver el panel principal
+      responses:
+        '200':
+          $ref: '#/components/responses/HtmlPage'
+  /categorias:
+    get:
+      operationId: listCategories
+      summary: Listar categorías
+      description: Disponible para ADMIN y EMPLEADO.
+      responses:
+        '200':
+          $ref: '#/components/responses/HtmlPage'
+  /categorias/nuevo:
+    get:
+      operationId: newCategoryForm
+      summary: Mostrar formulario de categoría
+      description: Solo ADMIN.
+      responses:
+        '200':
+          $ref: '#/components/responses/HtmlPage'
+  /categorias/editar/{id}:
+    get:
+      operationId: editCategoryForm
+      summary: Mostrar formulario de edición de categoría
+      description: Solo ADMIN.
+      parameters:
+        - $ref: '#/components/parameters/Id'
+      responses:
+        '200':
+          $ref: '#/components/responses/HtmlPage'
+        '302':
+          $ref: '#/components/responses/Redirect'
+  /categorias/guardar:
+    post:
+      operationId: saveCategory
+      summary: Crear o actualizar categoría
+      description: Solo ADMIN. Los campos corresponden al formulario HTML.
+      requestBody:
+        $ref: '#/components/requestBodies/Form'
+      responses:
+        '302':
+          $ref: '#/components/responses/Redirect'
+  /categorias/eliminar/{id}:
+    post:
+      operationId: deleteCategory
+      summary: Eliminar categoría
+      description: Solo ADMIN.
+      parameters:
+        - $ref: '#/components/parameters/Id'
+      responses:
+        '302':
+          $ref: '#/components/responses/Redirect'
+  /clientes:
+    get:
+      operationId: listClients
+      summary: Listar clientes
+      responses:
+        '200':
+          $ref: '#/components/responses/HtmlPage'
+  /clientes/nuevo:
+    get:
+      operationId: newClientForm
+      summary: Mostrar formulario de cliente
+      responses:
+        '200':
+          $ref: '#/components/responses/HtmlPage'
+  /clientes/editar/{id}:
+    get:
+      operationId: editClientForm
+      summary: Mostrar formulario de edición de cliente
+      description: Solo ADMIN.
+      parameters:
+        - $ref: '#/components/parameters/Id'
+      responses:
+        '200':
+          $ref: '#/components/responses/HtmlPage'
+        '302':
+          $ref: '#/components/responses/Redirect'
+  /clientes/guardar:
+    post:
+      operationId: saveClient
+      summary: Crear o actualizar cliente
+      description: ADMIN puede crear y actualizar; EMPLEADO solo puede crear.
+      requestBody:
+        $ref: '#/components/requestBodies/Form'
+      responses:
+        '302':
+          $ref: '#/components/responses/Redirect'
+  /clientes/eliminar/{id}:
+    post:
+      operationId: deleteClient
+      summary: Eliminar cliente
+      description: Solo ADMIN.
+      parameters:
+        - $ref: '#/components/parameters/Id'
+      responses:
+        '302':
+          $ref: '#/components/responses/Redirect'
+  /productos:
+    get:
+      operationId: listProducts
+      summary: Listar productos
+      responses:
+        '200':
+          $ref: '#/components/responses/HtmlPage'
+  /productos/nuevo:
+    get:
+      operationId: newProductForm
+      summary: Mostrar formulario de producto
+      description: Solo ADMIN.
+      responses:
+        '200':
+          $ref: '#/components/responses/HtmlPage'
+  /productos/editar/{id}:
+    get:
+      operationId: editProductForm
+      summary: Mostrar formulario de edición de producto
+      description: Solo ADMIN.
+      parameters:
+        - $ref: '#/components/parameters/Id'
+      responses:
+        '200':
+          $ref: '#/components/responses/HtmlPage'
+        '302':
+          $ref: '#/components/responses/Redirect'
+  /productos/guardar:
+    post:
+      operationId: saveProduct
+      summary: Crear o actualizar producto
+      description: Solo ADMIN. Los campos corresponden al formulario HTML.
+      requestBody:
+        $ref: '#/components/requestBodies/Form'
+      responses:
+        '302':
+          $ref: '#/components/responses/Redirect'
+  /productos/eliminar/{id}:
+    post:
+      operationId: deleteProduct
+      summary: Eliminar producto
+      description: Solo ADMIN.
+      parameters:
+        - $ref: '#/components/parameters/Id'
+      responses:
+        '302':
+          $ref: '#/components/responses/Redirect'
+  /facturas:
+    get:
+      operationId: listInvoices
+      summary: Listar facturas
+      description: EMPLEADO ve sus facturas; ADMIN ve todas.
+      responses:
+        '200':
+          $ref: '#/components/responses/HtmlPage'
+  /facturas/nuevo:
+    get:
+      operationId: newInvoiceForm
+      summary: Mostrar formulario de factura
+      responses:
+        '200':
+          $ref: '#/components/responses/HtmlPage'
+  /facturas/editar/{id}:
+    get:
+      operationId: editInvoiceForm
+      summary: Mostrar formulario de edición de factura
+      description: Solo se puede editar una factura visible para el usuario.
+      parameters:
+        - $ref: '#/components/parameters/Id'
+      responses:
+        '200':
+          $ref: '#/components/responses/HtmlPage'
+        '302':
+          $ref: '#/components/responses/Redirect'
+  /facturas/ver/{id}:
+    get:
+      operationId: viewInvoice
+      summary: Ver detalle de factura
+      parameters:
+        - $ref: '#/components/parameters/Id'
+      responses:
+        '200':
+          $ref: '#/components/responses/HtmlPage'
+  /facturas/guardar:
+    post:
+      operationId: saveInvoice
+      summary: Crear o actualizar factura
+      description: >-
+        El formulario incluye clienteId y pares repetidos de productoIds y
+        cantidades. La factura debe incluir al menos un producto válido.
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                clienteId:
+                  type: integer
+                  format: int64
+                productoIds:
+                  type: array
+                  items:
+                    type: integer
+                    format: int64
+                cantidades:
+                  type: array
+                  items:
+                    type: integer
+              additionalProperties: true
+      responses:
+        '302':
+          $ref: '#/components/responses/Redirect'
+  /facturas/entregar/{id}:
+    post:
+      operationId: markInvoiceDelivered
+      summary: Marcar factura como entregada
+      parameters:
+        - $ref: '#/components/parameters/Id'
+      responses:
+        '200':
+          description: Factura entregada correctamente
+# ==========================================
+# SECCIÓN COMPONENTES AGREGADA (Soluciona el error)
+# ==========================================
+components:
+  responses:
+    HtmlPage:
+      description: Devuelve una vista o página web HTML procesada por Thymeleaf.
+      content:
+        text/html:
+          schema:
+            type: string
+    Redirect:
+      description: Redirección HTTP (Código de estado 302) a otra ruta del sistema.
+  requestBodies:
+    Form:
+      required: true
+      content:
+        application/x-www-form-urlencoded:
+          schema:
+            type: object
+            additionalProperties: true
+  parameters:
+    Id:
+      name: id
+      in: path
+      required: true
+      description: Identificador único numérico (ID) del recurso.
+      schema:
+        type: integer
+        format: int64

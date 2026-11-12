@@ -5,7 +5,7 @@
 <nav th:replace="~{fragments/layout :: navbar('usuarios')}"></nav>
 <main class="app-main">
     <div class="mb-3">
-        <a class="btn-back text-decoration-none" th:href="@{/usuarios}">— Volver a usuarios</a>
+        <a class="btn-back text-decoration-none" th:href="@{/usuarios}">← Volver a usuarios</a>
     </div>
     <section class="user-form-card">
         <h1 th:text="${usuarioForm.id == null or usuarioForm.id == 0 ? 'Nuevo usuario' : 'Editar usuario'}">Nuevo usuario</h1>

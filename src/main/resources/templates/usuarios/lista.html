@@ -1,19 +1,19 @@
 <!doctype html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments/layout :: head('Usuarios', 'usuarios-lista')}"></head>
-<body class="app-page">
+<body class="app-page user-list-page">
 <nav th:replace="~{fragments/layout :: navbar('usuarios')}"></nav>
-<main class="app-main">
-    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 page-heading">
+<main class="app-main user-list-main">
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 page-heading user-list-heading">
         <div>
             <h1>Usuarios</h1>
             <p>Gestiona los accesos al sistema.</p>
         </div>
-        <a class="btn btn-primary" th:href="@{/usuarios/nuevo}">+ Nuevo usuario</a>
+        <a class="btn btn-primary user-new-button" th:href="@{/usuarios/nuevo}"><span aria-hidden="true">＋</span> Nuevo usuario</a>
     </div>
-    <section class="content-card">
+    <section class="content-card user-list-card">
         <div class="table-responsive">
-            <table class="table align-middle">
+            <table class="table align-middle user-list-table">
                 <thead>
                 <tr>
                     <th style="width: 60px;">N.°</th>
@@ -56,7 +56,7 @@
                 </tbody>
             </table>
         </div>
-        <footer class="table-footer">
+        <footer class="table-footer user-list-footer">
             <span>Mostrando <span th:text="${#lists.size(usuarios)}">0</span> de <span th:text="${#lists.size(usuarios)}">0</span> usuarios</span>
             <div class="pagination-pills">
                 <span class="page-pill">‹</span>
