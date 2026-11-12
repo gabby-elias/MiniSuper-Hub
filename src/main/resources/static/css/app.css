@@ -6,11 +6,11 @@
     --app-border: #e5dfed;
     --app-text: #2E2A3B;
     --app-muted: #7C739A;
-    --app-green: #174b88;
-    --app-green-dark: #113b70;
-    --app-green-soft: #e8f0fb;
-    --app-blue: #1d5ca8;
-    --app-blue-light: #eaf2ff;
+    --app-green: #6B4C8A;
+    --app-green-dark: #563d70;
+    --app-green-soft: #f3eef8;
+    --app-blue: #302744;
+    --app-blue-light: #f3eef8;
     --bs-body-color: var(--app-text);
     --bs-body-bg: var(--app-bg);
     --bs-border-color: var(--app-border);
@@ -43,7 +43,7 @@ body {
 }
 
 .stat-card .stat-value-green {
-    color: #16825f;
+    color: #493263;
 }
 
 .stat-card .stat-value-warning {
@@ -108,7 +108,7 @@ body {
 
 .table thead th {
     color: #ffffff;
-    background: #6B4C8A;
+    background: #2E2A3B;
     font-weight: 600;
     white-space: nowrap;
 }
@@ -122,23 +122,23 @@ body {
 }
 
 .btn-primary {
-    --bs-btn-bg: var(--app-green);
-    --bs-btn-border-color: var(--app-green);
-    --bs-btn-hover-bg: var(--app-green-dark);
-    --bs-btn-hover-border-color: var(--app-green-dark);
-    --bs-btn-active-bg: var(--app-green-dark);
-    --bs-btn-active-border-color: var(--app-green-dark);
+    --bs-btn-bg: #6B4C8A;
+    --bs-btn-border-color: #6B4C8A;
+    --bs-btn-hover-bg: #563d70;
+    --bs-btn-hover-border-color: #563d70;
+    --bs-btn-active-bg: #493263;
+    --bs-btn-active-border-color: #493263;
 }
 
 .btn-outline-light {
-    --bs-btn-color: #405979;
-    --bs-btn-border-color: #cad8e9;
-    --bs-btn-hover-color: var(--app-green-dark);
-    --bs-btn-hover-bg: #eaf2fc;
-    --bs-btn-hover-border-color: #a9c2e0;
-    --bs-btn-active-color: var(--app-green-dark);
-    --bs-btn-active-bg: #e2edf9;
-    --bs-btn-active-border-color: #a9c2e0;
+    --bs-btn-color: #493263;
+    --bs-btn-border-color: #ded7e9;
+    --bs-btn-hover-color: #ffffff;
+    --bs-btn-hover-bg: #6B4C8A;
+    --bs-btn-hover-border-color: #6B4C8A;
+    --bs-btn-active-color: #ffffff;
+    --bs-btn-active-bg: #493263;
+    --bs-btn-active-border-color: #493263;
 }
 
 .btn-outline-warning {
@@ -151,11 +151,11 @@ body {
 
 .btn-light {
     --bs-btn-color: #ffffff;
-    --bs-btn-bg: var(--app-green);
-    --bs-btn-border-color: var(--app-green);
+    --bs-btn-bg: #6B4C8A;
+    --bs-btn-border-color: #6B4C8A;
     --bs-btn-hover-color: #ffffff;
-    --bs-btn-hover-bg: var(--app-green-dark);
-    --bs-btn-hover-border-color: var(--app-green-dark);
+    --bs-btn-hover-bg: #563d70;
+    --bs-btn-hover-border-color: #563d70;
 }
 
 .alert-info {
@@ -164,183 +164,174 @@ body {
     --bs-alert-border-color: #c6dbee;
 }
 
-body.app-page > main a:not(.btn) {
-    color: #6B4C8A;
+.app-auth-container {
+    width: 100%;
+    max-width: 420px;
+    padding: 1.5rem;
 }
 
-body.app-page > main a:not(.btn):hover {
-    color: #7C739A;
+.auth-card {
+    border: 1px solid var(--app-border);
+    border-radius: 0.95rem;
+    box-shadow: 0 0.8rem 2.2rem rgba(30, 27, 58, 0.08);
 }
 
-.app-main > .content-card:has(> h1 ~ form) {
-    position: relative;
-    overflow: hidden;
-    padding: clamp(1.25rem, 3vw, 2rem) !important;
-    border-color: #dfe9e2;
-    border-top: 3px solid var(--app-green);
-    border-radius: 1rem;
-    box-shadow: 0 0.75rem 2rem rgba(25, 65, 43, 0.075);
+.badge.invoice-state-badge {
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 0.74rem;
+    padding: 0.35rem 0.65rem;
 }
 
-.app-main > .content-card:has(> h1 ~ form) > h1 {
-    margin-bottom: 1.5rem !important;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid #e8eee9;
-    color: #24372c;
-    font-size: clamp(1.25rem, 2vw, 1.5rem);
-    font-weight: 700;
-    letter-spacing: -0.035em;
-}
-
-.app-main > .mb-3 > a.text-decoration-none {
+.invoice-badge-status {
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
-    color: #4d6b58;
-    font-size: 0.88rem;
+    padding: 0.28rem 0.68rem;
+    border-radius: 999px;
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    border: 1px solid transparent;
+}
+
+.invoice-badge-status::before {
+    content: "";
+    width: 0.42rem;
+    height: 0.42rem;
+    border-radius: 50%;
+    background-color: currentColor;
+    opacity: 0.9;
+}
+
+.invoice-badge-status.is-delivered {
+    color: #493263;
+    background: #f1ecf7;
+    border-color: #ded7e9;
+}
+
+.invoice-badge-status.is-pending {
+    color: #98630a;
+    background: #fff8e8;
+    border-color: #fae4b5;
+}
+
+.invoice-badge-status.is-cancelled {
+    color: #b02a37;
+    background: #fdebed;
+    border-color: #f7c3c8;
+}
+
+.stat-icon {
+    width: 2.8rem;
+    height: 2.8rem;
+    border-radius: 0.75rem;
+    display: grid;
+    place-items: center;
+    font-size: 1.3rem;
+}
+
+.stat-icon-blue {
+    background: #eef2fa;
+    color: #3b5f92;
+}
+
+.stat-icon-green {
+    background: #f3eef8;
+    color: #6B4C8A;
+}
+
+.stat-icon-warning {
+    background: #fef7ea;
+    color: #b67406;
+}
+
+.btn-floating-new {
+    position: fixed;
+    right: 1.75rem;
+    bottom: 1.75rem;
+    z-index: 1010;
+    box-shadow: 0 0.45rem 1.25rem rgba(107, 76, 138, 0.35);
+    border-radius: 999px;
+    padding: 0.75rem 1.35rem;
     font-weight: 600;
-    transition: color 0.15s ease, transform 0.15s ease;
 }
 
-.app-main > .mb-3 > a.text-decoration-none:hover {
-    color: var(--app-green-dark);
-    transform: translateX(-2px);
+.dashboard-hero {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, #2E2A3B 0%, #1E1B3A 100%);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.app-main > .content-card:has(> h1 ~ form) .form-label,
-.invoice-panel .form-label {
-    margin-bottom: 0.45rem;
-    color: #394b3f;
-    font-size: 0.84rem;
-    font-weight: 650;
+.dashboard-hero::after {
+    content: "";
+    position: absolute;
+    right: -4rem;
+    top: -4rem;
+    width: 16rem;
+    height: 16rem;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(107, 76, 138, 0.35) 0%, rgba(107, 76, 138, 0) 70%);
+    pointer-events: none;
 }
 
-.app-main > .content-card:has(> h1 ~ form) .form-control,
-.app-main > .content-card:has(> h1 ~ form) .form-select,
-.invoice-panel .form-control,
-.invoice-panel .form-select {
-    min-height: 2.85rem;
-    padding: 0.68rem 0.85rem;
-    border: 1px solid #d7e2da;
-    border-radius: 0.68rem;
-    background-color: #ffffff;
-    color: var(--app-text);
-    transition: border-color 0.16s ease, box-shadow 0.16s ease, background-color 0.16s ease;
+.dashboard-hero h1 {
+    color: #ffffff;
+    font-size: clamp(1.4rem, 2.2vw, 1.9rem);
+    font-weight: 750;
+    letter-spacing: -0.03em;
 }
 
-.app-main > .content-card:has(> h1 ~ form) textarea.form-control,
-.invoice-panel textarea.form-control {
-    min-height: 6.5rem;
-    resize: vertical;
+.dashboard-hero p {
+    color: #ded7e9;
+    font-size: 0.92rem;
 }
 
-.app-main > .content-card:has(> h1 ~ form) .form-control:hover,
-.app-main > .content-card:has(> h1 ~ form) .form-select:hover,
-.invoice-panel .form-control:hover,
-.invoice-panel .form-select:hover {
-    border-color: #b8cbbd;
-}
-
-.app-main > .content-card:has(> h1 ~ form) .form-control:focus,
-.app-main > .content-card:has(> h1 ~ form) .form-select:focus,
-.invoice-panel .form-control:focus,
-.invoice-panel .form-select:focus {
-    border-color: var(--app-green);
-    background-color: #ffffff;
-    box-shadow: 0 0 0 0.22rem rgba(25, 135, 84, 0.13);
-}
-
-.app-main > .content-card:has(> h1 ~ form) .form-control::placeholder,
-.invoice-panel .form-control::placeholder {
-    color: #9aa79e;
-}
-
-.app-main > .content-card:has(> h1 ~ form) .form-text,
-.invoice-panel .form-text {
-    margin-top: 0.45rem;
-    font-size: 0.78rem;
-    line-height: 1.5;
-}
-
-.app-main > .content-card:has(> h1 ~ form) .form-check,
-.invoice-panel .form-check {
+.dashboard-quick-actions {
     display: flex;
-    min-height: 1.5rem;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+}
+
+.dashboard-action-btn {
+    display: inline-flex;
     align-items: center;
-    gap: 0.55rem;
-}
-
-.app-main > .content-card:has(> h1 ~ form) .form-check-input,
-.invoice-panel .form-check-input {
-    width: 1.15rem;
-    height: 1.15rem;
-    margin: 0;
-    border-color: #b8cbbd;
-    cursor: pointer;
-}
-
-.app-main > .content-card:has(> h1 ~ form) .form-check-input:checked,
-.invoice-panel .form-check-input:checked {
-    border-color: var(--app-green);
-    background-color: var(--app-green);
-}
-
-.app-main > .content-card:has(> h1 ~ form) .form-check-label,
-.invoice-panel .form-check-label {
-    color: #394b3f;
-    font-size: 0.86rem;
-    cursor: pointer;
-}
-
-.app-main > .content-card:has(> h1 ~ form) form > .d-flex:last-child {
-    margin-top: 1.65rem !important;
-    padding-top: 1.25rem;
-    border-top: 1px solid #e8eee9;
-}
-
-.app-main > .content-card:has(> h1 ~ form) form > .d-flex:last-child .btn,
-.invoice-panel .invoice-actions .btn {
-    min-height: 2.75rem;
-    padding-right: 1.15rem;
-    padding-left: 1.15rem;
-    border-radius: 0.68rem;
-    font-size: 0.86rem;
+    gap: 0.5rem;
+    padding: 0.55rem 0.95rem;
+    border-radius: 0.65rem;
+    background: rgba(255, 255, 255, 0.12);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    font-size: 0.82rem;
     font-weight: 600;
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    text-decoration: none;
+    transition: background 0.15s ease, transform 0.15s ease;
 }
 
-.app-main > .content-card:has(> h1 ~ form) form > .d-flex:last-child .btn:hover,
-.invoice-panel .invoice-actions .btn:hover {
+.dashboard-action-btn:hover {
+    background: rgba(255, 255, 255, 0.22);
+    color: #ffffff;
     transform: translateY(-1px);
 }
 
-.app-main > .content-card:has(> h1 ~ form) form > .d-flex:last-child .btn-primary,
-.invoice-panel .invoice-actions .btn-light {
-    box-shadow: 0 0.35rem 0.8rem rgba(25, 135, 84, 0.18);
+.dashboard-action-btn.is-primary {
+    background: #6B4C8A;
+    border-color: #6B4C8A;
 }
 
-.app-main > .content-card:has(> h1 ~ form) form > .d-flex:last-child .btn-outline-light,
-.invoice-panel .invoice-actions .btn-outline-light {
-    --bs-btn-color: #52665a;
-    --bs-btn-border-color: #d7e2da;
-    --bs-btn-hover-color: #284532;
-    --bs-btn-hover-bg: #f2f7f3;
-    --bs-btn-hover-border-color: #b8cbbd;
-    --bs-btn-active-color: #284532;
-    --bs-btn-active-bg: #eaf3ec;
-    --bs-btn-active-border-color: #b8cbbd;
+.dashboard-action-btn.is-primary:hover {
+    background: #563d70;
+    border-color: #563d70;
 }
 
-@media (max-width: 575.98px) {
-    .app-main > .content-card:has(> h1 ~ form) {
-        padding: 1.2rem !important;
-    }
-
-    .app-main > .content-card:has(> h1 ~ form) form > .d-flex:last-child {
-        flex-direction: column-reverse;
-    }
-
-    .app-main > .content-card:has(> h1 ~ form) form > .d-flex:last-child .btn {
-        width: 100%;
-    }
+.badge-low-stock {
+    background: #fdf2e9;
+    color: #b0570b;
+    border: 1px solid #fad7b5;
+    font-weight: 600;
+    font-size: 0.74rem;
+    padding: 0.3rem 0.6rem;
+    border-radius: 999px;
 }

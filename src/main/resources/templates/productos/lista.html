@@ -6,43 +6,31 @@
 <main class="app-main">
     <header class="product-list-heading">
         <div class="product-list-title">
-            <span class="product-title-icon" aria-hidden="true">📦</span>
-            <div>
-                <h1>Catálogo de Productos</h1>
-                <p th:text="${esAdmin ? 'Gestiona el inventario, existencias y precios de venta.' : 'Consulta los productos disponibles y sus precios.'}">Catálogo de productos.</p>
-            </div>
+            <h1>Catálogo de Productos</h1>
+            <p th:text="${esAdmin ? 'Gestiona el inventario, existencias y precios de venta.' : 'Consulta los productos disponibles y sus precios.'}">Catálogo de productos.</p>
         </div>
         <a th:if="${esAdmin}" class="btn product-new-button" th:href="@{/productos/nuevo}">
-            <span aria-hidden="true">＋</span> Nuevo producto
+            + Nuevo producto
         </a>
     </header>
 
     <section class="row g-3 product-stat-grid" aria-label="Resumen de inventario">
         <div class="col-6 col-xl-4">
-            <article class="product-stat-card product-stat-card--blue">
-                <span class="product-stat-icon" aria-hidden="true">📦</span>
-                <div>
-                    <span>Total productos</span>
-                    <strong th:text="${cantidadProductos}">0</strong>
-                </div>
+            <article class="product-stat-card product-stat-card--purple">
+                <span class="product-stat-label">Total productos</span>
+                <strong class="product-stat-value" th:text="${cantidadProductos}">0</strong>
             </article>
         </div>
         <div class="col-6 col-xl-4">
-            <article class="product-stat-card product-stat-card--green">
-                <span class="product-stat-icon" aria-hidden="true">$</span>
-                <div>
-                    <span th:text="${esAdmin ? 'Ventas del día' : 'Mis ventas de hoy'}">Ventas del día</span>
-                    <strong th:text="|$${#numbers.formatDecimal(ventasHoy, 1, 2)}|">$0.00</strong>
-                </div>
+            <article class="product-stat-card product-stat-card--slate">
+                <span class="product-stat-label" th:text="${esAdmin ? 'Ventas del día' : 'Mis ventas de hoy'}">Ventas del día</span>
+                <strong class="product-stat-value" th:text="|$${#numbers.formatDecimal(ventasHoy, 1, 2)}|">$0.00</strong>
             </article>
         </div>
         <div class="col-12 col-xl-4">
             <article class="product-stat-card product-stat-card--amber">
-                <span class="product-stat-icon" aria-hidden="true">⚠️</span>
-                <div>
-                    <span>Artículos con stock bajo (&le; 5)</span>
-                    <strong th:text="${cantidadStockBajo}">0</strong>
-                </div>
+                <span class="product-stat-label">Artículos con stock bajo (&le; 5)</span>
+                <strong class="product-stat-value text-amber" th:text="${cantidadStockBajo}">0</strong>
             </article>
         </div>
     </section>
@@ -50,7 +38,6 @@
     <section class="product-table-card">
         <div class="product-toolbar">
             <label class="product-filter-search">
-                <span aria-hidden="true">⌕</span>
                 <input type="search" placeholder="Buscar por producto o categoría..." aria-label="Buscar productos" data-table-search>
                 <kbd>Ctrl K</kbd>
             </label>
@@ -83,19 +70,13 @@
                     data-search-row
                     th:attr="data-stock-status=${producto.stock == 0 ? 'agotado' : (producto.stock <= 5 ? 'bajo' : 'disponible')}">
                     <td>
-                        <div class="product-name-cell">
-                            <span class="product-avatar-icon" th:text="${#strings.substring(producto.nombre, 0, 1)}">P</span>
-                            <div class="product-name-info">
-                                <strong th:text="${producto.nombre}">Nombre</strong>
-                                <span class="product-unit-pill" th:if="${producto.unidadMedida != null and !#strings.isEmpty(producto.unidadMedida)}" th:text="${producto.unidadMedida}">unidad</span>
-                            </div>
+                        <div class="product-name-info">
+                            <strong th:text="${producto.nombre}">Nombre</strong>
+                            <span class="product-unit-pill" th:if="${producto.unidadMedida != null and !#strings.isEmpty(producto.unidadMedida)}" th:text="${producto.unidadMedida}">unidad</span>
                         </div>
                     </td>
                     <td>
-                        <span class="product-category-tag">
-                            <span aria-hidden="true">🏷️</span>
-                            <span th:text="${producto.categoria != null ? producto.categoria.nombreCategoria : 'Sin categoría'}">Categoría</span>
-                        </span>
+                        <span class="product-category-tag" th:text="${producto.categoria != null ? producto.categoria.nombreCategoria : 'Sin categoría'}">Categoría</span>
                     </td>
                     <td>
                         <span class="product-price-val" th:text="|$${#numbers.formatDecimal(producto.precioVenta, 1, 2)}|">$0.00</span>

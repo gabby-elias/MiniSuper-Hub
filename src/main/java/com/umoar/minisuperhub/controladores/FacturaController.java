@@ -12,6 +12,7 @@ import com.umoar.minisuperhub.servicios.ProductoService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
@@ -193,8 +195,9 @@ public class FacturaController {
     }
 
     @PostMapping("/eliminar/{id}")
-    public String eliminar(@PathVariable Long id, RedirectAttributes redirectAttributes) {
-        facturaService.eliminar(id);
+    public String eliminar(@PathVariable Long id, Authentication authentication, RedirectAttributes redirectAttributes) {
+        Factura factura = buscarFacturaAutorizada(id, authentication);
+        facturaService.eliminar(factura.getId());
         redirectAttributes.addFlashAttribute("alertType", "success");
         redirectAttributes.addFlashAttribute("alertMessage", "Factura eliminada correctamente.");
         return "redirect:/facturas";
@@ -210,7 +213,7 @@ public class FacturaController {
         return (admin
                 ? facturaService.buscarPorId(id)
                 : facturaService.buscarPorIdYVendedor(id, authentication.getName()))
-                .orElseThrow(() -> new EntityNotFoundException("Factura no encontrada: " + id));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Factura no encontrada: " + id));
     }
 
     private boolean esAdmin(Authentication authentication) {

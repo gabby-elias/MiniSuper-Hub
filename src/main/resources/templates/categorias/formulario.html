@@ -6,16 +6,12 @@
 <main class="app-main">
     <div class="category-form-wrapper">
         <a class="category-form-back" th:href="@{/categorias}">
-            <span aria-hidden="true">←</span> Volver a categorías
+            ← Volver a categorías
         </a>
 
         <section class="category-form-card">
             <header class="category-form-header">
-                <span class="category-form-icon" aria-hidden="true">🗂️</span>
-                <div>
-                    <h1 th:text="${categoria.id == 0 ? 'Crear Nueva Categoría' : 'Editar Categoría de Producto'}">Categoría</h1>
-                    <p th:text="${categoria.id == 0 ? 'Asigna un nombre descriptivo para agrupar productos similares.' : 'Modifica el nombre de la categoría en el catálogo.'}">Formulario de categoría.</p>
-                </div>
+                <h1 th:text="${categoria.id == 0 ? 'Nueva categoría' : 'Editar categoría'}">Categoría</h1>
             </header>
 
             <form class="category-form-body" th:action="@{/categorias/guardar}" th:object="${categoria}" method="post"
@@ -28,22 +24,12 @@
                 <div class="mb-3">
                     <label for="nombreCategoria" class="form-label">Nombre de la categoría <span class="text-danger">*</span></label>
                     <input id="nombreCategoria" class="form-control" type="text" th:field="*{nombreCategoria}"
-                           maxlength="100" placeholder="Ej.: Bebidas, Lácteos, Granos Básicos, Limpieza..." required autofocus>
-                    <div class="form-text">Usa un nombre corto y claro que facilite la búsqueda en facturación.</div>
-                </div>
-
-                <div class="category-tips-banner">
-                    <span aria-hidden="true">💡</span>
-                    <div>
-                        <strong>Consejo de organización:</strong>
-                        <p class="mb-0 mt-1">Las categorías permiten a los vendedores filtrar productos rápidamente al momento de despachar o cobrar una factura en mostrador.</p>
-                    </div>
+                           maxlength="100" placeholder="Nombre de la categoría" required autofocus>
                 </div>
 
                 <div class="category-form-actions">
                     <a class="btn btn-outline-secondary" th:href="@{/categorias}">Cancelar</a>
                     <button class="btn btn-submit-category" type="submit">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
                         Guardar categoría
                     </button>
                 </div>

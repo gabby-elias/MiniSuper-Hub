@@ -1,10 +1,13 @@
 package com.umoar.minisuperhub.controladores;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @ControllerAdvice(annotations = Controller.class)
@@ -26,5 +29,10 @@ public class CrudAlertExceptionHandler {
         redirectAttributes.addFlashAttribute("alertMessage",
                 "No se pudo eliminar porque el registro está relacionado con otros datos.");
         return "redirect:" + base;
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public void manejarNoEncontrado() {
     }
 }

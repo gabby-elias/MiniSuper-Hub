@@ -6,34 +6,25 @@
 <main class="app-main">
     <header class="category-list-heading">
         <div class="category-list-title">
-            <span class="category-title-icon" aria-hidden="true">🗂️</span>
-            <div>
-                <h1>Categorías de Productos</h1>
-                <p th:text="${esAdmin ? 'Organiza y clasifica los artículos del catálogo de tu minisúper.' : 'Consulta las categorías disponibles en el inventario.'}">Categorías.</p>
-            </div>
+            <h1>Categorías de Productos</h1>
+            <p th:text="${esAdmin ? 'Organiza y clasifica los artículos del catálogo de tu minisúper.' : 'Consulta las categorías disponibles en el inventario.'}">Categorías.</p>
         </div>
-        <a th:if="${esAdmin}" class="btn category-new-button" th:href="@{/categorias/nuevo}">
-            <span aria-hidden="true">＋</span> Nueva categoría
-        </a>
+        <button th:if="${esAdmin}" type="button" class="btn category-new-button" data-bs-toggle="modal" data-bs-target="#modalNuevaCategoria">
+            + Nueva categoría
+        </button>
     </header>
 
     <section class="row g-3 category-stat-grid" aria-label="Resumen de categorías">
         <div class="col-12 col-md-6">
-            <article class="category-stat-card category-stat-card--teal">
-                <span class="category-stat-icon" aria-hidden="true">🗂️</span>
-                <div>
-                    <span>Total categorías activas</span>
-                    <strong th:text="${#lists.size(categorias)}">0</strong>
-                </div>
+            <article class="category-stat-card category-stat-card--purple">
+                <span class="category-stat-label">Total categorías activas</span>
+                <strong class="category-stat-value" th:text="${#lists.size(categorias)}">0</strong>
             </article>
         </div>
         <div class="col-12 col-md-6">
-            <article class="category-stat-card category-stat-card--blue">
-                <span class="category-stat-icon" aria-hidden="true">🏷️</span>
-                <div>
-                    <span>Clasificación del inventario</span>
-                    <strong>Catálogo general</strong>
-                </div>
+            <article class="category-stat-card category-stat-card--slate">
+                <span class="category-stat-label">Clasificación del inventario</span>
+                <strong class="category-stat-value">Catálogo general</strong>
             </article>
         </div>
     </section>
@@ -41,7 +32,6 @@
     <section class="category-table-card">
         <div class="category-toolbar">
             <label class="category-filter-search">
-                <span aria-hidden="true">⌕</span>
                 <input type="search" placeholder="Buscar categoría por nombre o código..." aria-label="Buscar categorías" data-table-search>
                 <kbd>Ctrl K</kbd>
             </label>
@@ -62,10 +52,7 @@
                         <span class="category-id-pill" th:text="|#${categoria.id}|">#0</span>
                     </td>
                     <td>
-                        <div class="category-name-cell">
-                            <span class="category-badge-icon" aria-hidden="true">📁</span>
-                            <span class="category-name-text" th:text="${categoria.nombreCategoria}">Nombre</span>
-                        </div>
+                        <strong class="category-name-text" th:text="${categoria.nombreCategoria}">Nombre</strong>
                     </td>
                     <td th:if="${esAdmin}">
                         <div class="category-row-actions">
@@ -96,6 +83,36 @@
             <span id="categoryResultCount" th:text="|Mostrando ${#lists.size(categorias)} categorías|">Mostrando categorías</span>
         </footer>
     </section>
+
+    <!-- Modal Simplificado: Crear Categoría -->
+    <div class="modal fade modal-category-clean" id="modalNuevaCategoria" tabindex="-1" aria-labelledby="modalNuevaCategoriaTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title fs-5" id="modalNuevaCategoriaTitle">Nueva categoría</h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <form th:action="@{/categorias/guardar}" method="post"
+                      data-swal-confirm data-swal-action="save"
+                      data-swal-title="¿Guardar categoría?"
+                      data-swal-text="Confirma para guardar la nueva categoría."
+                      data-swal-confirm-text="Sí, guardar">
+                    <input type="hidden" name="id" value="0">
+                    <div class="modal-body">
+                        <div class="mb-2">
+                            <label for="modalNombreCategoria" class="form-label fw-semibold text-dark">Nombre de la categoría</label>
+                            <input id="modalNombreCategoria" name="nombreCategoria" class="form-control" type="text"
+                                   maxlength="100" placeholder="Nombre de la categoría" required autofocus>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Guardar categoría</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </main>
 <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
 <script>
