@@ -17,7 +17,16 @@ document.addEventListener('DOMContentLoaded', () => {
             if (event.defaultPrevented || form.dataset.confirmed === 'true') return;
             event.preventDefault();
             const isDelete = form.dataset.swalAction === 'delete';
-            Swal.fire({
+            if (!window.Swal) {
+                const title = form.dataset.swalTitle || '¿Estás seguro?';
+                const text = form.dataset.swalText || 'Confirma para continuar.';
+                if (window.confirm(`${title}\n\n${text}`)) {
+                    form.dataset.confirmed = 'true';
+                    form.requestSubmit();
+                }
+                return;
+            }
+            window.Swal.fire({
                 title: form.dataset.swalTitle || '¿Estás seguro?',
                 text: form.dataset.swalText || 'Confirma para continuar.',
                 icon: isDelete ? 'warning' : 'question',

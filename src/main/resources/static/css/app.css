@@ -7,10 +7,10 @@
     --app-text: #2E2A3B;
     --app-muted: #7C739A;
     --app-green: #6B4C8A;
-    --app-green-dark: #563d70;
-    --app-green-soft: #f3eef8;
-    --app-blue: #302744;
-    --app-blue-light: #f3eef8;
+    --app-green-dark: #583c74;
+    --app-green-soft: #eee9f4;
+    --app-blue: #1d5ca8;
+    --app-blue-light: #eaf2ff;
     --bs-body-color: var(--app-text);
     --bs-body-bg: var(--app-bg);
     --bs-border-color: var(--app-border);
@@ -131,14 +131,14 @@ body {
 }
 
 .btn-outline-light {
-    --bs-btn-color: #493263;
+    --bs-btn-color: #55475A;
     --bs-btn-border-color: #ded7e9;
     --bs-btn-hover-color: #ffffff;
     --bs-btn-hover-bg: #6B4C8A;
     --bs-btn-hover-border-color: #6B4C8A;
     --bs-btn-active-color: #ffffff;
-    --bs-btn-active-bg: #493263;
-    --bs-btn-active-border-color: #493263;
+    --bs-btn-active-bg: #583c74;
+    --bs-btn-active-border-color: #583c74;
 }
 
 .btn-outline-warning {
@@ -231,9 +231,13 @@ body {
     font-size: 1.3rem;
 }
 
-.stat-icon-blue {
-    background: #eef2fa;
-    color: #3b5f92;
+.app-main > .content-card:has(> h1 ~ form) .form-control:focus,
+.app-main > .content-card:has(> h1 ~ form) .form-select:focus,
+.invoice-panel .form-control:focus,
+.invoice-panel .form-select:focus {
+    border-color: var(--app-green);
+    background-color: #ffffff;
+    box-shadow: 0 0 0 0.22rem rgba(107, 76, 138, 0.15);
 }
 
 .stat-icon-green {

@@ -94,6 +94,7 @@ public class FacturaController {
     @GetMapping("/ver/{id}")
     public String ver(@PathVariable Long id, Authentication authentication, Model model) {
         model.addAttribute("factura", buscarFacturaAutorizada(id, authentication));
+        model.addAttribute("productos", productoService.listar());
         model.addAttribute("nombreMinisuper", nombreMinisuper);
         model.addAttribute("direccionMinisuper", direccionMinisuper);
         model.addAttribute("telefonoMinisuper", telefonoMinisuper);
@@ -166,6 +167,39 @@ public class FacturaController {
                 ? "Factura guardada correctamente."
                 : "Factura actualizada correctamente.");
         return "redirect:/facturas";
+    }
+
+    @PostMapping("/agregar-producto/{id}")
+    public String agregarProducto(@PathVariable Long id,
+                                  @RequestParam Long productoId,
+                                  @RequestParam int cantidad,
+                                  Authentication authentication,
+                                  RedirectAttributes redirectAttributes) {
+        Factura factura = buscarFacturaAutorizada(id, authentication);
+        if (factura.isAnulada()) {
+            redirectAttributes.addFlashAttribute("alertType", "error");
+            redirectAttributes.addFlashAttribute("alertMessage", "No se puede modificar una factura anulada.");
+            return "redirect:/facturas/ver/" + id;
+        }
+        if (cantidad < 1) {
+            redirectAttributes.addFlashAttribute("alertType", "error");
+            redirectAttributes.addFlashAttribute("alertMessage", "La cantidad debe ser mayor que cero.");
+            return "redirect:/facturas/ver/" + id;
+        }
+
+        Producto producto = productoService.buscarPorId(productoId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        double subtotal = producto.getPrecioVenta() * cantidad;
+        DetalleFactura detalle = DetalleFactura.builder()
+                .producto(producto)
+                .cantidad(cantidad)
+                .precioUnitario(producto.getPrecioVenta())
+                .subtotal(subtotal)
+                .build();
+        facturaService.agregarDetalle(id, detalle);
+        redirectAttributes.addFlashAttribute("alertType", "success");
+        redirectAttributes.addFlashAttribute("alertMessage", "Producto agregado a la factura.");
+        return "redirect:/facturas/ver/" + id;
     }
 
     @PostMapping("/entregar/{id}")
