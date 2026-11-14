@@ -25,15 +25,13 @@
     backdrop-filter: blur(10px);
 }
 
-.login-card .fs-1 {
-    display: grid;
-    width: 3.5rem;
-    height: 3.5rem;
+.login-cart-image {
+    display: block;
+    width: 5rem;
+    height: 4.35rem;
     margin: 0 auto 1rem;
-    place-items: center;
-    border-radius: 1rem;
-    background: #eee9f4;
-    font-size: 1.65rem !important;
+    object-fit: contain;
+    object-position: center;
 }
 
 .login-card h1 {

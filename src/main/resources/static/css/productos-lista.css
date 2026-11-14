@@ -169,8 +169,26 @@ body.app-page > main.app-main {
 }
 
 .product-name {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
     color: #1e163b;
     font-weight: 500;
+}
+
+.product-food-icon {
+    display: inline-grid;
+    width: 2rem;
+    height: 2rem;
+    flex: 0 0 2rem;
+    place-items: center;
+    border-radius: 0.6rem;
+    background: #fff2e7;
+    font-size: 1rem;
+}
+
+.product-food-icon--chicken {
+    background: #fff0e3;
 }
 
 .product-category-text {
