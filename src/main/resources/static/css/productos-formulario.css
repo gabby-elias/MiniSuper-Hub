@@ -1,3 +1,4 @@
+/* Layout de ancho completo */
 body.app-page > main.app-main {
     box-sizing: border-box;
     width: calc(100% - var(--sidebar-width));
@@ -5,7 +6,8 @@ body.app-page > main.app-main {
     min-width: 0;
     min-height: calc(100vh - var(--topbar-height));
     margin: var(--topbar-height) 0 0 var(--sidebar-width);
-    padding: 1.5rem clamp(1.25rem, 2.4vw, 2.5rem) 2.5rem;
+    padding: 1.75rem clamp(1.25rem, 2.5vw, 2.5rem) 2.5rem;
+    background-color: #f7f8fc;
 }
 
 @media (max-width: 720px) {
@@ -16,8 +18,10 @@ body.app-page > main.app-main {
     }
 }
 
+/* Enlace Volver */
 .product-form-wrapper {
-    width: min(100%, 1100px);
+    width: 100%;
+    max-width: 680px;
     margin: 0;
 }
 
@@ -25,121 +29,277 @@ body.app-page > main.app-main {
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
-    margin-bottom: 1.15rem;
-    color: #6B4C8A !important;
-    font-size: 0.86rem;
-    font-weight: 600;
+    margin-bottom: 1.25rem;
+    color: #4b455b !important;
+    font-size: 0.88rem;
+    font-weight: 500;
     text-decoration: none;
     transition: color 0.15s ease;
 }
 
 .product-form-back:hover {
-    color: #493263 !important;
+    color: #1e163b !important;
 }
 
+/* Card del formulario (Imagen 3) */
 .product-form-card {
-    border: 1px solid #e5dfed;
-    border-radius: 0.85rem;
     background: #ffffff;
-    box-shadow: 0 0.35rem 1.2rem rgba(30, 27, 58, 0.045);
-    overflow: hidden;
+    border: 1px solid #ede8f5;
+    border-radius: 1.25rem;
+    box-shadow: 0 4px 20px rgba(30, 22, 59, 0.04);
+    padding: 2.25rem 2.25rem 2rem;
 }
 
-.product-form-header {
-    padding: 1.25rem 1.6rem;
-    border-bottom: 1px solid #ede8f5;
-    background: #faf9fc;
-}
-
-.product-form-header h1 {
-    margin: 0;
-    color: #2E2A3B;
-    font-size: 1.35rem;
-    font-weight: 750;
-    letter-spacing: -0.025em;
-}
-
-.product-form-body {
-    padding: 1.6rem;
-}
-
-.product-form-section-title {
-    margin-bottom: 1rem;
-    padding-bottom: 0.35rem;
-    border-bottom: 1px solid #ede8f5;
-    color: #302744;
-    font-size: 0.84rem;
+.product-form-title {
+    margin: 0 0 1.75rem 0;
+    color: #1e163b;
+    font-size: 1.55rem;
     font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
+    letter-spacing: -0.02em;
 }
 
-.form-label {
-    margin-bottom: 0.4rem;
-    color: #2E2A3B;
+/* Labels */
+.form-field-group {
+    margin-bottom: 1.25rem;
+}
+
+.form-label-custom {
+    display: block;
+    margin-bottom: 0.45rem;
+    color: #1e163b;
     font-size: 0.86rem;
     font-weight: 600;
 }
 
-.required-star {
-    color: #dc3545;
-    margin-left: 0.15rem;
+/* Inputs de texto y selects */
+.form-control-custom,
+.form-select-custom {
+    width: 100%;
+    height: 44px;
+    padding: 0.55rem 0.95rem;
+    border: 1px solid #dcd7e6;
+    border-radius: 0.65rem;
+    background-color: #ffffff;
+    color: #1e163b;
+    font-size: 0.88rem;
+    outline: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
-.unit-quick-picks {
+.form-control-custom:focus,
+.form-select-custom:focus {
+    border-color: #654388;
+    box-shadow: 0 0 0 3px rgba(101, 67, 136, 0.15);
+}
+
+.form-control-custom::placeholder {
+    color: #9f99ad;
+}
+
+/* Stepper de Existencias (Imagen 3) */
+.stock-stepper-box {
     display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem;
-    margin-top: 0.45rem;
+    align-items: center;
+    width: 100%;
+    height: 44px;
+    border: 1px solid #dcd7e6;
+    border-radius: 0.65rem;
+    background-color: #ffffff;
+    overflow: hidden;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
-.unit-tag-btn {
-    border: 1px solid #ded7e9;
-    border-radius: 999px;
-    background: #faf9fc;
-    color: #563d70;
-    font-size: 0.74rem;
-    font-weight: 550;
-    padding: 0.2rem 0.65rem;
+.stock-stepper-box:focus-within {
+    border-color: #654388;
+    box-shadow: 0 0 0 3px rgba(101, 67, 136, 0.15);
+}
+
+.stepper-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 100%;
+    border: none;
+    background: transparent;
+    color: #7c739a;
+    font-size: 1.25rem;
+    font-weight: 500;
     cursor: pointer;
-    transition: all 0.12s ease;
+    user-select: none;
+    transition: background-color 0.15s ease, color 0.15s ease;
 }
 
-.unit-tag-btn:hover {
-    border-color: #6B4C8A;
-    background: #f6f2fa;
-    color: #6B4C8A;
+.stepper-btn:hover {
+    background-color: #f6f4fa;
+    color: #1e163b;
 }
 
+.stepper-btn:active {
+    background-color: #ede9f5;
+}
+
+.stepper-input {
+    flex: 1;
+    min-width: 0;
+    height: 100%;
+    border: none;
+    outline: none;
+    text-align: center;
+    color: #1e163b;
+    font-size: 0.95rem;
+    font-weight: 600;
+    background: transparent;
+    -moz-appearance: textfield;
+}
+
+.stepper-input::-webkit-outer-spin-button,
+.stepper-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Pills de Agregar Rápido (+5, +10, +20) */
+.quick-add-container {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    margin-top: 0.5rem;
+}
+
+.quick-add-label {
+    color: #7c739a;
+    font-size: 0.78rem;
+    font-weight: 500;
+    margin-right: 0.2rem;
+}
+
+.quick-add-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.15rem 0.65rem;
+    border: none;
+    border-radius: 9999px;
+    background-color: #efe9f7;
+    color: #654388;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.15s ease, transform 0.1s ease;
+}
+
+.quick-add-pill:hover {
+    background-color: #e4d8f2;
+    transform: translateY(-1px);
+}
+
+.quick-add-pill:active {
+    background-color: #d7c5ec;
+    transform: translateY(0);
+}
+
+/* Input group para Precio de venta ($) */
+.price-input-group {
+    display: flex;
+    align-items: stretch;
+    width: 100%;
+    height: 44px;
+    border: 1px solid #dcd7e6;
+    border-radius: 0.65rem;
+    background-color: #ffffff;
+    overflow: hidden;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.price-input-group:focus-within {
+    border-color: #654388;
+    box-shadow: 0 0 0 3px rgba(101, 67, 136, 0.15);
+}
+
+.price-prefix {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 0.95rem;
+    background-color: #f7f6fa;
+    border-right: 1px solid #dcd7e6;
+    color: #7c739a;
+    font-size: 0.95rem;
+    font-weight: 500;
+    user-select: none;
+}
+
+.price-input {
+    flex: 1;
+    min-width: 0;
+    height: 100%;
+    padding: 0 0.85rem;
+    border: none;
+    outline: none;
+    color: #1e163b;
+    font-size: 0.92rem;
+    background: transparent;
+}
+
+.price-input::placeholder {
+    color: #9f99ad;
+}
+
+/* Botones inferiores (Cancelar / Guardar) */
 .product-form-actions {
     display: flex;
     align-items: center;
     justify-content: flex-end;
     gap: 0.75rem;
-    margin-top: 1.75rem;
-    padding-top: 1.25rem;
-    border-top: 1px solid #ede8f5;
+    margin-top: 2rem;
 }
 
-.btn-submit-product {
+.btn-form-cancel {
     display: inline-flex;
     align-items: center;
-    padding: 0.65rem 1.4rem;
-    border: none;
-    border-radius: 0.6rem;
-    background: #6B4C8A;
-    color: #ffffff;
+    justify-content: center;
+    padding: 0.6rem 1.4rem;
+    border: 1px solid #dcd7e6;
+    border-radius: 0.65rem;
+    background-color: #ffffff;
+    color: #4b455b !important;
     font-size: 0.88rem;
-    font-weight: 650;
-    box-shadow: 0 0.35rem 0.85rem rgba(107, 76, 138, 0.22);
-    transition: background-color 0.15s ease;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.15s ease;
+    cursor: pointer;
 }
 
-.btn-submit-product:hover {
-    background: #563d70;
-    color: #ffffff;
+.btn-form-cancel:hover {
+    background-color: #f7f4fb;
+    border-color: #c4bdd4;
+    color: #1e163b !important;
 }
 
-.btn-submit-product:active {
-    background: #493263;
+.btn-form-submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.6rem 1.6rem;
+    border: none;
+    border-radius: 0.65rem;
+    background-color: #654388;
+    color: #ffffff !important;
+    font-size: 0.88rem;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(101, 67, 136, 0.22);
+    transition: background-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+    cursor: pointer;
+}
+
+.btn-form-submit:hover {
+    background-color: #543472;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px rgba(101, 67, 136, 0.28);
+}
+
+.btn-form-submit:active {
+    background-color: #43265d;
+    transform: translateY(0);
 }

@@ -50,8 +50,6 @@ public class ReportesController {
     private final ProductoService productoService;
     private final FacturaExcelService facturaExcelService;
 
-    private static final ZoneId ZONA_HORARIA = ZoneId.of("America/El_Salvador");
-
     @GetMapping("/reportes")
     @Transactional(readOnly = true)
     public String mostrar(

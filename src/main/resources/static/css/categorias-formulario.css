@@ -1,1 +1,148 @@
-/* Estilos específicos de templates/categorias/formulario.html. */
+/* Layout de ancho completo */
+body.app-page > main.app-main {
+    box-sizing: border-box;
+    width: calc(100% - var(--sidebar-width));
+    max-width: none;
+    min-width: 0;
+    min-height: calc(100vh - var(--topbar-height));
+    margin: var(--topbar-height) 0 0 var(--sidebar-width);
+    padding: 1.75rem clamp(1.25rem, 2.5vw, 2.5rem) 2.5rem;
+    background-color: #f7f8fc;
+}
+
+@media (max-width: 720px) {
+    body.app-page > main.app-main {
+        width: 100%;
+        margin-left: 0;
+        padding: 1rem 0.85rem 2rem;
+    }
+}
+
+.category-form-wrapper {
+    width: 100%;
+    max-width: 600px;
+    margin: 0;
+}
+
+.category-form-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-bottom: 1.25rem;
+    color: #4b455b !important;
+    font-size: 0.88rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.15s ease;
+}
+
+.category-form-back:hover {
+    color: #1e163b !important;
+}
+
+.category-form-card {
+    background: #ffffff;
+    border: 1px solid #ede8f5;
+    border-radius: 1.25rem;
+    box-shadow: 0 4px 20px rgba(30, 22, 59, 0.04);
+    padding: 2.25rem 2.25rem 2rem;
+}
+
+.category-form-title {
+    margin: 0 0 1.75rem 0;
+    color: #1e163b;
+    font-size: 1.55rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+.form-field-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-label-custom {
+    display: block;
+    margin-bottom: 0.45rem;
+    color: #1e163b;
+    font-size: 0.86rem;
+    font-weight: 600;
+}
+
+.form-control-custom {
+    width: 100%;
+    height: 44px;
+    padding: 0.55rem 0.95rem;
+    border: 1px solid #dcd7e6;
+    border-radius: 0.65rem;
+    background-color: #ffffff;
+    color: #1e163b;
+    font-size: 0.88rem;
+    outline: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.form-control-custom:focus {
+    border-color: #654388;
+    box-shadow: 0 0 0 3px rgba(101, 67, 136, 0.15);
+}
+
+.form-control-custom::placeholder {
+    color: #9f99ad;
+}
+
+.category-form-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: 2rem;
+}
+
+.btn-form-cancel {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.6rem 1.4rem;
+    border: 1px solid #dcd7e6;
+    border-radius: 0.65rem;
+    background-color: #ffffff;
+    color: #4b455b !important;
+    font-size: 0.88rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.15s ease;
+    cursor: pointer;
+}
+
+.btn-form-cancel:hover {
+    background-color: #f7f4fb;
+    border-color: #c4bdd4;
+    color: #1e163b !important;
+}
+
+.btn-form-submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.6rem 1.6rem;
+    border: none;
+    border-radius: 0.65rem;
+    background-color: #654388;
+    color: #ffffff !important;
+    font-size: 0.88rem;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(101, 67, 136, 0.22);
+    transition: background-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+    cursor: pointer;
+}
+
+.btn-form-submit:hover {
+    background-color: #543472;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px rgba(101, 67, 136, 0.28);
+}
+
+.btn-form-submit:active {
+    background-color: #43265d;
+    transform: translateY(0);
+}

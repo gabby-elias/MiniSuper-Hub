@@ -4,87 +4,84 @@
 <body class="app-page">
 <nav th:replace="~{fragments/layout :: navbar('categorias')}"></nav>
 <main class="app-main">
-    <header class="category-list-heading">
-        <div class="category-list-title">
-            <h1>Categorías de Productos</h1>
-            <p th:text="${esAdmin ? 'Organiza y clasifica los artículos del catálogo de tu minisúper.' : 'Consulta las categorías disponibles en el inventario.'}">Categorías.</p>
+    <!-- Encabezado -->
+    <header class="category-page-header">
+        <div class="category-page-title">
+            <h1>Categorías</h1>
+            <p>Organiza los productos de tu minisúper.</p>
         </div>
-        <button th:if="${esAdmin}" type="button" class="btn category-new-button" data-bs-toggle="modal" data-bs-target="#modalNuevaCategoria">
+        <button th:if="${esAdmin}" type="button" class="btn-category-new" data-bs-toggle="modal" data-bs-target="#modalNuevaCategoria">
             + Nueva categoría
         </button>
     </header>
 
-    <section class="row g-3 category-stat-grid" aria-label="Resumen de categorías">
-        <div class="col-12 col-md-6">
-            <article class="category-stat-card category-stat-card--purple">
-                <span class="category-stat-label">Total categorías activas</span>
-                <strong class="category-stat-value" th:text="${#lists.size(categorias)}">0</strong>
-            </article>
-        </div>
-        <div class="col-12 col-md-6">
-            <article class="category-stat-card category-stat-card--slate">
-                <span class="category-stat-label">Clasificación del inventario</span>
-                <strong class="category-stat-value">Catálogo general</strong>
-            </article>
-        </div>
-    </section>
-
-    <section class="category-table-card">
-        <div class="category-toolbar">
-            <label class="category-filter-search">
-                <input type="search" placeholder="Buscar categoría por nombre o código..." aria-label="Buscar categorías" data-table-search>
-                <kbd>Ctrl K</kbd>
-            </label>
-        </div>
-
+    <!-- Card de la Tabla -->
+    <section class="category-card">
         <div class="table-responsive">
-            <table class="table category-list-table align-middle">
+            <table class="table category-table align-middle">
                 <thead>
                 <tr>
-                    <th style="width: 120px;">Código</th>
-                    <th>Nombre de la Categoría</th>
-                    <th th:if="${esAdmin}" class="text-end" style="width: 140px;">Acciones</th>
+                    <th style="width: 100px;">N.°</th>
+                    <th>Nombre de categoría</th>
+                    <th class="text-center" style="width: 160px;">Productos</th>
+                    <th th:if="${esAdmin}" class="text-end" style="width: 240px;">Acciones</th>
                 </tr>
                 </thead>
-                <tbody>
-                <tr th:each="categoria : ${categorias}" data-category-row data-search-row>
+                <tbody id="categoryTableBody">
+                <tr th:each="categoria, stat : ${categorias}" data-category-row data-search-row th:attr="data-category-id=${categoria.id}">
                     <td>
-                        <span class="category-id-pill" th:text="|#${categoria.id}|">#0</span>
+                        <span class="category-row-num" th:text="${stat.count}">1</span>
                     </td>
                     <td>
-                        <strong class="category-name-text" th:text="${categoria.nombreCategoria}">Nombre</strong>
+                        <span class="category-name" th:text="${categoria.nombreCategoria}">Nombre</span>
                     </td>
-                    <td th:if="${esAdmin}">
-                        <div class="category-row-actions">
-                            <a class="category-action-button" th:href="@{/categorias/editar/{id}(id=${categoria.id})}" aria-label="Editar categoría" title="Editar categoría">
-                                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 5 4 4M4 20l4-.8L19.2 8a2.1 2.1 0 0 0-3-3L5 16.2 4 20Z"/></svg>
+                    <td class="text-center">
+                        <span class="category-count-badge"
+                              th:text="${productosPorCategoria != null and productosPorCategoria.containsKey(categoria.id) ? productosPorCategoria.get(categoria.id) : 0}">
+                            0
+                        </span>
+                    </td>
+                    <td th:if="${esAdmin}" class="text-end">
+                        <div class="category-actions">
+                            <button type="button" class="btn-action-outline" data-bs-toggle="modal" th:attr="data-bs-target='#modalVerCategoria' + ${categoria.id}">
+                                Ver
+                            </button>
+                            <a class="btn-action-outline" th:href="@{/categorias/editar/{id}(id=${categoria.id})}">
+                                Editar
                             </a>
                             <form th:action="@{/categorias/eliminar/{id}(id=${categoria.id})}" method="post" class="d-inline"
                                   data-swal-confirm data-swal-action="delete"
                                   data-swal-title="¿Eliminar categoría?"
                                   data-swal-text="Si la categoría tiene productos asociados, no podrá ser eliminada.">
-                                <button class="category-action-button category-action-button--delete" type="submit" aria-label="Eliminar categoría" title="Eliminar categoría">
-                                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M10 11v6m4-6v6M6 7l1 14h10l1-14M9 7V4h6v3"/></svg>
+                                <button class="btn-action-outline btn-action-delete" type="submit">
+                                    Eliminar
                                 </button>
                             </form>
                         </div>
                     </td>
                 </tr>
                 <tr th:if="${#lists.isEmpty(categorias)}" class="category-empty-row">
-                    <td th:colspan="${esAdmin ? 3 : 2}" class="text-center">No hay categorías registradas en el catálogo.</td>
+                    <td th:colspan="${esAdmin ? 4 : 3}" class="text-center py-5 text-muted">No hay categorías registradas en el catálogo.</td>
                 </tr>
-                <tr data-category-no-results hidden class="category-empty-row">
-                    <td th:colspan="${esAdmin ? 3 : 2}" class="text-center">No se encontraron categorías que coincidan con la búsqueda.</td>
+                <tr id="categoryNoResultsRow" style="display: none;" class="category-empty-row">
+                    <td th:colspan="${esAdmin ? 4 : 3}" class="text-center py-5 text-muted">No se encontraron categorías que coincidan con la búsqueda.</td>
                 </tr>
                 </tbody>
             </table>
         </div>
-        <footer class="category-table-footer">
-            <span id="categoryResultCount" th:text="|Mostrando ${#lists.size(categorias)} categorías|">Mostrando categorías</span>
+
+        <!-- Footer con conteo y paginación -->
+        <footer class="category-footer">
+            <span id="categoryCounterText">
+                Mostrando <strong id="categoryVisibleCount" th:text="${#lists.size(categorias) > 5 ? 5 : #lists.size(categorias)}">0</strong> de <strong id="categoryTotalCount" th:text="${#lists.size(categorias)}">0</strong> categorías
+            </span>
+            <div class="pagination-wrapper" id="categoryPagination">
+                <!-- Se llena mediante script -->
+            </div>
         </footer>
     </section>
 
-    <!-- Modal Simplificado: Crear Categoría -->
+    <!-- Modal: Nueva Categoría -->
     <div class="modal fade modal-category-clean" id="modalNuevaCategoria" tabindex="-1" aria-labelledby="modalNuevaCategoriaTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -99,45 +96,185 @@
                       data-swal-confirm-text="Sí, guardar">
                     <input type="hidden" name="id" value="0">
                     <div class="modal-body">
-                        <div class="mb-2">
-                            <label for="modalNombreCategoria" class="form-label fw-semibold text-dark">Nombre de la categoría</label>
+                        <div class="mb-3">
+                            <label for="modalNombreCategoria" class="form-label fw-semibold text-dark">Nombre de la categoría <span class="text-danger">*</span></label>
                             <input id="modalNombreCategoria" name="nombreCategoria" class="form-control" type="text"
-                                   maxlength="100" placeholder="Nombre de la categoría" required autofocus>
+                                   maxlength="100" placeholder="Ej.: Bebidas, Snacks..." required autofocus>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-primary">Guardar categoría</button>
+                        <button type="submit" class="btn btn-submit-category">Guardar categoría</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
+
+    <!-- Modales para cada categoría: Ver categoría -->
+    <th:block th:each="categoria : ${categorias}">
+        <div class="modal fade modal-category-clean" th:id="'modalVerCategoria' + ${categoria.id}" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2 class="modal-title fs-5">
+                            Detalle de Categoría: <span class="text-primary-emphasis" th:text="${categoria.nombreCategoria}">Nombre</span>
+                        </h2>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="d-flex align-items-center justify-content-between mb-3 p-3 bg-light rounded-3">
+                            <div>
+                                <small class="text-muted text-uppercase fw-semibold">Nombre de la categoría</small>
+                                <div class="fs-5 fw-bold text-dark" th:text="${categoria.nombreCategoria}">Categoría</div>
+                            </div>
+                            <div class="text-end">
+                                <small class="text-muted text-uppercase fw-semibold">Total de productos</small>
+                                <div>
+                                    <span class="category-count-badge fs-6"
+                                          th:text="${productosPorCategoria != null and productosPorCategoria.containsKey(categoria.id) ? productosPorCategoria.get(categoria.id) : 0}">0</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h6 class="fw-bold text-dark mt-4 mb-2">Productos asociados:</h6>
+                        <div class="category-detail-list border rounded-3 overflow-hidden">
+                            <table class="table table-sm table-hover mb-0">
+                                <thead class="table-light">
+                                <tr>
+                                    <th>Código</th>
+                                    <th>Producto</th>
+                                    <th>Precio</th>
+                                    <th>Existencias</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="producto : ${productos}" th:if="${producto.categoria != null and producto.categoria.id == categoria.id}">
+                                    <td><code th:text="${'P' + #numbers.formatInteger(producto.id, 3)}">P001</code></td>
+                                    <td class="fw-semibold" th:text="${producto.nombre}">Nombre</td>
+                                    <td th:text="|$${#numbers.formatDecimal(producto.precioVenta, 1, 2)}|">$0.00</td>
+                                    <td>
+                                        <span class="badge"
+                                              th:classappend="${producto.stock == 0 ? 'text-bg-danger' : (producto.stock <= 5 ? 'text-bg-warning' : 'text-bg-success')}"
+                                              th:text="${producto.stock}">0</span>
+                                    </td>
+                                </tr>
+                                <tr th:if="${productosPorCategoria == null or !productosPorCategoria.containsKey(categoria.id) or productosPorCategoria.get(categoria.id) == 0}">
+                                    <td colspan="4" class="text-center py-3 text-muted">No hay productos asignados a esta categoría todavía.</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <a th:if="${esAdmin}" class="btn btn-submit-category" th:href="@{/categorias/editar/{id}(id=${categoria.id})}">Editar categoría</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </th:block>
+
 </main>
 <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
 <script>
     (() => {
-        const searchInput = document.querySelector('[data-table-search]');
-        const rows = [...document.querySelectorAll('[data-category-row]')];
-        const noResults = document.querySelector('[data-category-no-results]');
-        const counter = document.getElementById('categoryResultCount');
-        const total = rows.length;
+        const rows = [...document.querySelectorAll('#categoryTableBody tr[data-category-row]')];
+        const noResults = document.getElementById('categoryNoResultsRow');
+        const visibleCounter = document.getElementById('categoryVisibleCount');
+        const totalCounter = document.getElementById('categoryTotalCount');
+        const paginationContainer = document.getElementById('categoryPagination');
+        const pageSize = 5;
+        let currentPage = 1;
+        let filteredRows = [...rows];
 
-        function applySearch() {
-            const query = (searchInput?.value || '').trim().toLowerCase();
-            let visible = 0;
+        function renderPagination() {
+            if (!paginationContainer) return;
+            paginationContainer.innerHTML = '';
+            const totalPages = Math.ceil(filteredRows.length / pageSize) || 1;
 
-            rows.forEach(row => {
-                const matches = !query || row.textContent.toLowerCase().includes(query);
-                row.hidden = !matches;
-                if (matches) visible++;
-            });
+            if (currentPage > totalPages) currentPage = totalPages;
+            if (currentPage < 1) currentPage = 1;
 
-            if (noResults) noResults.hidden = (visible > 0 || total === 0);
-            if (counter) counter.textContent = `Mostrando ${visible} de ${total} categorías`;
+            // Botón Anterior
+            const prevBtn = document.createElement('button');
+            prevBtn.className = 'page-btn';
+            prevBtn.innerHTML = '&lt;';
+            prevBtn.disabled = currentPage === 1;
+            prevBtn.onclick = () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    showPage(currentPage);
+                }
+            };
+            paginationContainer.appendChild(prevBtn);
+
+            // Números de página
+            for (let i = 1; i <= totalPages; i++) {
+                const numBtn = document.createElement('button');
+                numBtn.className = 'page-btn' + (i === currentPage ? ' active' : '');
+                numBtn.textContent = i;
+                numBtn.onclick = () => {
+                    currentPage = i;
+                    showPage(currentPage);
+                };
+                paginationContainer.appendChild(numBtn);
+            }
+
+            // Botón Siguiente
+            const nextBtn = document.createElement('button');
+            nextBtn.className = 'page-btn';
+            nextBtn.innerHTML = '&gt;';
+            nextBtn.disabled = currentPage === totalPages;
+            nextBtn.onclick = () => {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    showPage(currentPage);
+                }
+            };
+            paginationContainer.appendChild(nextBtn);
         }
 
-        searchInput?.addEventListener('input', applySearch);
+        function showPage(page) {
+            const start = (page - 1) * pageSize;
+            const end = start + pageSize;
+
+            rows.forEach(row => row.style.display = 'none');
+            const pageItems = filteredRows.slice(start, end);
+            pageItems.forEach(row => row.style.display = '');
+
+            if (visibleCounter) {
+                visibleCounter.textContent = pageItems.length;
+            }
+            if (totalCounter) {
+                totalCounter.textContent = filteredRows.length;
+            }
+            renderPagination();
+        }
+
+        function filterCategories(query) {
+            const q = (query || '').trim().toLowerCase();
+            filteredRows = rows.filter(row => {
+                return !q || row.textContent.toLowerCase().includes(q);
+            });
+
+            if (noResults) {
+                noResults.style.display = (filteredRows.length === 0 && rows.length > 0) ? '' : 'none';
+            }
+
+            currentPage = 1;
+            showPage(currentPage);
+        }
+
+        const searches = [...document.querySelectorAll('[data-table-search]')];
+        searches.forEach(input => {
+            input.addEventListener('input', () => {
+                filterCategories(input.value);
+            });
+        });
+
+        // Inicializar vista
+        filterCategories('');
     })();
 </script>
 </body>
