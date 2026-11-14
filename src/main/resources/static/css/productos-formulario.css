@@ -22,7 +22,7 @@ body.app-page > main.app-main {
 .product-form-wrapper {
     width: 100%;
     max-width: 680px;
-    margin: 0;
+    margin: 0 auto;
 }
 
 .product-form-back {
