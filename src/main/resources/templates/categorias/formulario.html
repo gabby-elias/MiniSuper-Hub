@@ -10,26 +10,24 @@
         </a>
 
         <section class="category-form-card">
-            <header class="category-form-header">
-                <h1 th:text="${categoria.id == 0 ? 'Nueva categoría' : 'Editar categoría'}">Categoría</h1>
-            </header>
+            <h1 class="category-form-title" th:text="${categoria.id == 0 ? 'Nueva categoría' : 'Editar categoría'}">Nueva categoría</h1>
 
-            <form class="category-form-body" th:action="@{/categorias/guardar}" th:object="${categoria}" method="post"
+            <form th:action="@{/categorias/guardar}" th:object="${categoria}" method="post"
                   data-swal-confirm data-swal-action="save"
                   data-swal-title="¿Guardar categoría?"
                   data-swal-text="Confirma para guardar los cambios de la categoría."
                   data-swal-confirm-text="Sí, guardar">
                 <input type="hidden" th:field="*{id}">
 
-                <div class="mb-3">
-                    <label for="nombreCategoria" class="form-label">Nombre de la categoría <span class="text-danger">*</span></label>
-                    <input id="nombreCategoria" class="form-control" type="text" th:field="*{nombreCategoria}"
-                           maxlength="100" placeholder="Nombre de la categoría" required autofocus>
+                <div class="form-field-group">
+                    <label for="nombreCategoria" class="form-label-custom">Nombre de la categoría</label>
+                    <input id="nombreCategoria" class="form-control-custom" type="text" th:field="*{nombreCategoria}"
+                           maxlength="100" placeholder="Ej.: Bebidas, Lácteos, Snacks..." required autofocus>
                 </div>
 
                 <div class="category-form-actions">
-                    <a class="btn btn-outline-secondary" th:href="@{/categorias}">Cancelar</a>
-                    <button class="btn btn-submit-category" type="submit">
+                    <a class="btn-form-cancel" th:href="@{/categorias}">Cancelar</a>
+                    <button class="btn-form-submit" type="submit" th:text="${categoria.id == 0 ? 'Guardar categoría' : 'Guardar cambios'}">
                         Guardar categoría
                     </button>
                 </div>

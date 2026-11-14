@@ -1,3 +1,4 @@
+/* Layout de ancho completo */
 body.app-page > main.app-main {
     box-sizing: border-box;
     width: calc(100% - var(--sidebar-width));
@@ -5,7 +6,8 @@ body.app-page > main.app-main {
     min-width: 0;
     min-height: calc(100vh - var(--topbar-height));
     margin: var(--topbar-height) 0 0 var(--sidebar-width);
-    padding: 1.5rem clamp(1.25rem, 2.4vw, 2.5rem) 2.5rem;
+    padding: 1.75rem clamp(1.25rem, 2.5vw, 2.5rem) 2.5rem;
+    background-color: #f7f8fc;
 }
 
 @media (max-width: 720px) {
@@ -17,7 +19,8 @@ body.app-page > main.app-main {
 }
 
 .category-form-wrapper {
-    width: min(100%, 860px);
+    width: 100%;
+    max-width: 600px;
     margin: 0;
 }
 
@@ -25,49 +28,66 @@ body.app-page > main.app-main {
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
-    margin-bottom: 1.15rem;
-    color: #6B4C8A !important;
-    font-size: 0.86rem;
-    font-weight: 600;
+    margin-bottom: 1.25rem;
+    color: #4b455b !important;
+    font-size: 0.88rem;
+    font-weight: 500;
     text-decoration: none;
     transition: color 0.15s ease;
 }
 
 .category-form-back:hover {
-    color: #493263 !important;
+    color: #1e163b !important;
 }
 
 .category-form-card {
-    border: 1px solid #e5dfed;
-    border-radius: 0.85rem;
     background: #ffffff;
-    box-shadow: 0 0.35rem 1.2rem rgba(30, 27, 58, 0.045);
-    overflow: hidden;
+    border: 1px solid #ede8f5;
+    border-radius: 1.25rem;
+    box-shadow: 0 4px 20px rgba(30, 22, 59, 0.04);
+    padding: 2.25rem 2.25rem 2rem;
 }
 
-.category-form-header {
-    padding: 1.25rem 1.6rem;
-    border-bottom: 1px solid #ede8f5;
-    background: #faf9fc;
+.category-form-title {
+    margin: 0 0 1.75rem 0;
+    color: #1e163b;
+    font-size: 1.55rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
 }
 
-.category-form-header h1 {
-    margin: 0;
-    color: #2E2A3B;
-    font-size: 1.35rem;
-    font-weight: 750;
-    letter-spacing: -0.025em;
+.form-field-group {
+    margin-bottom: 1.5rem;
 }
 
-.category-form-body {
-    padding: 1.6rem;
-}
-
-.form-label {
-    margin-bottom: 0.4rem;
-    color: #2E2A3B;
+.form-label-custom {
+    display: block;
+    margin-bottom: 0.45rem;
+    color: #1e163b;
     font-size: 0.86rem;
     font-weight: 600;
+}
+
+.form-control-custom {
+    width: 100%;
+    height: 44px;
+    padding: 0.55rem 0.95rem;
+    border: 1px solid #dcd7e6;
+    border-radius: 0.65rem;
+    background-color: #ffffff;
+    color: #1e163b;
+    font-size: 0.88rem;
+    outline: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.form-control-custom:focus {
+    border-color: #654388;
+    box-shadow: 0 0 0 3px rgba(101, 67, 136, 0.15);
+}
+
+.form-control-custom::placeholder {
+    color: #9f99ad;
 }
 
 .category-form-actions {
@@ -75,30 +95,54 @@ body.app-page > main.app-main {
     align-items: center;
     justify-content: flex-end;
     gap: 0.75rem;
-    margin-top: 1.75rem;
-    padding-top: 1.25rem;
-    border-top: 1px solid #ede8f5;
+    margin-top: 2rem;
 }
 
-.btn-submit-category {
+.btn-form-cancel {
     display: inline-flex;
     align-items: center;
-    padding: 0.65rem 1.4rem;
-    border: none;
-    border-radius: 0.6rem;
-    background: #6B4C8A;
-    color: #ffffff;
+    justify-content: center;
+    padding: 0.6rem 1.4rem;
+    border: 1px solid #dcd7e6;
+    border-radius: 0.65rem;
+    background-color: #ffffff;
+    color: #4b455b !important;
     font-size: 0.88rem;
-    font-weight: 650;
-    box-shadow: 0 0.35rem 0.85rem rgba(107, 76, 138, 0.22);
-    transition: background-color 0.15s ease;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.15s ease;
+    cursor: pointer;
 }
 
-.btn-submit-category:hover {
-    background: #563d70;
-    color: #ffffff;
+.btn-form-cancel:hover {
+    background-color: #f7f4fb;
+    border-color: #c4bdd4;
+    color: #1e163b !important;
 }
 
-.btn-submit-category:active {
-    background: #493263;
+.btn-form-submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.6rem 1.6rem;
+    border: none;
+    border-radius: 0.65rem;
+    background-color: #654388;
+    color: #ffffff !important;
+    font-size: 0.88rem;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(101, 67, 136, 0.22);
+    transition: background-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+    cursor: pointer;
+}
+
+.btn-form-submit:hover {
+    background-color: #543472;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px rgba(101, 67, 136, 0.28);
+}
+
+.btn-form-submit:active {
+    background-color: #43265d;
+    transform: translateY(0);
 }

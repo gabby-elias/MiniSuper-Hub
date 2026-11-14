@@ -133,8 +133,8 @@ body.app-page {
     width: 0.45rem;
     height: 0.45rem;
     border-radius: 50%;
-    background: #4ed2a0;
-    box-shadow: 0 0 0 0.2rem rgba(78, 210, 160, 0.13);
+    background: #8b68b8;
+    box-shadow: 0 0 0 0.2rem rgba(139, 104, 184, 0.25);
 }
 
 .app-topbar {

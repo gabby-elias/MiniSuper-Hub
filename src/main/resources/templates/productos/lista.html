@@ -4,151 +4,214 @@
 <body class="app-page">
 <nav th:replace="~{fragments/layout :: navbar('productos')}"></nav>
 <main class="app-main">
-    <header class="product-list-heading">
-        <div class="product-list-title">
-            <h1>Catálogo de Productos</h1>
-            <p th:text="${esAdmin ? 'Gestiona el inventario, existencias y precios de venta.' : 'Consulta los productos disponibles y sus precios.'}">Catálogo de productos.</p>
-        </div>
-        <a th:if="${esAdmin}" class="btn product-new-button" th:href="@{/productos/nuevo}">
-            + Nuevo producto
-        </a>
-    </header>
-
-    <section class="row g-3 product-stat-grid" aria-label="Resumen de inventario">
-        <div class="col-6 col-xl-4">
-            <article class="product-stat-card product-stat-card--purple">
-                <span class="product-stat-label">Total productos</span>
-                <strong class="product-stat-value" th:text="${cantidadProductos}">0</strong>
+    <!-- Tarjetas de métricas superiores (Imagen 2) -->
+    <section class="row g-3 product-kpi-grid" aria-label="Resumen de inventario">
+        <div class="col-12 col-md-4">
+            <article class="product-kpi-card">
+                <span class="product-kpi-label">Ventas de hoy</span>
+                <strong class="product-kpi-value value-green" th:text="|$${#numbers.formatDecimal(ventasHoy, 1, 2)}|">$0.00</strong>
             </article>
         </div>
-        <div class="col-6 col-xl-4">
-            <article class="product-stat-card product-stat-card--slate">
-                <span class="product-stat-label" th:text="${esAdmin ? 'Ventas del día' : 'Mis ventas de hoy'}">Ventas del día</span>
-                <strong class="product-stat-value" th:text="|$${#numbers.formatDecimal(ventasHoy, 1, 2)}|">$0.00</strong>
+        <div class="col-12 col-md-4">
+            <article class="product-kpi-card">
+                <span class="product-kpi-label">Productos</span>
+                <strong class="product-kpi-value value-dark" th:text="${cantidadProductos}">0</strong>
             </article>
         </div>
-        <div class="col-12 col-xl-4">
-            <article class="product-stat-card product-stat-card--amber">
-                <span class="product-stat-label">Artículos con stock bajo (&le; 5)</span>
-                <strong class="product-stat-value text-amber" th:text="${cantidadStockBajo}">0</strong>
+        <div class="col-12 col-md-4">
+            <article class="product-kpi-card">
+                <span class="product-kpi-label">Stock bajo</span>
+                <strong class="product-kpi-value value-amber" th:text="${cantidadStockBajo}">0</strong>
             </article>
         </div>
     </section>
 
-    <section class="product-table-card">
-        <div class="product-toolbar">
-            <label class="product-filter-search">
-                <input type="search" placeholder="Buscar por producto o categoría..." aria-label="Buscar productos" data-table-search>
-                <kbd>Ctrl K</kbd>
-            </label>
-            <label class="product-status-filter">
-                <span>Existencias:</span>
-                <select aria-label="Filtrar por nivel de stock" data-product-stock-filter>
-                    <option value="">Todos los niveles</option>
-                    <option value="disponible">Disponibles</option>
-                    <option value="bajo">Stock bajo (&le; 5)</option>
-                    <option value="agotado">Agotados (0)</option>
-                </select>
-            </label>
+    <!-- Encabezado de la página -->
+    <header class="product-page-header">
+        <div class="product-page-title">
+            <h1>Productos</h1>
+            <p>Administra el catálogo, las existencias y los precios.</p>
         </div>
+        <a th:if="${esAdmin}" class="btn-product-new" th:href="@{/productos/nuevo}">
+            + Nuevo producto
+        </a>
+    </header>
 
+    <!-- Card de la Tabla de Productos -->
+    <section class="product-card">
         <div class="table-responsive">
-            <table class="table product-list-table align-middle">
+            <table class="table product-table align-middle">
                 <thead>
                 <tr>
+                    <th style="width: 100px;">Código</th>
                     <th>Producto</th>
                     <th>Categoría</th>
-                    <th>Precio de Venta</th>
-                    <th>Existencias</th>
-                    <th>Estado</th>
-                    <th th:if="${esAdmin}" class="text-end">Acciones</th>
+                    <th style="width: 110px;">Precio</th>
+                    <th style="width: 110px;">Existencias</th>
+                    <th style="width: 130px;">Estado</th>
+                    <th th:if="${esAdmin}" class="text-end" style="width: 180px;">Acciones</th>
                 </tr>
                 </thead>
-                <tbody>
-                <tr th:each="producto : ${productos}"
-                    data-product-row
-                    data-search-row
-                    th:attr="data-stock-status=${producto.stock == 0 ? 'agotado' : (producto.stock <= 5 ? 'bajo' : 'disponible')}">
+                <tbody id="productTableBody">
+                <tr th:each="producto, stat : ${productos}" data-product-row data-search-row th:attr="data-product-id=${producto.id}">
                     <td>
-                        <div class="product-name-info">
-                            <strong th:text="${producto.nombre}">Nombre</strong>
-                            <span class="product-unit-pill" th:if="${producto.unidadMedida != null and !#strings.isEmpty(producto.unidadMedida)}" th:text="${producto.unidadMedida}">unidad</span>
-                        </div>
+                        <span class="product-code" th:text="${'P' + #numbers.formatInteger(producto.id, 3)}">P001</span>
                     </td>
                     <td>
-                        <span class="product-category-tag" th:text="${producto.categoria != null ? producto.categoria.nombreCategoria : 'Sin categoría'}">Categoría</span>
+                        <span class="product-name" th:text="${producto.nombre}">Nombre</span>
                     </td>
                     <td>
-                        <span class="product-price-val" th:text="|$${#numbers.formatDecimal(producto.precioVenta, 1, 2)}|">$0.00</span>
+                        <span class="product-category-text" th:text="${producto.categoria != null ? producto.categoria.nombreCategoria : 'Sin categoría'}">Categoría</span>
                     </td>
                     <td>
-                        <span class="product-stock-count" th:text="${producto.stock}">0</span>
+                        <span class="product-price" th:text="|$${#numbers.formatDecimal(producto.precioVenta, 1, 2)}|">$0.00</span>
                     </td>
                     <td>
-                        <span class="stock-badge"
-                              th:classappend="${producto.stock == 0 ? ' stock-empty' : (producto.stock <= 5 ? ' stock-low' : ' stock-available')}"
-                              th:title="|Existencias: ${producto.stock}|"
-                              th:text="${producto.stock == 0 ? 'Agotado' : (producto.stock <= 5 ? 'Stock bajo' : 'Disponible')}">Disponible</span>
+                        <span class="product-stock" th:text="${producto.stock}">0</span>
                     </td>
-                    <td th:if="${esAdmin}">
-                        <div class="product-row-actions">
-                            <a class="product-action-button" th:href="@{/productos/editar/{id}(id=${producto.id})}" aria-label="Editar producto" title="Editar producto">
-                                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 5 4 4M4 20l4-.8L19.2 8a2.1 2.1 0 0 0-3-3L5 16.2 4 20Z"/></svg>
+                    <td>
+                        <span class="status-pill"
+                              th:classappend="${producto.stock == 0 ? 'status-out' : (producto.stock <= 5 ? 'status-low' : 'status-available')}"
+                              th:text="${producto.stock == 0 ? 'Agotado' : (producto.stock <= 5 ? 'Stock bajo' : 'Disponible')}">
+                            Disponible
+                        </span>
+                    </td>
+                    <td th:if="${esAdmin}" class="text-end">
+                        <div class="product-actions">
+                            <a class="btn-action-outline" th:href="@{/productos/editar/{id}(id=${producto.id})}">
+                                Editar
                             </a>
                             <form th:action="@{/productos/eliminar/{id}(id=${producto.id})}" method="post" class="d-inline"
                                   data-swal-confirm data-swal-action="delete"
                                   data-swal-title="¿Eliminar producto?"
                                   data-swal-text="Si el producto tiene detalles de factura registrados, no podrá ser eliminado.">
-                                <button class="product-action-button product-action-button--delete" type="submit" aria-label="Eliminar producto" title="Eliminar producto">
-                                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M10 11v6m4-6v6M6 7l1 14h10l1-14M9 7V4h6v3"/></svg>
+                                <button class="btn-action-outline btn-action-delete" type="submit">
+                                    Eliminar
                                 </button>
                             </form>
                         </div>
                     </td>
                 </tr>
                 <tr th:if="${#lists.isEmpty(productos)}" class="product-empty-row">
-                    <td th:colspan="${esAdmin ? 6 : 5}" class="text-center">No hay productos registrados en el catálogo.</td>
+                    <td th:colspan="${esAdmin ? 7 : 6}" class="text-center py-5 text-muted">No hay productos registrados en el catálogo.</td>
                 </tr>
-                <tr data-product-no-results hidden class="product-empty-row">
-                    <td th:colspan="${esAdmin ? 6 : 5}" class="text-center">No se encontraron productos que coincidan con la búsqueda o filtro.</td>
+                <tr id="productNoResultsRow" style="display: none;" class="product-empty-row">
+                    <td th:colspan="${esAdmin ? 7 : 6}" class="text-center py-5 text-muted">No se encontraron productos que coincidan con la búsqueda.</td>
                 </tr>
                 </tbody>
             </table>
         </div>
-        <footer class="product-table-footer">
-            <span id="productResultCount" th:text="|Mostrando ${#lists.size(productos)} productos|">Mostrando productos</span>
+
+        <!-- Footer con conteo y paginación -->
+        <footer class="product-footer">
+            <span id="productCounterText">
+                Mostrando <strong id="productVisibleCount" th:text="${#lists.size(productos) > 5 ? 5 : #lists.size(productos)}">0</strong> de <strong id="productTotalCount" th:text="${#lists.size(productos)}">0</strong> productos
+            </span>
+            <div class="pagination-wrapper" id="productPagination">
+                <!-- Se llena mediante script -->
+            </div>
         </footer>
     </section>
 </main>
 <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
 <script>
     (() => {
-        const searchInput = document.querySelector('[data-table-search]');
-        const stockFilter = document.querySelector('[data-product-stock-filter]');
-        const rows = [...document.querySelectorAll('[data-product-row]')];
-        const noResults = document.querySelector('[data-product-no-results]');
-        const counter = document.getElementById('productResultCount');
-        const total = rows.length;
+        const rows = [...document.querySelectorAll('#productTableBody tr[data-product-row]')];
+        const noResults = document.getElementById('productNoResultsRow');
+        const visibleCounter = document.getElementById('productVisibleCount');
+        const totalCounter = document.getElementById('productTotalCount');
+        const paginationContainer = document.getElementById('productPagination');
+        const pageSize = 5;
+        let currentPage = 1;
+        let filteredRows = [...rows];
 
-        function applyFilters() {
-            const query = (searchInput?.value || '').trim().toLowerCase();
-            const stock = stockFilter?.value || '';
-            let visible = 0;
+        function renderPagination() {
+            if (!paginationContainer) return;
+            paginationContainer.innerHTML = '';
+            const totalPages = Math.ceil(filteredRows.length / pageSize) || 1;
 
-            rows.forEach(row => {
-                const textMatches = !query || row.textContent.toLowerCase().includes(query);
-                const stockMatches = !stock || row.getAttribute('data-stock-status') === stock;
-                const show = textMatches && stockMatches;
-                row.hidden = !show;
-                if (show) visible++;
-            });
+            if (currentPage > totalPages) currentPage = totalPages;
+            if (currentPage < 1) currentPage = 1;
 
-            if (noResults) noResults.hidden = (visible > 0 || total === 0);
-            if (counter) counter.textContent = `Mostrando ${visible} de ${total} productos`;
+            // Botón Anterior
+            const prevBtn = document.createElement('button');
+            prevBtn.className = 'page-btn';
+            prevBtn.innerHTML = '&lt;';
+            prevBtn.disabled = currentPage === 1;
+            prevBtn.onclick = () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    showPage(currentPage);
+                }
+            };
+            paginationContainer.appendChild(prevBtn);
+
+            // Números de página
+            for (let i = 1; i <= totalPages; i++) {
+                const numBtn = document.createElement('button');
+                numBtn.className = 'page-btn' + (i === currentPage ? ' active' : '');
+                numBtn.textContent = i;
+                numBtn.onclick = () => {
+                    currentPage = i;
+                    showPage(currentPage);
+                };
+                paginationContainer.appendChild(numBtn);
+            }
+
+            // Botón Siguiente
+            const nextBtn = document.createElement('button');
+            nextBtn.className = 'page-btn';
+            nextBtn.innerHTML = '&gt;';
+            nextBtn.disabled = currentPage === totalPages;
+            nextBtn.onclick = () => {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    showPage(currentPage);
+                }
+            };
+            paginationContainer.appendChild(nextBtn);
         }
 
-        searchInput?.addEventListener('input', applyFilters);
-        stockFilter?.addEventListener('change', applyFilters);
+        function showPage(page) {
+            const start = (page - 1) * pageSize;
+            const end = start + pageSize;
+
+            rows.forEach(row => row.style.display = 'none');
+            const pageItems = filteredRows.slice(start, end);
+            pageItems.forEach(row => row.style.display = '');
+
+            if (visibleCounter) {
+                visibleCounter.textContent = pageItems.length;
+            }
+            if (totalCounter) {
+                totalCounter.textContent = filteredRows.length;
+            }
+            renderPagination();
+        }
+
+        function filterProducts(query) {
+            const q = (query || '').trim().toLowerCase();
+            filteredRows = rows.filter(row => {
+                return !q || row.textContent.toLowerCase().includes(q);
+            });
+
+            if (noResults) {
+                noResults.style.display = (filteredRows.length === 0 && rows.length > 0) ? '' : 'none';
+            }
+
+            currentPage = 1;
+            showPage(currentPage);
+        }
+
+        const searches = [...document.querySelectorAll('[data-table-search]')];
+        searches.forEach(input => {
+            input.addEventListener('input', () => {
+                filterProducts(input.value);
+            });
+        });
+
+        // Inicializar vista
+        filterProducts('');
     })();
 </script>
 </body>
