@@ -1,1 +1,145 @@
-/* Estilos específicos de templates/productos/formulario.html. */
+body.app-page > main.app-main {
+    box-sizing: border-box;
+    width: calc(100% - var(--sidebar-width));
+    max-width: none;
+    min-width: 0;
+    min-height: calc(100vh - var(--topbar-height));
+    margin: var(--topbar-height) 0 0 var(--sidebar-width);
+    padding: 1.5rem clamp(1.25rem, 2.4vw, 2.5rem) 2.5rem;
+}
+
+@media (max-width: 720px) {
+    body.app-page > main.app-main {
+        width: 100%;
+        margin-left: 0;
+        padding: 1rem 0.85rem 2rem;
+    }
+}
+
+.product-form-wrapper {
+    width: min(100%, 1100px);
+    margin: 0;
+}
+
+.product-form-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-bottom: 1.15rem;
+    color: #6B4C8A !important;
+    font-size: 0.86rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.15s ease;
+}
+
+.product-form-back:hover {
+    color: #493263 !important;
+}
+
+.product-form-card {
+    border: 1px solid #e5dfed;
+    border-radius: 0.85rem;
+    background: #ffffff;
+    box-shadow: 0 0.35rem 1.2rem rgba(30, 27, 58, 0.045);
+    overflow: hidden;
+}
+
+.product-form-header {
+    padding: 1.25rem 1.6rem;
+    border-bottom: 1px solid #ede8f5;
+    background: #faf9fc;
+}
+
+.product-form-header h1 {
+    margin: 0;
+    color: #2E2A3B;
+    font-size: 1.35rem;
+    font-weight: 750;
+    letter-spacing: -0.025em;
+}
+
+.product-form-body {
+    padding: 1.6rem;
+}
+
+.product-form-section-title {
+    margin-bottom: 1rem;
+    padding-bottom: 0.35rem;
+    border-bottom: 1px solid #ede8f5;
+    color: #302744;
+    font-size: 0.84rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.form-label {
+    margin-bottom: 0.4rem;
+    color: #2E2A3B;
+    font-size: 0.86rem;
+    font-weight: 600;
+}
+
+.required-star {
+    color: #dc3545;
+    margin-left: 0.15rem;
+}
+
+.unit-quick-picks {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.45rem;
+}
+
+.unit-tag-btn {
+    border: 1px solid #ded7e9;
+    border-radius: 999px;
+    background: #faf9fc;
+    color: #563d70;
+    font-size: 0.74rem;
+    font-weight: 550;
+    padding: 0.2rem 0.65rem;
+    cursor: pointer;
+    transition: all 0.12s ease;
+}
+
+.unit-tag-btn:hover {
+    border-color: #6B4C8A;
+    background: #f6f2fa;
+    color: #6B4C8A;
+}
+
+.product-form-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: 1.75rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid #ede8f5;
+}
+
+.btn-submit-product {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.65rem 1.4rem;
+    border: none;
+    border-radius: 0.6rem;
+    background: #6B4C8A;
+    color: #ffffff;
+    font-size: 0.88rem;
+    font-weight: 650;
+    box-shadow: 0 0.35rem 0.85rem rgba(107, 76, 138, 0.22);
+    transition: background-color 0.15s ease;
+}
+
+.btn-submit-product:hover {
+    background: #563d70;
+    color: #ffffff;
+}
+
+.btn-submit-product:active {
+    background: #493263;
+}

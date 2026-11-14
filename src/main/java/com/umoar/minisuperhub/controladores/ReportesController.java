@@ -5,6 +5,7 @@ import com.umoar.minisuperhub.modelos.Factura;
 import com.umoar.minisuperhub.modelos.Producto;
 import com.umoar.minisuperhub.servicios.CategoriaService;
 import com.umoar.minisuperhub.servicios.ClienteService;
+import com.umoar.minisuperhub.servicios.FacturaExcelService;
 import com.umoar.minisuperhub.servicios.FacturaService;
 import com.umoar.minisuperhub.servicios.ProductoService;
 import com.lowagie.text.Document;
@@ -47,6 +48,9 @@ public class ReportesController {
     private final ClienteService clienteService;
     private final FacturaService facturaService;
     private final ProductoService productoService;
+    private final FacturaExcelService facturaExcelService;
+
+    private static final ZoneId ZONA_HORARIA = ZoneId.of("America/El_Salvador");
 
     @GetMapping("/reportes")
     @Transactional(readOnly = true)

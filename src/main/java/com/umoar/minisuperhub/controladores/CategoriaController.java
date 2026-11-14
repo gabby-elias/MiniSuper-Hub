@@ -2,6 +2,7 @@ package com.umoar.minisuperhub.controladores;
 
 import com.umoar.minisuperhub.modelos.Categoria;
 import com.umoar.minisuperhub.servicios.CategoriaService;
+import com.umoar.minisuperhub.servicios.ProductoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,16 +13,27 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.Map;
+import java.util.stream.Collectors;
+
 @Controller
 @RequestMapping("/categorias")
 @RequiredArgsConstructor
 public class CategoriaController {
 
     private final CategoriaService categoriaService;
+    private final ProductoService productoService;
 
     @GetMapping
     public String listar(Model model) {
-        model.addAttribute("categorias", categoriaService.listar());
+        var categorias = categoriaService.listar();
+        var productos = productoService.listar();
+        Map<Long, Long> productosPorCategoria = productos.stream()
+                .filter(p -> p.getCategoria() != null)
+                .collect(Collectors.groupingBy(p -> p.getCategoria().getId(), Collectors.counting()));
+        model.addAttribute("categorias", categorias);
+        model.addAttribute("productos", productos);
+        model.addAttribute("productosPorCategoria", productosPorCategoria);
         return "categorias/lista";
     }
 

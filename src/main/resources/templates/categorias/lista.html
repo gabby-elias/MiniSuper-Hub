@@ -4,25 +4,141 @@
 <body class="app-page">
 <nav th:replace="~{fragments/layout :: navbar('categorias')}"></nav>
 <main class="app-main">
-    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 page-heading">
-        <div><h1>Categorías</h1><p th:text="${esAdmin ? 'Organiza los productos de tu minisúper.' : 'Consulta las categorías disponibles.'}">Categorías</p></div>
-        <a th:if="${esAdmin}" class="btn btn-primary" th:href="@{/categorias/nuevo}">＋ Nueva categoría</a>
-    </div>
-    <section class="content-card table-responsive">
-        <table class="table table-hover align-middle">
-            <thead><tr><th>ID</th><th>Nombre de categoría</th><th th:if="${esAdmin}" class="text-end">Acciones</th></tr></thead>
-            <tbody>
-            <tr th:each="categoria : ${categorias}">
-                <td th:text="${categoria.id}"></td><td th:text="${categoria.nombreCategoria}"></td>
-                <td th:if="${esAdmin}" class="text-end text-nowrap"><a class="btn btn-sm btn-outline-light" th:href="@{/categorias/editar/{id}(id=${categoria.id})}">Editar</a>
-                    <form class="d-inline" th:action="@{/categorias/eliminar/{id}(id=${categoria.id})}" method="post" data-swal-confirm data-swal-action="delete" data-swal-title="¿Eliminar categoría?" data-swal-text="Si tiene productos asociados, no podrá eliminarse."><button class="btn btn-sm btn-outline-danger" type="submit">Eliminar</button></form>
-                </td>
-            </tr>
-            <tr th:if="${#lists.isEmpty(categorias)}"><td th:colspan="${esAdmin ? 3 : 2}" class="text-center text-secondary py-5">No hay categorías registradas.</td></tr>
-            </tbody>
-        </table>
+    <header class="category-list-heading">
+        <div class="category-list-title">
+            <h1>Categorías de Productos</h1>
+            <p th:text="${esAdmin ? 'Organiza y clasifica los artículos del catálogo de tu minisúper.' : 'Consulta las categorías disponibles en el inventario.'}">Categorías.</p>
+        </div>
+        <button th:if="${esAdmin}" type="button" class="btn category-new-button" data-bs-toggle="modal" data-bs-target="#modalNuevaCategoria">
+            + Nueva categoría
+        </button>
+    </header>
+
+    <section class="row g-3 category-stat-grid" aria-label="Resumen de categorías">
+        <div class="col-12 col-md-6">
+            <article class="category-stat-card category-stat-card--purple">
+                <span class="category-stat-label">Total categorías activas</span>
+                <strong class="category-stat-value" th:text="${#lists.size(categorias)}">0</strong>
+            </article>
+        </div>
+        <div class="col-12 col-md-6">
+            <article class="category-stat-card category-stat-card--slate">
+                <span class="category-stat-label">Clasificación del inventario</span>
+                <strong class="category-stat-value">Catálogo general</strong>
+            </article>
+        </div>
     </section>
+
+    <section class="category-table-card">
+        <div class="category-toolbar">
+            <label class="category-filter-search">
+                <input type="search" placeholder="Buscar categoría por nombre o código..." aria-label="Buscar categorías" data-table-search>
+                <kbd>Ctrl K</kbd>
+            </label>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table category-list-table align-middle">
+                <thead>
+                <tr>
+                    <th style="width: 120px;">Código</th>
+                    <th>Nombre de la Categoría</th>
+                    <th th:if="${esAdmin}" class="text-end" style="width: 140px;">Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="categoria : ${categorias}" data-category-row data-search-row>
+                    <td>
+                        <span class="category-id-pill" th:text="|#${categoria.id}|">#0</span>
+                    </td>
+                    <td>
+                        <strong class="category-name-text" th:text="${categoria.nombreCategoria}">Nombre</strong>
+                    </td>
+                    <td th:if="${esAdmin}">
+                        <div class="category-row-actions">
+                            <a class="category-action-button" th:href="@{/categorias/editar/{id}(id=${categoria.id})}" aria-label="Editar categoría" title="Editar categoría">
+                                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 5 4 4M4 20l4-.8L19.2 8a2.1 2.1 0 0 0-3-3L5 16.2 4 20Z"/></svg>
+                            </a>
+                            <form th:action="@{/categorias/eliminar/{id}(id=${categoria.id})}" method="post" class="d-inline"
+                                  data-swal-confirm data-swal-action="delete"
+                                  data-swal-title="¿Eliminar categoría?"
+                                  data-swal-text="Si la categoría tiene productos asociados, no podrá ser eliminada.">
+                                <button class="category-action-button category-action-button--delete" type="submit" aria-label="Eliminar categoría" title="Eliminar categoría">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M10 11v6m4-6v6M6 7l1 14h10l1-14M9 7V4h6v3"/></svg>
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(categorias)}" class="category-empty-row">
+                    <td th:colspan="${esAdmin ? 3 : 2}" class="text-center">No hay categorías registradas en el catálogo.</td>
+                </tr>
+                <tr data-category-no-results hidden class="category-empty-row">
+                    <td th:colspan="${esAdmin ? 3 : 2}" class="text-center">No se encontraron categorías que coincidan con la búsqueda.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <footer class="category-table-footer">
+            <span id="categoryResultCount" th:text="|Mostrando ${#lists.size(categorias)} categorías|">Mostrando categorías</span>
+        </footer>
+    </section>
+
+    <!-- Modal Simplificado: Crear Categoría -->
+    <div class="modal fade modal-category-clean" id="modalNuevaCategoria" tabindex="-1" aria-labelledby="modalNuevaCategoriaTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title fs-5" id="modalNuevaCategoriaTitle">Nueva categoría</h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <form th:action="@{/categorias/guardar}" method="post"
+                      data-swal-confirm data-swal-action="save"
+                      data-swal-title="¿Guardar categoría?"
+                      data-swal-text="Confirma para guardar la nueva categoría."
+                      data-swal-confirm-text="Sí, guardar">
+                    <input type="hidden" name="id" value="0">
+                    <div class="modal-body">
+                        <div class="mb-2">
+                            <label for="modalNombreCategoria" class="form-label fw-semibold text-dark">Nombre de la categoría</label>
+                            <input id="modalNombreCategoria" name="nombreCategoria" class="form-control" type="text"
+                                   maxlength="100" placeholder="Nombre de la categoría" required autofocus>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Guardar categoría</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </main>
 <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+<script>
+    (() => {
+        const searchInput = document.querySelector('[data-table-search]');
+        const rows = [...document.querySelectorAll('[data-category-row]')];
+        const noResults = document.querySelector('[data-category-no-results]');
+        const counter = document.getElementById('categoryResultCount');
+        const total = rows.length;
+
+        function applySearch() {
+            const query = (searchInput?.value || '').trim().toLowerCase();
+            let visible = 0;
+
+            rows.forEach(row => {
+                const matches = !query || row.textContent.toLowerCase().includes(query);
+                row.hidden = !matches;
+                if (matches) visible++;
+            });
+
+            if (noResults) noResults.hidden = (visible > 0 || total === 0);
+            if (counter) counter.textContent = `Mostrando ${visible} de ${total} categorías`;
+        }
+
+        searchInput?.addEventListener('input', applySearch);
+    })();
+</script>
 </body>
 </html>
