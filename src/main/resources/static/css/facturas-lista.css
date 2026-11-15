@@ -481,6 +481,62 @@ body.app-page.invoice-list-page {
 }
 
 .invoice-list-page .invoice-table-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    min-height: 3.5rem;
     border-top-color: #eeeaf2;
     color: #7C739A;
+}
+
+.table-pagination {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.28rem;
+}
+
+.table-pagination > span {
+    display: inline-flex;
+    gap: 0.28rem;
+}
+
+.table-pagination button {
+    min-width: 1.8rem;
+    height: 1.8rem;
+    display: inline-grid;
+    place-items: center;
+    padding: 0 0.35rem;
+    border: 1px solid #e7e2ec;
+    border-radius: 0.45rem;
+    background: #fff;
+    color: #6f6879;
+    font-size: 0.75rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.table-pagination button:hover:not(:disabled):not(.is-active) {
+    border-color: #d6c9e2;
+    background: #f8f5fa;
+    color: #594072;
+}
+
+.table-pagination button.is-active {
+    border-color: #6B4C8A;
+    background: #6B4C8A;
+    color: #fff;
+    font-weight: 700;
+}
+
+.table-pagination button:disabled {
+    color: #c4bfca;
+    cursor: not-allowed;
+}
+
+@media (max-width: 520px) {
+    .invoice-list-page .invoice-table-footer {
+        align-items: flex-start;
+        flex-direction: column;
+    }
 }
