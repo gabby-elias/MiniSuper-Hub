@@ -39,7 +39,7 @@
             </label>
         </div>
         <div class="table-responsive">
-            <table class="table invoice-list-table align-middle">
+            <table class="table invoice-list-table align-middle" data-pagination-table="facturas" data-pagination-label="facturas">
                 <thead>
                 <tr>
                     <th>N.º</th><th>Fecha</th><th>Cliente</th>
@@ -79,7 +79,13 @@
             </table>
         </div>
         <footer class="invoice-table-footer">
-            <span id="invoiceResultCount" th:attr="data-total=${#lists.size(facturas)}" th:text="|Mostrando ${#lists.size(facturas)} facturas|"></span>
+            <span id="invoiceResultCount" data-pagination-summary="facturas"
+                  th:attr="data-total=${#lists.size(facturas)}" th:text="|Mostrando ${#lists.size(facturas)} de ${#lists.size(facturas)} facturas|"></span>
+            <nav class="table-pagination" data-pagination-controls="facturas" aria-label="Paginación de facturas">
+                <button type="button" data-page-prev aria-label="Página anterior">‹</button>
+                <span data-page-numbers></span>
+                <button type="button" data-page-next aria-label="Página siguiente">›</button>
+            </nav>
         </footer>
     </section>
 </main>
