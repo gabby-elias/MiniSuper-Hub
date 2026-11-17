@@ -2,13 +2,21 @@ package com.umoar.minisuperhub.servicios;
 
 import com.umoar.minisuperhub.modelos.DetalleFactura;
 import com.umoar.minisuperhub.modelos.Factura;
+import com.umoar.minisuperhub.modelos.Cliente;
+import com.umoar.minisuperhub.modelos.Producto;
+import com.umoar.minisuperhub.dto.VendedorFacturasResumen;
 import com.umoar.minisuperhub.modelos.Usuario;
+import com.umoar.minisuperhub.repositorios.ClienteRepository;
 import com.umoar.minisuperhub.repositorios.FacturaRepository;
+import com.umoar.minisuperhub.repositorios.ProductoRepository;
+import com.umoar.minisuperhub.repositorios.UsuarioRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +26,9 @@ import java.util.Optional;
 public class FacturaService {
 
     private final FacturaRepository facturaRepository;
+    private final ClienteRepository clienteRepository;
+    private final ProductoRepository productoRepository;
+    private final UsuarioRepository usuarioRepository;
 
     public List<Factura> listar() {
         return facturaRepository.findAllByOrderByIdDesc();
@@ -25,6 +36,16 @@ public class FacturaService {
 
     public List<Factura> listarPorVendedor(String username) {
         return facturaRepository.findByVendedorUsernameOrderByIdDesc(username);
+    }
+
+    @Transactional(readOnly = true)
+    public List<VendedorFacturasResumen> resumirFacturasPorVendedor() {
+        return facturaRepository.resumirFacturasPorVendedor();
+    }
+
+    @Transactional(readOnly = true)
+    public List<Factura> listarParaReporte(LocalDateTime inicio, LocalDateTime fin) {
+        return facturaRepository.buscarParaReporte(inicio, fin);
     }
 
     public Optional<Factura> buscarPorId(Long id) {
@@ -43,6 +64,58 @@ public class FacturaService {
     @Transactional(readOnly = true)
     public Optional<Factura> buscarCompletaPorIdYVendedor(Long id, String username) {
         return facturaRepository.buscarCompletaPorIdYVendedor(id, username);
+    }
+
+    @Transactional
+    public Factura guardarDesdeFormulario(Factura formulario, Long clienteId,
+                                         List<Long> productoIds, List<Integer> cantidades,
+                                         String username, boolean administrador) {
+        if (productoIds == null || cantidades == null || productoIds.isEmpty()
+                || productoIds.size() != cantidades.size()) {
+            throw new IllegalArgumentException("Agrega al menos un producto a la factura.");
+        }
+
+        if (formulario.getId() != 0 && !administrador
+                && facturaRepository.findByIdAndVendedorUsername(formulario.getId(), username).isEmpty()) {
+            throw new AccessDeniedException("Solo puedes modificar tus propias facturas.");
+        }
+
+        Cliente cliente = null;
+        if (clienteId != null) {
+            cliente = clienteRepository.findById(clienteId)
+                    .orElseThrow(() -> new IllegalArgumentException(
+                            "Selecciona un cliente válido o consumidor final."));
+        }
+
+        List<DetalleFactura> detalles = new ArrayList<>();
+        double total = 0;
+        for (int i = 0; i < productoIds.size(); i++) {
+            Long productoId = productoIds.get(i);
+            Integer cantidad = cantidades.get(i);
+            if (productoId == null || cantidad == null || cantidad < 1) {
+                throw new IllegalArgumentException("Revisa los productos y cantidades de la factura.");
+            }
+            Producto producto = productoRepository.findById(productoId)
+                    .orElseThrow(() -> new IllegalArgumentException(
+                            "Revisa los productos y cantidades de la factura."));
+            double subtotal = producto.getPrecioVenta() * cantidad;
+            detalles.add(DetalleFactura.builder()
+                    .producto(producto)
+                    .cantidad(cantidad)
+                    .precioUnitario(producto.getPrecioVenta())
+                    .subtotal(subtotal)
+                    .build());
+            total += subtotal;
+        }
+
+        Usuario vendedor = usuarioRepository.findByUsername(username)
+                .orElseThrow(() -> new EntityNotFoundException("No se encontró el usuario autenticado."));
+        Factura datosFactura = new Factura();
+        datosFactura.setId(formulario.getId());
+        datosFactura.setFecha(formulario.getFecha());
+        datosFactura.setCliente(cliente);
+        datosFactura.setTotal(total);
+        return guardarConDetalles(datosFactura, detalles, vendedor);
     }
 
     @Transactional
@@ -73,6 +146,23 @@ public class FacturaService {
             factura.getDetalles().add(detalle);
         }
         return facturaRepository.save(factura);
+    }
+
+    @Transactional
+    public Factura agregarProducto(Long facturaId, Long productoId, int cantidad) {
+        if (cantidad < 1) {
+            throw new IllegalArgumentException("La cantidad debe ser mayor que cero.");
+        }
+        Producto producto = productoRepository.findById(productoId)
+                .orElseThrow(() -> new EntityNotFoundException("No se encontró el producto con id " + productoId));
+        double subtotal = producto.getPrecioVenta() * cantidad;
+        DetalleFactura detalle = DetalleFactura.builder()
+                .producto(producto)
+                .cantidad(cantidad)
+                .precioUnitario(producto.getPrecioVenta())
+                .subtotal(subtotal)
+                .build();
+        return agregarDetalle(facturaId, detalle);
     }
 
     @Transactional

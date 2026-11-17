@@ -1,11 +1,6 @@
 package com.umoar.minisuperhub.controladores;
 
-import com.umoar.minisuperhub.modelos.Cliente;
-import com.umoar.minisuperhub.modelos.DetalleFactura;
 import com.umoar.minisuperhub.modelos.Factura;
-import com.umoar.minisuperhub.modelos.Producto;
-import com.umoar.minisuperhub.modelos.Usuario;
-import com.umoar.minisuperhub.repositorios.UsuarioRepository;
 import com.umoar.minisuperhub.servicios.ClienteService;
 import com.umoar.minisuperhub.servicios.FacturaService;
 import com.umoar.minisuperhub.servicios.ProductoService;
@@ -13,7 +8,6 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,6 +21,7 @@ import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +34,6 @@ public class FacturaController {
     private final FacturaService facturaService;
     private final ClienteService clienteService;
     private final ProductoService productoService;
-    private final UsuarioRepository usuarioRepository;
 
     @Value("${app.minisuper.nombre:Minisúper}")
     private String nombreMinisuper;
@@ -74,7 +68,7 @@ public class FacturaController {
     @GetMapping("/nuevo")
     public String nuevo(Model model) {
         Factura factura = new Factura();
-        factura.setFecha(java.time.LocalDateTime.now());
+        factura.setFecha(LocalDateTime.now());
 
         factura.setDetalles(new ArrayList<>());
         model.addAttribute("factura", factura);
@@ -111,53 +105,13 @@ public class FacturaController {
                           @RequestParam(required = false) List<Integer> cantidades,
                           Authentication authentication,
                           RedirectAttributes redirectAttributes) {
-        boolean admin = esAdmin(authentication);
-        if (!admin && factura.getId() != 0
-                && facturaService.buscarPorIdYVendedor(factura.getId(), authentication.getName()).isEmpty()) {
-            throw new AccessDeniedException("Solo puedes modificar tus propias facturas.");
-        }
-        if (productoIds == null || cantidades == null || productoIds.isEmpty()
-                || productoIds.size() != cantidades.size()) {
-            return volverAlFormulario(factura, redirectAttributes,
-                    "Agrega al menos un producto a la factura.");
-        }
-
-        Cliente cliente = null;
-        if (clienteId != null) {
-            cliente = clienteService.buscarPorId(clienteId).orElse(null);
-            if (cliente == null) {
-                return volverAlFormulario(factura, redirectAttributes,
-                        "Selecciona un cliente válido o consumidor final.");
-            }
-        }
-
-        List<DetalleFactura> detalles = new ArrayList<>();
-        double total = 0;
-        for (int i = 0; i < productoIds.size(); i++) {
-            Integer cantidad = cantidades.get(i);
-            Producto producto = productoService.buscarPorId(productoIds.get(i)).orElse(null);
-            if (producto == null || cantidad == null || cantidad < 1) {
-                return volverAlFormulario(factura, redirectAttributes,
-                        "Revisa los productos y cantidades de la factura.");
-            }
-
-            double subtotal = producto.getPrecioVenta() * cantidad;
-            DetalleFactura detalle = DetalleFactura.builder()
-                    .producto(producto)
-                    .cantidad(cantidad)
-                    .precioUnitario(producto.getPrecioVenta())
-                    .subtotal(subtotal)
-                    .build();
-            detalles.add(detalle);
-            total += subtotal;
-        }
-
         boolean nueva = factura.getId() == 0;
-        factura.setCliente(cliente);
-        factura.setTotal(total);
-        Usuario vendedor = usuarioRepository.findByUsername(authentication.getName())
-                .orElseThrow(() -> new EntityNotFoundException("No se encontró el usuario autenticado."));
-        facturaService.guardarConDetalles(factura, detalles, vendedor);
+        try {
+            facturaService.guardarDesdeFormulario(factura, clienteId, productoIds, cantidades,
+                    authentication.getName(), esAdmin(authentication));
+        } catch (IllegalArgumentException | IllegalStateException ex) {
+            return volverAlFormulario(factura, redirectAttributes, ex.getMessage());
+        }
         redirectAttributes.addFlashAttribute("alertType", "success");
         redirectAttributes.addFlashAttribute("alertMessage", nueva
                 ? "Factura guardada correctamente."
@@ -177,22 +131,15 @@ public class FacturaController {
             redirectAttributes.addFlashAttribute("alertMessage", "No se puede modificar una factura anulada.");
             return "redirect:/facturas/ver/" + id;
         }
-        if (cantidad < 1) {
+        try {
+            facturaService.agregarProducto(id, productoId, cantidad);
+        } catch (EntityNotFoundException ex) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        } catch (IllegalArgumentException | IllegalStateException ex) {
             redirectAttributes.addFlashAttribute("alertType", "error");
-            redirectAttributes.addFlashAttribute("alertMessage", "La cantidad debe ser mayor que cero.");
+            redirectAttributes.addFlashAttribute("alertMessage", ex.getMessage());
             return "redirect:/facturas/ver/" + id;
         }
-
-        Producto producto = productoService.buscarPorId(productoId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        double subtotal = producto.getPrecioVenta() * cantidad;
-        DetalleFactura detalle = DetalleFactura.builder()
-                .producto(producto)
-                .cantidad(cantidad)
-                .precioUnitario(producto.getPrecioVenta())
-                .subtotal(subtotal)
-                .build();
-        facturaService.agregarDetalle(id, detalle);
         redirectAttributes.addFlashAttribute("alertType", "success");
         redirectAttributes.addFlashAttribute("alertMessage", "Producto agregado a la factura.");
         return "redirect:/facturas/ver/" + id;

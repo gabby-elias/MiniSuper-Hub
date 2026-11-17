@@ -32,15 +32,16 @@
             <h1>Productos</h1>
             <p>Administra el catálogo, las existencias y los precios.</p>
         </div>
-        <a th:if="${esAdmin}" class="btn-product-new" th:href="@{/productos/nuevo}">
+        <button th:if="${esAdmin}" type="button" class="btn-product-new"
+                data-bs-toggle="modal" data-bs-target="#modalNuevoProducto">
             + Nuevo producto
-        </a>
+        </button>
     </header>
 
     <!-- Card de la Tabla de Productos -->
     <section class="product-card">
         <div class="table-responsive">
-            <table class="table product-table align-middle">
+            <table class="table product-table align-middle" data-catalog-list>
                 <thead>
                 <tr>
                     <th style="width: 100px;">Código</th>
@@ -53,7 +54,7 @@
                 </tr>
                 </thead>
                 <tbody id="productTableBody">
-                <tr th:each="producto, stat : ${productos}" data-product-row data-search-row th:attr="data-product-id=${producto.id}">
+                <tr th:each="producto, stat : ${productos}" data-product-row data-catalog-row data-search-row th:attr="data-product-id=${producto.id}">
                     <td>
                         <span class="product-code" th:text="${'P' + #numbers.formatInteger(producto.id, 3)}">P001</span>
                     </td>
@@ -95,7 +96,7 @@
                 <tr th:if="${#lists.isEmpty(productos)}" class="product-empty-row">
                     <td th:colspan="${esAdmin ? 7 : 6}" class="text-center py-5 text-muted">No hay productos registrados en el catálogo.</td>
                 </tr>
-                <tr id="productNoResultsRow" style="display: none;" class="product-empty-row">
+                <tr id="productNoResultsRow" data-catalog-no-results hidden class="product-empty-row">
                     <td th:colspan="${esAdmin ? 7 : 6}" class="text-center py-5 text-muted">No se encontraron productos que coincidan con la búsqueda.</td>
                 </tr>
                 </tbody>
@@ -105,114 +106,29 @@
         <!-- Footer con conteo y paginación -->
         <footer class="product-footer">
             <span id="productCounterText">
-                Mostrando <strong id="productVisibleCount" th:text="${#lists.size(productos) > 5 ? 5 : #lists.size(productos)}">0</strong> de <strong id="productTotalCount" th:text="${#lists.size(productos)}">0</strong> productos
+                Mostrando <strong id="productVisibleCount" data-catalog-visible th:text="${#lists.size(productos) > 5 ? 5 : #lists.size(productos)}">0</strong> de <strong id="productTotalCount" data-catalog-total th:text="${#lists.size(productos)}">0</strong> productos
             </span>
-            <div class="pagination-wrapper" id="productPagination">
+            <div class="pagination-wrapper" id="productPagination" data-catalog-pagination>
                 <!-- Se llena mediante script -->
             </div>
         </footer>
     </section>
+
+    <div th:if="${esAdmin}" class="modal fade modal-product-clean" id="modalNuevoProducto" tabindex="-1"
+         aria-labelledby="modalNuevoProductoTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title fs-5" id="modalNuevoProductoTitle">Nuevo producto</h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <th:block th:replace="~{fragments/producto-formulario :: formularioProducto(true)}"></th:block>
+            </div>
+        </div>
+    </div>
 </main>
 <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
-<script>
-    (() => {
-        const rows = [...document.querySelectorAll('#productTableBody tr[data-product-row]')];
-        const noResults = document.getElementById('productNoResultsRow');
-        const visibleCounter = document.getElementById('productVisibleCount');
-        const totalCounter = document.getElementById('productTotalCount');
-        const paginationContainer = document.getElementById('productPagination');
-        const pageSize = 5;
-        let currentPage = 1;
-        let filteredRows = [...rows];
-
-        function renderPagination() {
-            if (!paginationContainer) return;
-            paginationContainer.innerHTML = '';
-            const totalPages = Math.ceil(filteredRows.length / pageSize) || 1;
-
-            if (currentPage > totalPages) currentPage = totalPages;
-            if (currentPage < 1) currentPage = 1;
-
-            // Botón Anterior
-            const prevBtn = document.createElement('button');
-            prevBtn.className = 'page-btn';
-            prevBtn.innerHTML = '&lt;';
-            prevBtn.disabled = currentPage === 1;
-            prevBtn.onclick = () => {
-                if (currentPage > 1) {
-                    currentPage--;
-                    showPage(currentPage);
-                }
-            };
-            paginationContainer.appendChild(prevBtn);
-
-            // Números de página
-            for (let i = 1; i <= totalPages; i++) {
-                const numBtn = document.createElement('button');
-                numBtn.className = 'page-btn' + (i === currentPage ? ' active' : '');
-                numBtn.textContent = i;
-                numBtn.onclick = () => {
-                    currentPage = i;
-                    showPage(currentPage);
-                };
-                paginationContainer.appendChild(numBtn);
-            }
-
-            // Botón Siguiente
-            const nextBtn = document.createElement('button');
-            nextBtn.className = 'page-btn';
-            nextBtn.innerHTML = '&gt;';
-            nextBtn.disabled = currentPage === totalPages;
-            nextBtn.onclick = () => {
-                if (currentPage < totalPages) {
-                    currentPage++;
-                    showPage(currentPage);
-                }
-            };
-            paginationContainer.appendChild(nextBtn);
-        }
-
-        function showPage(page) {
-            const start = (page - 1) * pageSize;
-            const end = start + pageSize;
-
-            rows.forEach(row => row.style.display = 'none');
-            const pageItems = filteredRows.slice(start, end);
-            pageItems.forEach(row => row.style.display = '');
-
-            if (visibleCounter) {
-                visibleCounter.textContent = pageItems.length;
-            }
-            if (totalCounter) {
-                totalCounter.textContent = filteredRows.length;
-            }
-            renderPagination();
-        }
-
-        function filterProducts(query) {
-            const q = (query || '').trim().toLowerCase();
-            filteredRows = rows.filter(row => {
-                return !q || row.textContent.toLowerCase().includes(q);
-            });
-
-            if (noResults) {
-                noResults.style.display = (filteredRows.length === 0 && rows.length > 0) ? '' : 'none';
-            }
-
-            currentPage = 1;
-            showPage(currentPage);
-        }
-
-        const searches = [...document.querySelectorAll('[data-table-search]')];
-        searches.forEach(input => {
-            input.addEventListener('input', () => {
-                filterProducts(input.value);
-            });
-        });
-
-        // Inicializar vista
-        filterProducts('');
-    })();
-</script>
+<script th:src="@{/js/catalog-list.js}"></script>
+<script th:src="@{/js/product-form.js(v=13)}"></script>
 </body>
 </html>

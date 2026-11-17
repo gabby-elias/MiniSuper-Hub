@@ -230,17 +230,18 @@ body.app-page.details-page {
 }
 
 .details-page .details-view-button {
-    border-color: #6B4C8A;
+    border-color: #C9C3D9;
     border-radius: 0.42rem;
-    background: #6B4C8A;
-    color: #fff;
+    background: #fff;
+    color: #2E2A3B;
     font-size: 0.75rem;
     font-weight: 650;
 }
 
 .details-page .details-view-button:hover {
-    border-color: #594072;
-    background: #594072;
+    border-color: #C9C3D9;
+    background: #f7f3fa;
+    color: #594072;
 }
 
 .details-page .details-table-footer {
@@ -305,6 +306,179 @@ body.app-page.details-page {
         align-items: flex-start;
         flex-direction: column;
     }
+}
+
+.details-page .invoice-state-badge {
+    border: 1px solid #C9C3D9;
+    background-color: #F5F3F9 !important;
+    color: #2E2A3B !important;
+}
+
+.details-page .invoice-state-badge.text-bg-warning {
+    background-color: #fff1cc !important;
+    color: #71540b !important;
+}
+
+.details-page .invoice-state-badge.text-bg-danger {
+    background-color: #f8e0e4 !important;
+    color: #873846 !important;
+}
+
+.details-page .invoice-state-badge.text-bg-success {
+    background-color: #dff1e6 !important;
+    color: #246745 !important;
+}
+
+.details-page .details-vendor-summary {
+    margin-bottom: 1.25rem;
+    padding: 1rem 1.15rem;
+    border: 1px solid #e2d9ec;
+    border-radius: .85rem;
+    background: #fff;
+    box-shadow: 0 .3rem .9rem rgba(52, 39, 72, .035);
+}
+
+.details-page .details-vendor-summary-heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: .85rem;
+}
+
+.details-page .details-vendor-summary-heading h2 {
+    margin: 0;
+    color: #2E2A3B;
+    font-size: .95rem;
+    font-weight: 700;
+}
+
+.details-page .details-vendor-summary-heading p {
+    margin: .25rem 0 0;
+    color: #7C739A;
+    font-size: .76rem;
+}
+
+.details-page .details-show-all {
+    color: #6B4C8A;
+    font-size: .76rem;
+    font-weight: 650;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.details-page .details-show-all:hover {
+    color: #594072;
+    text-decoration: underline;
+}
+
+.details-page .details-vendor-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 11rem), 1fr));
+    gap: .55rem;
+}
+
+.details-page .details-vendor-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .75rem;
+    min-height: 3.2rem;
+    padding: .6rem .75rem;
+    border: 1px solid #eeeaf2;
+    border-radius: .6rem;
+    background: #fcfbfd;
+    color: #2E2A3B;
+    text-decoration: none;
+    transition: border-color .15s ease, background-color .15s ease;
+}
+
+.details-page .details-vendor-card:hover,
+.details-page .details-vendor-card.is-selected {
+    border-color: #c9b8d8;
+    background: #f8f6fb;
+}
+
+.details-page .details-vendor-card.is-selected {
+    box-shadow: inset 3px 0 #6B4C8A;
+}
+
+.details-page .details-vendor-name {
+    overflow: hidden;
+    font-size: .78rem;
+    font-weight: 600;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.details-page .details-vendor-count {
+    display: flex;
+    align-items: baseline;
+    gap: .25rem;
+    flex-shrink: 0;
+    color: #7C739A;
+    font-size: .68rem;
+}
+
+.details-page .details-vendor-count strong {
+    color: #6B4C8A;
+    font-size: .92rem;
+    font-variant-numeric: tabular-nums;
+}
+
+.details-page .details-vendor-filter {
+    display: flex;
+    align-items: center;
+    gap: .55rem;
+    margin-top: .85rem;
+    padding-top: .8rem;
+    border-top: 1px solid #eeeaf2;
+}
+
+.details-page .details-vendor-filter label {
+    color: #6f6879;
+    font-size: .76rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.details-page .details-vendor-filter .form-select {
+    width: min(100%, 20rem);
+    min-height: 2.2rem;
+    padding-top: .35rem;
+    padding-bottom: .35rem;
+    border-color: #e2d9ec;
+    color: #2E2A3B;
+    font-size: .77rem;
+}
+
+.details-page .details-vendor-filter .form-select:focus {
+    border-color: #9b82b2;
+    box-shadow: 0 0 0 .18rem rgba(107, 76, 138, .12);
+}
+
+.details-page .details-filter-button {
+    min-height: 2.2rem;
+    padding: .35rem .8rem;
+    border: 1px solid #6B4C8A;
+    border-radius: .45rem;
+    background: #6B4C8A;
+    color: #fff;
+    font-size: .76rem;
+    font-weight: 650;
+    white-space: nowrap;
+}
+
+.details-page .details-filter-button:hover {
+    border-color: #594072;
+    background: #594072;
+    color: #fff;
+}
+
+.details-page .details-vendor-empty {
+    margin: 0;
+    color: #7C739A;
+    font-size: .78rem;
 }
 
 @media (max-width: 767.98px) {

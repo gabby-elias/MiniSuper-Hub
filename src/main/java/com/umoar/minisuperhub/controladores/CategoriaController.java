@@ -32,6 +32,7 @@ public class CategoriaController {
                 .filter(p -> p.getCategoria() != null)
                 .collect(Collectors.groupingBy(p -> p.getCategoria().getId(), Collectors.counting()));
         model.addAttribute("categorias", categorias);
+        model.addAttribute("categoria", new Categoria());
         model.addAttribute("productos", productos);
         model.addAttribute("productosPorCategoria", productosPorCategoria);
         return "categorias/lista";

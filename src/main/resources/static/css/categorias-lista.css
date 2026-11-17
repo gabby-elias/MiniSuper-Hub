@@ -1,3 +1,5 @@
+@import url("/css/categorias-formulario.css?v=13");
+
 /* Layout de ancho completo */
 body.app-page > main.app-main {
     box-sizing: border-box;
@@ -266,6 +268,10 @@ body.app-page > main.app-main {
     padding: 1rem 1.5rem;
     border-top: 1px solid #ede8f5;
     background: #faf9fc;
+}
+
+.modal-category-clean .category-form-actions {
+    margin-top: 0;
 }
 
 .modal-category-clean .btn-submit-category {
