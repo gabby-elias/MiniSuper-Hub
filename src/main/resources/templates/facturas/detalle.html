@@ -144,26 +144,6 @@
     </section>
 </main>
 <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
-<script>
-(() => {
-    const producto = document.getElementById('detalleProducto');
-    const cantidad = document.getElementById('detalleCantidad');
-    const precio = document.getElementById('detallePrecio');
-    const subtotal = document.getElementById('detalleSubtotal');
-    if (!producto || !cantidad || !precio || !subtotal) return;
-
-    const moneda = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
-    const actualizar = () => {
-        const opcion = producto.selectedOptions[0];
-        const valor = Number(opcion?.dataset.price || 0);
-        const unidades = Math.max(1, Number.parseInt(cantidad.value, 10) || 1);
-        precio.value = moneda.format(valor);
-        subtotal.value = moneda.format(valor * unidades);
-    };
-    producto.addEventListener('change', actualizar);
-    cantidad.addEventListener('input', actualizar);
-    actualizar();
-})();
-</script>
+<script th:src="@{/js/invoice-detail.js}"></script>
 </body>
 </html>

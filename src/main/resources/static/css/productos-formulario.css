@@ -303,3 +303,140 @@ body.app-page > main.app-main {
     background-color: #43265d;
     transform: translateY(0);
 }
+
+.unit-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+}
+
+.unit-choice {
+    min-height: 2.15rem;
+    padding: 0.38rem 0.8rem;
+    border: 1px solid #ded7e9;
+    border-radius: 0.55rem;
+    background: #fff;
+    color: #4b455b;
+    font-size: 0.82rem;
+    font-weight: 550;
+    transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.unit-choice:hover,
+.unit-choice:focus-visible {
+    border-color: #bda9d0;
+    background: #f8f5fb;
+    color: #654388;
+}
+
+.unit-choice.is-selected {
+    border-color: #9d80b6;
+    background: #efe9f7;
+    color: #5b3b7c;
+    box-shadow: inset 0 0 0 1px rgba(101, 67, 136, 0.08);
+}
+
+.unit-custom-input[hidden] {
+    display: none !important;
+}
+
+.unit-custom-input:not([hidden]) {
+    margin-top: 0.65rem;
+}
+
+.price-stepper-box {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 44px;
+    padding: 0 0.2rem;
+    border: 1px solid #dcd7e6;
+    border-radius: 0.65rem;
+    background: #fff;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.price-stepper-box:focus-within {
+    border-color: #654388;
+    box-shadow: 0 0 0 3px rgba(101, 67, 136, 0.12);
+}
+
+.price-stepper-box > .stepper-btn {
+    flex: 0 0 38px;
+    width: 38px;
+    height: 34px;
+    border-radius: 0.45rem;
+}
+
+.price-stepper-box .price-input-group {
+    flex: 1;
+    min-width: 0;
+    height: 100%;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+}
+
+.price-stepper-box .price-prefix {
+    padding: 0 0.65rem;
+    border: 0;
+    background: transparent;
+    color: #7c739a;
+}
+
+.price-stepper-box .price-input {
+    padding: 0 0.45rem;
+    text-align: center;
+}
+
+.price-quick-add-container {
+    flex-wrap: wrap;
+}
+
+.product-form-preview {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    min-height: 2.65rem;
+    margin-top: 1rem;
+    padding: 0.6rem 0.8rem;
+    border: 1px solid #e8e1f0;
+    border-radius: 0.65rem;
+    background: #f6f3fa;
+    color: #4b455b;
+    font-size: 0.82rem;
+    line-height: 1.45;
+}
+
+.product-form-preview strong {
+    color: #2e2a3b;
+    font-weight: 700;
+}
+
+.product-preview-icon {
+    width: 1.1rem;
+    height: 1.1rem;
+    flex: 0 0 1.1rem;
+    fill: none;
+    stroke: #6b4c8a;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.8;
+}
+
+@media (max-width: 575.98px) {
+    .unit-options {
+        gap: 0.35rem;
+    }
+
+    .unit-choice {
+        padding-inline: 0.65rem;
+        font-size: 0.78rem;
+    }
+
+    .product-form-preview {
+        align-items: flex-start;
+        font-size: 0.75rem;
+    }
+}

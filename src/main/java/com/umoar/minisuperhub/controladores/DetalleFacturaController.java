@@ -15,10 +15,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/detalles-factura")
@@ -39,12 +42,30 @@ public class DetalleFacturaController {
     private String telefonoMinisuper;
 
     @GetMapping
-    public String listar(Authentication authentication, Model model) {
+    public String listar(@RequestParam(required = false) String vendedor,
+                         Authentication authentication, Model model) {
         boolean admin = authentication.getAuthorities().stream()
                 .anyMatch(authority -> "ROLE_ADMIN".equals(authority.getAuthority()));
-        var facturas = admin ? facturaService.listar()
-                : facturaService.listarPorVendedor(authentication.getName());
+        List<Factura> facturas;
+        String vendedorSeleccionado = "";
+
+        if (admin) {
+            var resumenVendedores = facturaService.resumirFacturasPorVendedor();
+            vendedorSeleccionado = resumenVendedores.stream()
+                    .filter(resumen -> resumen.getUsername().equals(vendedor))
+                    .map(resumen -> resumen.getUsername())
+                    .findFirst()
+                    .orElse("");
+            facturas = vendedorSeleccionado.isEmpty()
+                    ? facturaService.listar()
+                    : facturaService.listarPorVendedor(vendedorSeleccionado);
+            model.addAttribute("resumenVendedores", resumenVendedores);
+        } else {
+            facturas = facturaService.listarPorVendedor(authentication.getName());
+        }
+
         model.addAttribute("facturas", facturas);
+        model.addAttribute("vendedorSeleccionado", vendedorSeleccionado);
         model.addAttribute("esAdmin", admin);
         return "detalles-factura/lista-facturas";
     }
@@ -69,12 +90,8 @@ public class DetalleFacturaController {
 
     @GetMapping("/nuevo")
     public String nuevo(Model model) {
-        DetalleFactura detalle = new DetalleFactura();
-        detalle.setFactura(new Factura());
-        detalle.setProducto(new Producto());
-        model.addAttribute("detalleFactura", detalle);
-        cargarOpciones(model);
-        return "detalles-factura/formulario";
+        model.addAttribute("facturas", facturaService.listar());
+        return "detalles-factura/lista-generadas";
     }
 
     @GetMapping("/editar/{id}")

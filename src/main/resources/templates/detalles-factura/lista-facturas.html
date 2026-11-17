@@ -12,6 +12,41 @@
         </div>
     </div>
 
+    <section th:if="${esAdmin}" class="content-card details-vendor-summary" aria-labelledby="vendor-summary-title">
+        <div class="details-vendor-summary-heading">
+            <div>
+                <h2 id="vendor-summary-title">Facturas por empleado</h2>
+                <p>Consulta el total de ventas registradas por cada empleado.</p>
+            </div>
+            <a class="details-show-all" th:href="@{/detalles-factura}">Ver todos</a>
+        </div>
+        <div class="details-vendor-grid" th:if="${!#lists.isEmpty(resumenVendedores)}">
+            <a class="details-vendor-card" th:each="resumen : ${resumenVendedores}"
+               th:href="@{/detalles-factura(vendedor=${resumen.username})}"
+               th:classappend="${vendedorSeleccionado == resumen.username ? ' is-selected' : ''}">
+                <span class="details-vendor-name" th:text="${resumen.nombre}">Nombre del empleado</span>
+                <span class="details-vendor-count">
+                    <strong th:text="${resumen.cantidadFacturas}">0</strong>
+                    <span th:text="${resumen.cantidadFacturas == 1 ? 'factura' : 'facturas'}">facturas</span>
+                </span>
+            </a>
+        </div>
+        <p class="details-vendor-empty" th:if="${#lists.isEmpty(resumenVendedores)}">
+            No hay empleados registrados para mostrar.
+        </p>
+        <form class="details-vendor-filter" method="get" th:action="@{/detalles-factura}">
+            <label for="vendedor-filter">Filtrar facturas por empleado</label>
+            <select id="vendedor-filter" name="vendedor" class="form-select">
+                <option value="" th:selected="${vendedorSeleccionado == ''}">Todos los empleados</option>
+                <option th:each="resumen : ${resumenVendedores}"
+                        th:value="${resumen.username}"
+                        th:text="|${resumen.nombre} (${resumen.cantidadFacturas})|"
+                        th:selected="${vendedorSeleccionado == resumen.username}">Empleado (0)</option>
+            </select>
+            <button class="btn details-filter-button" type="submit">Filtrar</button>
+        </form>
+    </section>
+
     <section class="content-card details-table-card table-responsive" aria-label="Facturas registradas">
         <table class="table table-hover align-middle details-table" data-pagination-table="detalles-factura" data-pagination-label="facturas">
             <thead>

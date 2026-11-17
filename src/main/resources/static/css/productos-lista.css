@@ -1,3 +1,5 @@
+@import url("/css/productos-formulario.css?v=13");
+
 /* Layout de ancho completo */
 body.app-page > main.app-main {
     box-sizing: border-box;
@@ -87,6 +89,7 @@ body.app-page > main.app-main {
 /* Botón + Nuevo producto */
 .btn-product-new {
     display: inline-flex;
+    font-family: inherit;
     align-items: center;
     justify-content: center;
     gap: 0.4rem;
@@ -354,6 +357,15 @@ body.app-page > main.app-main {
     padding: 1rem 1.5rem;
     border-top: 1px solid #ede8f5;
     background: #faf9fc;
+}
+
+.modal-product-clean form {
+    max-height: calc(100vh - 8rem);
+    overflow-y: auto;
+}
+
+.modal-product-clean .product-form-actions {
+    margin-top: 0;
 }
 
 .modal-product-clean .btn-submit-product {

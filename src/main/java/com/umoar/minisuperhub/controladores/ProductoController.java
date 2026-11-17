@@ -41,6 +41,12 @@ public class ProductoController {
                 .mapToDouble(factura -> factura.getTotal())
                 .sum();
         model.addAttribute("productos", productos);
+        if (admin) {
+            Producto productoNuevo = new Producto();
+            productoNuevo.setCategoria(new Categoria());
+            model.addAttribute("producto", productoNuevo);
+            model.addAttribute("categorias", categoriaService.listar());
+        }
         model.addAttribute("cantidadProductos", productos.size());
         model.addAttribute("cantidadStockBajo", productos.stream().filter(producto -> producto.getStock() <= 5).count());
         model.addAttribute("ventasHoy", ventasHoy);

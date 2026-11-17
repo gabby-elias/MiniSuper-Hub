@@ -8,7 +8,7 @@
 }
 
 .generated-invoices-eyebrow {
-    color: #2b68a7;
+    color: #7C739A;
     font-size: 0.75rem;
     font-weight: 750;
     letter-spacing: 0.08em;
@@ -16,7 +16,7 @@
 
 .generated-invoices-heading h1 {
     margin: 0.25rem 0 0;
-    color: #193858;
+    color: #2E2A3B;
     font-size: clamp(1.45rem, 2.4vw, 2rem);
     font-weight: 750;
 }
@@ -28,18 +28,18 @@
 
 .generated-invoices-card {
     overflow: hidden;
-    border: 1px solid #dce6f1;
+    border: 1px solid #e2d9ec;
     border-radius: 0.75rem;
     background: #ffffff;
-    box-shadow: 0 0.35rem 1rem rgba(35, 65, 46, 0.045);
+    box-shadow: 0 0.35rem 1rem rgba(52, 39, 72, 0.05);
 }
 
 .generated-invoices-table {
     --bs-table-bg: #ffffff;
-    --bs-table-color: #26384d;
-    --bs-table-border-color: #e8edf3;
-    --bs-table-hover-bg: #f5f9fd;
-    --bs-table-hover-color: #26384d;
+    --bs-table-color: #2E2A3B;
+    --bs-table-border-color: #eeeaf2;
+    --bs-table-hover-bg: #f8f6fb;
+    --bs-table-hover-color: #2E2A3B;
     margin: 0;
 }
 
@@ -49,8 +49,8 @@
 }
 
 .generated-invoices-table thead th {
-    background: #eaf0f7;
-    color: #294767;
+    background: #6B4C8A;
+    color: #ffffff;
     font-size: 0.75rem;
     font-weight: 700;
     white-space: nowrap;
@@ -58,24 +58,25 @@
 
 .generated-invoice-id,
 .generated-invoice-total {
-    color: #173d6b !important;
+    color: #2E2A3B !important;
     font-weight: 700;
 }
 
 .generated-invoices-table tbody tr.invoice-selected-row > * {
-    background: #edf5ff;
+    background: #eee9f4;
 }
 
 .btn-view-invoice {
-    border: 1px solid #c9d9ec;
-    color: #1e5b9b;
+    border: 1px solid #C9C3D9;
+    background: #ffffff;
+    color: #2E2A3B;
     font-weight: 650;
 }
 
 .btn-view-invoice:hover {
-    border-color: #1e5b9b;
-    background: #edf5ff;
-    color: #173d6b;
+    border-color: #C9C3D9;
+    background: #f7f3fa;
+    color: #594072;
 }
 
 @media (max-width: 700px) {

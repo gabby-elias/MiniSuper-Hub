@@ -18,7 +18,7 @@
     <!-- Card de la Tabla -->
     <section class="category-card">
         <div class="table-responsive">
-            <table class="table category-table align-middle">
+            <table class="table category-table align-middle" data-catalog-list>
                 <thead>
                 <tr>
                     <th style="width: 100px;">N.°</th>
@@ -28,7 +28,7 @@
                 </tr>
                 </thead>
                 <tbody id="categoryTableBody">
-                <tr th:each="categoria, stat : ${categorias}" data-category-row data-search-row th:attr="data-category-id=${categoria.id}">
+                <tr th:each="categoria, stat : ${categorias}" data-category-row data-catalog-row data-search-row th:attr="data-category-id=${categoria.id}">
                     <td>
                         <span class="category-row-num" th:text="${stat.count}">1</span>
                     </td>
@@ -63,7 +63,7 @@
                 <tr th:if="${#lists.isEmpty(categorias)}" class="category-empty-row">
                     <td th:colspan="${esAdmin ? 4 : 3}" class="text-center py-5 text-muted">No hay categorías registradas en el catálogo.</td>
                 </tr>
-                <tr id="categoryNoResultsRow" style="display: none;" class="category-empty-row">
+                <tr id="categoryNoResultsRow" data-catalog-no-results hidden class="category-empty-row">
                     <td th:colspan="${esAdmin ? 4 : 3}" class="text-center py-5 text-muted">No se encontraron categorías que coincidan con la búsqueda.</td>
                 </tr>
                 </tbody>
@@ -73,9 +73,9 @@
         <!-- Footer con conteo y paginación -->
         <footer class="category-footer">
             <span id="categoryCounterText">
-                Mostrando <strong id="categoryVisibleCount" th:text="${#lists.size(categorias) > 5 ? 5 : #lists.size(categorias)}">0</strong> de <strong id="categoryTotalCount" th:text="${#lists.size(categorias)}">0</strong> categorías
+                Mostrando <strong id="categoryVisibleCount" data-catalog-visible th:text="${#lists.size(categorias) > 5 ? 5 : #lists.size(categorias)}">0</strong> de <strong id="categoryTotalCount" data-catalog-total th:text="${#lists.size(categorias)}">0</strong> categorías
             </span>
-            <div class="pagination-wrapper" id="categoryPagination">
+            <div class="pagination-wrapper" id="categoryPagination" data-catalog-pagination>
                 <!-- Se llena mediante script -->
             </div>
         </footer>
@@ -89,24 +89,7 @@
                     <h2 class="modal-title fs-5" id="modalNuevaCategoriaTitle">Nueva categoría</h2>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
-                <form th:action="@{/categorias/guardar}" method="post"
-                      data-swal-confirm data-swal-action="save"
-                      data-swal-title="¿Guardar categoría?"
-                      data-swal-text="Confirma para guardar la nueva categoría."
-                      data-swal-confirm-text="Sí, guardar">
-                    <input type="hidden" name="id" value="0">
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <label for="modalNombreCategoria" class="form-label fw-semibold text-dark">Nombre de la categoría <span class="text-danger">*</span></label>
-                            <input id="modalNombreCategoria" name="nombreCategoria" class="form-control" type="text"
-                                   maxlength="100" placeholder="Ej.: Bebidas, Snacks..." required autofocus>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-submit-category">Guardar categoría</button>
-                    </div>
-                </form>
+                <th:block th:replace="~{fragments/categoria-formulario :: formularioCategoria(true)}"></th:block>
             </div>
         </div>
     </div>
@@ -177,105 +160,6 @@
 
 </main>
 <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
-<script>
-    (() => {
-        const rows = [...document.querySelectorAll('#categoryTableBody tr[data-category-row]')];
-        const noResults = document.getElementById('categoryNoResultsRow');
-        const visibleCounter = document.getElementById('categoryVisibleCount');
-        const totalCounter = document.getElementById('categoryTotalCount');
-        const paginationContainer = document.getElementById('categoryPagination');
-        const pageSize = 5;
-        let currentPage = 1;
-        let filteredRows = [...rows];
-
-        function renderPagination() {
-            if (!paginationContainer) return;
-            paginationContainer.innerHTML = '';
-            const totalPages = Math.ceil(filteredRows.length / pageSize) || 1;
-
-            if (currentPage > totalPages) currentPage = totalPages;
-            if (currentPage < 1) currentPage = 1;
-
-            // Botón Anterior
-            const prevBtn = document.createElement('button');
-            prevBtn.className = 'page-btn';
-            prevBtn.innerHTML = '&lt;';
-            prevBtn.disabled = currentPage === 1;
-            prevBtn.onclick = () => {
-                if (currentPage > 1) {
-                    currentPage--;
-                    showPage(currentPage);
-                }
-            };
-            paginationContainer.appendChild(prevBtn);
-
-            // Números de página
-            for (let i = 1; i <= totalPages; i++) {
-                const numBtn = document.createElement('button');
-                numBtn.className = 'page-btn' + (i === currentPage ? ' active' : '');
-                numBtn.textContent = i;
-                numBtn.onclick = () => {
-                    currentPage = i;
-                    showPage(currentPage);
-                };
-                paginationContainer.appendChild(numBtn);
-            }
-
-            // Botón Siguiente
-            const nextBtn = document.createElement('button');
-            nextBtn.className = 'page-btn';
-            nextBtn.innerHTML = '&gt;';
-            nextBtn.disabled = currentPage === totalPages;
-            nextBtn.onclick = () => {
-                if (currentPage < totalPages) {
-                    currentPage++;
-                    showPage(currentPage);
-                }
-            };
-            paginationContainer.appendChild(nextBtn);
-        }
-
-        function showPage(page) {
-            const start = (page - 1) * pageSize;
-            const end = start + pageSize;
-
-            rows.forEach(row => row.style.display = 'none');
-            const pageItems = filteredRows.slice(start, end);
-            pageItems.forEach(row => row.style.display = '');
-
-            if (visibleCounter) {
-                visibleCounter.textContent = pageItems.length;
-            }
-            if (totalCounter) {
-                totalCounter.textContent = filteredRows.length;
-            }
-            renderPagination();
-        }
-
-        function filterCategories(query) {
-            const q = (query || '').trim().toLowerCase();
-            filteredRows = rows.filter(row => {
-                return !q || row.textContent.toLowerCase().includes(q);
-            });
-
-            if (noResults) {
-                noResults.style.display = (filteredRows.length === 0 && rows.length > 0) ? '' : 'none';
-            }
-
-            currentPage = 1;
-            showPage(currentPage);
-        }
-
-        const searches = [...document.querySelectorAll('[data-table-search]')];
-        searches.forEach(input => {
-            input.addEventListener('input', () => {
-                filterCategories(input.value);
-            });
-        });
-
-        // Inicializar vista
-        filterCategories('');
-    })();
-</script>
+<script th:src="@{/js/catalog-list.js}"></script>
 </body>
 </html>
