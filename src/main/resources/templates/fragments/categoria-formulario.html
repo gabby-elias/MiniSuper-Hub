@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<body>
+<form th:fragment="formularioCategoria(modal)" th:action="@{/categorias/guardar}" th:object="${categoria}" method="post"
+      data-swal-confirm data-swal-action="save"
+      data-swal-title="¿Guardar categoría?"
+      th:data-swal-text="${modal ? 'Confirma para guardar la nueva categoría.' : 'Confirma para guardar los cambios de la categoría.'}"
+      data-swal-confirm-text="Sí, guardar">
+    <input type="hidden" th:field="*{id}">
+
+    <div th:class="${modal ? 'modal-body' : ''}">
+        <div class="form-field-group">
+            <label for="nombreCategoria" class="form-label-custom">Nombre de la categoría</label>
+            <input id="nombreCategoria" class="form-control-custom" type="text" th:field="*{nombreCategoria}"
+                   maxlength="100" placeholder="Ej.: Bebidas, Lácteos, Snacks..." required autofocus>
+        </div>
+    </div>
+
+    <div class="category-form-actions" th:classappend="${modal ? ' modal-footer' : ''}">
+        <button th:if="${modal}" class="btn btn-outline-secondary" type="button" data-bs-dismiss="modal">Cancelar</button>
+        <a th:unless="${modal}" class="btn-form-cancel" th:href="@{/categorias}">Cancelar</a>
+        <button type="submit" th:class="${modal ? 'btn btn-submit-category' : 'btn-form-submit'}"
+                th:text="${categoria.id == 0 ? 'Guardar categoría' : 'Guardar cambios'}">
+            Guardar categoría
+        </button>
+    </div>
+</form>
+</body>
+</html>
