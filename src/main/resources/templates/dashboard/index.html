@@ -94,6 +94,29 @@
             </div>
             <p class="dashboard-empty" th:if="${#lists.isEmpty(ultimasFacturas)}">Todavía no hay facturas registradas.</p>
         </article>
+
+        <article class="dashboard-panel dashboard-quick-actions-panel">
+            <header class="dashboard-panel-heading">
+                <div>
+                    <h2>Acciones rápidas</h2>
+                    <p>Accesos directos de caja.</p>
+                </div>
+            </header>
+            <div class="dashboard-quick-actions">
+                <a class="dashboard-quick-action" th:href="@{/facturas/nuevo}">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v7M14 3v5h5M9 13h5M9 17h3M16 18h6M19 15v6"/></svg>
+                    <span>Nueva factura</span>
+                </a>
+                <a class="dashboard-quick-action" th:if="${esAdmin}" th:href="@{/productos/nuevo}">
+                    <span class="dashboard-quick-action-plus" aria-hidden="true">＋</span>
+                    <span>Nuevo producto</span>
+                </a>
+                <a class="dashboard-quick-action" th:if="${esAdmin}" th:href="@{/clientes/nuevo}">
+                    <span class="dashboard-quick-action-plus" aria-hidden="true">＋</span>
+                    <span>Nuevo cliente</span>
+                </a>
+            </div>
+        </article>
     </section>
 </main>
 <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
