@@ -22,7 +22,8 @@
     <div class="meta" th:if="${factura.cliente != null and factura.cliente.direccion != null and !#strings.isEmpty(factura.cliente.direccion)}"><span>Dirección:</span><span th:text="${factura.cliente.direccion}"></span></div>
     <div class="meta" th:if="${factura.vendedor != null}"><span>Atendió:</span><span th:text="${factura.vendedor.nombre}"></span></div>
     <hr class="divider">
-    <table>
+    <table class="ticket-lines">
+        <colgroup><col class="product-column"><col class="quantity-column"><col class="price-column"><col class="total-column"></colgroup>
         <thead><tr><th>Descripción</th><th class="quantity">Cant.</th><th class="amount">Precio</th><th class="amount">Total</th></tr></thead>
         <tbody>
         <tr th:each="detalle : ${factura.detalles}">

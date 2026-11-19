@@ -100,3 +100,133 @@
         padding-left: 1rem;
     }
 }
+
+.client-list-card {
+    overflow: hidden;
+}
+
+.client-list-card .table-responsive {
+    margin: 0;
+}
+
+.client-list-toolbar {
+    box-sizing: border-box;
+    display: flex;
+    width: 100%;
+    min-width: 0;
+    justify-content: flex-end;
+    padding: 1rem 1.25rem 0.75rem;
+}
+
+.client-list-search {
+    position: relative;
+    flex: 0 1 22rem;
+    width: 22rem;
+    min-width: 0;
+    max-width: 100%;
+    margin: 0;
+}
+
+.client-list-search > span {
+    position: absolute;
+    top: 50%;
+    left: 0.8rem;
+    color: #786d89;
+    font-size: 1.2rem;
+    line-height: 1;
+    transform: translateY(-50%);
+}
+
+.client-list-search input {
+    box-sizing: border-box;
+    display: block;
+    width: 100%;
+    min-width: 0;
+    min-height: 2.5rem;
+    padding: 0.5rem 0.85rem 0.5rem 2.25rem;
+    border: 1px solid #ded7e9;
+    border-radius: 0.65rem;
+    color: #2e2a3b;
+    outline: 0;
+}
+
+.client-list-search input:focus {
+    border-color: #7c5a9e;
+    box-shadow: 0 0 0 0.2rem rgba(107, 76, 138, 0.12);
+}
+
+.client-list-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.9rem 1.25rem;
+    border-top: 1px solid #ede8f5;
+    background: #faf9fc;
+    color: #7c739a;
+    font-size: 0.84rem;
+}
+
+.client-list-footer strong {
+    color: #4b455b;
+    font-weight: 600;
+}
+
+.pagination-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.page-btn {
+    display: inline-flex;
+    min-width: 2rem;
+    height: 2rem;
+    align-items: center;
+    justify-content: center;
+    padding: 0 0.5rem;
+    border: 1px solid #ded7e9;
+    border-radius: 0.5rem;
+    background: #fff;
+    color: #4b455b;
+    font-size: 0.82rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.page-btn:hover:not(:disabled):not(.active) {
+    border-color: #654388;
+    background: #f7f4fb;
+    color: #654388;
+}
+
+.page-btn.active {
+    border-color: #654388;
+    background: #654388;
+    color: #fff;
+    font-weight: 600;
+}
+
+.page-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+@media (max-width: 575.98px) {
+    .client-list-toolbar {
+        justify-content: flex-start;
+        padding: 0.85rem 1rem 0.65rem;
+    }
+
+    .client-list-search {
+        flex: 1 1 auto;
+        width: 100%;
+    }
+
+    .client-list-footer {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 0.85rem 1rem;
+    }
+}

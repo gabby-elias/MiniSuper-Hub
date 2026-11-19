@@ -1,0 +1,158 @@
+:root {
+    --type-body: 0.9rem;
+    --type-control: 0.875rem;
+    --type-caption: 0.8rem;
+    --type-eyebrow: 0.75rem;
+    --type-page-title: 1.65rem;
+    --type-section-title: 1.125rem;
+    --type-subsection-title: 1rem;
+}
+
+body.app-page,
+body.login-page {
+    font-size: var(--type-body);
+    line-height: 1.5;
+}
+
+body.login-page h1 {
+    font-size: var(--type-page-title);
+    line-height: 1.25;
+}
+
+body.login-page p {
+    font-size: var(--type-body);
+}
+
+body.login-page label,
+body.login-page .form-control,
+body.login-page button {
+    font-size: var(--type-control);
+}
+
+body.app-page > main.app-main h1,
+body.app-page > main.invoice-shell h1 {
+    font-size: var(--type-page-title);
+    line-height: 1.25;
+}
+
+body.app-page > main.app-main h2,
+body.app-page > main.invoice-shell h2 {
+    font-size: var(--type-section-title);
+    line-height: 1.35;
+}
+
+body.app-page > main.app-main h3,
+body.app-page > main.invoice-shell h3 {
+    font-size: var(--type-subsection-title);
+    line-height: 1.4;
+}
+
+body.app-page > main.app-main p,
+body.app-page > main.invoice-shell p {
+    font-size: var(--type-body);
+    line-height: 1.5;
+}
+
+body.app-page > main.app-main small,
+body.app-page > main.invoice-shell small {
+    font-size: var(--type-caption);
+    line-height: 1.4;
+}
+
+body.app-page > main.app-main label,
+body.app-page > main.invoice-shell label,
+body.app-page > main.app-main .form-label,
+body.app-page > main.invoice-shell .form-label {
+    font-size: var(--type-control);
+}
+
+body.app-page > main.app-main .form-control,
+body.app-page > main.app-main .form-select,
+body.app-page > main.app-main input,
+body.app-page > main.app-main select,
+body.app-page > main.app-main textarea,
+body.app-page > main.invoice-shell .form-control,
+body.app-page > main.invoice-shell .form-select,
+body.app-page > main.invoice-shell input,
+body.app-page > main.invoice-shell select,
+body.app-page > main.invoice-shell textarea {
+    font-size: var(--type-control);
+}
+
+body.app-page > main.app-main .table thead th,
+body.app-page > main.invoice-shell .table thead th {
+    font-size: 0.8125rem;
+}
+
+body.app-page > main.app-main .table tbody td,
+body.app-page > main.invoice-shell .table tbody td {
+    font-size: var(--type-control);
+}
+
+body.app-page > main.app-main .btn:not(.btn-lg),
+body.app-page > main.invoice-shell .btn:not(.btn-lg),
+body.app-page > main.app-main button:not(.btn-close),
+body.app-page > main.invoice-shell button:not(.btn-close),
+body.app-page > main.app-main .btn-category-new,
+body.app-page > main.app-main .btn-product-new,
+body.app-page > main.app-main .btn-client-new,
+body.app-page > main.app-main .btn-action-outline,
+body.app-page > main.app-main .btn-form-submit,
+body.app-page > main.app-main .btn-form-cancel,
+body.app-page > main.app-main .dashboard-quick-action,
+body.app-page > main.app-main .dashboard-panel-action,
+body.app-page > main.app-main .dashboard-panel-footer a {
+    font-size: var(--type-control);
+}
+
+body.app-page > main.app-main .btn-sm,
+body.app-page > main.invoice-shell .btn-sm {
+    font-size: var(--type-caption);
+}
+
+body.app-page > main.app-main .category-footer,
+body.app-page > main.app-main .product-footer,
+body.app-page > main.app-main .client-list-footer,
+body.app-page > main.app-main .details-table-footer,
+body.app-page > main.app-main .invoice-table-footer {
+    font-size: var(--type-caption);
+}
+
+body.app-page > main.app-main [class$="-eyebrow"],
+body.app-page > main.invoice-shell [class$="-eyebrow"] {
+    font-size: var(--type-eyebrow);
+}
+
+body.app-page .sidebar-link,
+body.app-page .topbar-search input {
+    font-size: var(--type-control);
+}
+
+body.app-page .sidebar-brand-copy strong,
+body.app-page .user-copy strong {
+    font-size: var(--type-control);
+}
+
+body.app-page .sidebar-brand-copy small,
+body.app-page .sidebar-footer,
+body.app-page .user-copy small {
+    font-size: var(--type-caption);
+}
+
+body.app-page .dashboard-stat-copy > span,
+body.app-page .dashboard-stock-name strong,
+body.app-page .dashboard-invoice-main strong,
+body.app-page .dashboard-invoice-total > strong {
+    font-size: var(--type-control);
+}
+
+body.app-page .dashboard-stat-copy small,
+body.app-page .dashboard-stock-name small,
+body.app-page .dashboard-invoice-main small,
+body.app-page .dashboard-invoice-date,
+body.app-page .dashboard-stock-quantity,
+body.app-page .dashboard-panel-action,
+body.app-page .dashboard-panel-footer a,
+body.app-page .dashboard-empty {
+    font-size: var(--type-caption);
+}

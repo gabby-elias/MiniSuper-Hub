@@ -60,4 +60,22 @@
 
     searches.forEach(input => input.addEventListener('input', () => filterRows(input.value)));
     filterRows();
+
+    const clientDocument = document.getElementById('nuevoClienteDocumento');
+    if (clientDocument) {
+        clientDocument.addEventListener('input', () => {
+            const digits = clientDocument.value.replace(/\D/g, '').slice(0, 9);
+            clientDocument.value = digits.length >= 8
+                ? `${digits.slice(0, 8)}-${digits.slice(8)}`
+                : digits;
+        });
+        clientDocument.addEventListener('keydown', (event) => {
+            if (event.key === 'Backspace' && clientDocument.value.endsWith('-')
+                    && clientDocument.selectionStart === clientDocument.value.length) {
+                event.preventDefault();
+                clientDocument.value = clientDocument.value.slice(0, -2);
+                clientDocument.dispatchEvent(new Event('input', { bubbles: true }));
+            }
+        });
+    }
 })();
