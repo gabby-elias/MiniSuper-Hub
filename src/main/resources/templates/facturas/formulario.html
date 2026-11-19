@@ -74,11 +74,11 @@
                         <tbody id="invoiceLines">
                         <tr th:each="detalle : ${factura.detalles}" class="invoice-line"
                             th:attr="data-product-id=${detalle.producto.id},data-name=${detalle.producto.nombre},data-price=${detalle.precioUnitario},data-quantity=${detalle.cantidad}">
-                            <td><span class="line-product-name" th:text="${detalle.producto.nombre}"></span><input type="hidden" name="productoIds" th:value="${detalle.producto.id}"><input type="hidden" name="cantidades" th:value="${detalle.cantidad}"></td>
-                            <td class="line-quantity" th:text="${detalle.cantidad}"></td>
-                            <td class="line-price" th:text="|$${#numbers.formatDecimal(detalle.precioUnitario, 1, 2)}|"></td>
-                            <td class="line-subtotal" th:text="|$${#numbers.formatDecimal(detalle.subtotal, 1, 2)}|"></td>
-                            <td><button type="button" class="btn btn-sm btn-outline-secondary remove-line" aria-label="Quitar producto" title="Quitar producto">×</button></td>
+                            <td data-label="Producto"><span class="line-product-name" th:text="${detalle.producto.nombre}"></span><input type="hidden" name="productoIds" th:value="${detalle.producto.id}"><input type="hidden" name="cantidades" th:value="${detalle.cantidad}"></td>
+                            <td class="line-quantity" data-label="Cantidad" th:text="${detalle.cantidad}"></td>
+                            <td class="line-price" data-label="Precio" th:text="|$${#numbers.formatDecimal(detalle.precioUnitario, 1, 2)}|"></td>
+                            <td class="line-subtotal" data-label="Subtotal" th:text="|$${#numbers.formatDecimal(detalle.subtotal, 1, 2)}|"></td>
+                            <td data-label="Acciones"><button type="button" class="btn btn-sm btn-outline-secondary remove-line" aria-label="Quitar producto" title="Quitar producto">×</button></td>
                         </tr>
                         </tbody>
                     </table>

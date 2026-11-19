@@ -521,15 +521,30 @@ body.app-page.invoice-form-page {
 
 @media (max-width: 575.98px) {
     .invoice-shell {
-        padding: 0.8rem 0.55rem 1.25rem;
+        box-sizing: border-box;
+        width: 100%;
+        max-width: none;
+        margin: 0;
+        padding: calc(var(--topbar-height) + 1rem) 0.65rem 1.25rem;
+    }
+
+    .invoice-form-layout,
+    .invoice-form-grid,
+    .invoice-workspace,
+    .invoice-summary-panel {
+        width: 100%;
+        min-width: 0;
     }
 
     .invoice-form-heading {
+        flex-direction: column;
         align-items: flex-start;
+        gap: 0.4rem;
     }
 
     .invoice-date {
-        padding-top: 0.5rem;
+        align-items: flex-start;
+        padding-top: 0;
         font-size: 0.78rem;
     }
 
@@ -544,7 +559,7 @@ body.app-page.invoice-form-page {
     }
 
     .invoice-entry-grid {
-        grid-template-columns: minmax(0, 1fr) 92px;
+        grid-template-columns: minmax(0, 1fr) minmax(5.75rem, 6rem);
         gap: 0.55rem;
     }
 
@@ -554,16 +569,119 @@ body.app-page.invoice-form-page {
 
     .invoice-entry-grid .btn {
         width: 100%;
-        padding-inline: 0.65rem;
+        padding-inline: 0.5rem;
     }
 
     .invoice-lines {
-        min-width: 540px;
+        display: block;
+        width: 100%;
+        min-width: 0;
     }
 
-    .invoice-form-page .invoice-lines thead th,
-    .invoice-form-page .invoice-lines tbody td {
-        padding: 0.62rem 0.55rem;
+    .invoice-lines thead {
+        display: none;
+    }
+
+    .invoice-lines tbody {
+        display: grid;
+        min-width: 0;
+        gap: 0.6rem;
+        padding: 0.6rem;
+    }
+
+    .invoice-lines tbody tr.invoice-line {
+        display: grid;
+        width: 100%;
+        min-width: 0;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        overflow: hidden;
+        border: 1px solid #e9e4ef;
+        border-radius: 0.65rem;
+        background: #ffffff;
+    }
+
+    .invoice-form-page .invoice-lines tbody tr.invoice-line td {
+        display: flex;
+        min-width: 0;
+        min-height: 3.2rem;
+        width: auto;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+        gap: 0.2rem;
+        padding: 0.55rem 0.65rem;
+        border: 0;
         font-size: 0.8rem;
+        text-align: left;
+        white-space: normal;
+        overflow-wrap: anywhere;
+    }
+
+    .invoice-form-page .invoice-lines tbody tr.invoice-line td:first-child {
+        grid-column: 1 / -1;
+        border-bottom: 1px solid #f0edf4;
+    }
+
+    .invoice-lines tbody tr.invoice-line td::before {
+        color: #766a88;
+        content: attr(data-label);
+        font-size: 0.68rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.035em;
+    }
+
+    .invoice-lines tbody tr.invoice-line .line-product-name {
+        max-width: 100%;
+        overflow-wrap: anywhere;
+    }
+
+    .invoice-lines tbody tr.invoice-line td:last-child {
+        align-items: flex-end;
+    }
+
+    .invoice-lines tbody tr.invoice-line td:last-child::before {
+        align-self: flex-end;
+    }
+
+    .invoice-lines tbody tr.empty-lines {
+        display: block;
+        width: 100%;
+        min-width: 0;
+    }
+
+    .invoice-form-page .invoice-lines tbody tr.empty-lines .empty-lines-cell {
+        display: block;
+        width: 100%;
+        padding: 0 !important;
+    }
+
+    .invoice-empty-state {
+        min-height: 9rem;
+        padding: 1rem 0.65rem;
+    }
+
+    .invoice-empty-state > span:last-child {
+        max-width: 100%;
+    }
+
+    .invoice-summary-panel {
+        display: flex;
+        align-items: stretch;
+    }
+
+    .invoice-summary-panel h2 {
+        margin-bottom: 1rem;
+    }
+
+    .invoice-summary-row,
+    .invoice-total-row {
+        width: 100%;
+    }
+
+    .invoice-summary-panel .invoice-save-button,
+    .invoice-summary-panel .invoice-cancel-button {
+        width: 100%;
+        margin-top: 0.55rem;
     }
 }

@@ -9,9 +9,18 @@
             <h1>Usuarios</h1>
             <p>Gestiona los accesos al sistema.</p>
         </div>
-        <a class="btn btn-primary user-new-button" th:href="@{/usuarios/nuevo}"><span aria-hidden="true">＋</span> Nuevo usuario</a>
+        <button th:if="${esAdmin}" class="btn btn-primary user-new-button" type="button"
+                data-bs-toggle="modal" data-bs-target="#modalNuevoUsuario">
+            <span aria-hidden="true">＋</span> Nuevo usuario
+        </button>
     </div>
     <section class="content-card user-list-card">
+        <div class="user-list-toolbar">
+            <label class="user-list-search" for="user-list-search">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7.5"/><path d="m16.5 16.5 4 4"/></svg>
+                <input id="user-list-search" type="search" placeholder="Buscar por nombre, usuario o rol..." aria-label="Buscar usuarios" autocomplete="off">
+            </label>
+        </div>
         <div class="table-responsive">
             <table class="table align-middle user-list-table">
                 <thead>
@@ -25,20 +34,20 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="usuario : ${usuarios}">
-                    <td class="text-secondary" th:text="${usuario.id}">1</td>
-                    <td>
+                <tr th:each="usuario : ${usuarios}" data-user-row>
+                    <td class="text-secondary" data-label="N.°" th:text="${usuario.id}">1</td>
+                    <td data-label="Nombre">
                         <div class="d-inline-flex align-items-center">
                             <span class="user-avatar-badge" th:text="${#strings.substring(usuario.nombre, 0, 1).toUpperCase()}">A</span>
                             <strong th:text="${usuario.nombre}">Administradora</strong>
                         </div>
                     </td>
-                    <td th:text="${usuario.username}">admin</td>
-                    <td th:text="${usuario.rol}">Administrador</td>
-                    <td>
+                    <td data-label="Usuario" th:text="${usuario.username}">admin</td>
+                    <td data-label="Rol" th:text="${usuario.rol}">Administrador</td>
+                    <td data-label="Estado">
                         <span class="badge-state" th:classappend="${usuario.activo ? 'badge-active' : 'badge-inactive'}" th:text="${usuario.activo ? 'Activo' : 'Inactivo'}">Activo</span>
                     </td>
-                    <td class="text-end text-nowrap">
+                    <td class="text-end text-nowrap" data-label="Acciones">
                         <div class="d-inline-flex align-items-center gap-1">
                             <a class="btn btn-action btn-action-edit" th:href="@{/usuarios/editar/{id}(id=${usuario.id})}"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> Editar</a>
                             <form th:if="${usuario.activo}" class="d-inline" th:action="@{/usuarios/{id}/desactivar(id=${usuario.id})}" method="post" data-swal-confirm data-swal-action="delete" data-swal-title="¿Desactivar usuario?" data-swal-text="El usuario ya no podrá iniciar sesión.">
@@ -50,14 +59,17 @@
                         </div>
                     </td>
                 </tr>
-                <tr th:if="${#lists.isEmpty(usuarios)}">
+                <tr th:if="${#lists.isEmpty(usuarios)}" data-user-empty>
                     <td colspan="6" class="text-center text-secondary py-5">No hay usuarios registrados.</td>
+                </tr>
+                <tr hidden data-user-no-results>
+                    <td colspan="6" class="text-center text-secondary py-5">No se encontraron usuarios que coincidan con la búsqueda.</td>
                 </tr>
                 </tbody>
             </table>
         </div>
         <footer class="table-footer user-list-footer">
-            <span>Mostrando <span th:text="${#lists.size(usuarios)}">0</span> de <span th:text="${#lists.size(usuarios)}">0</span> usuarios</span>
+            <span>Mostrando <span data-user-visible th:text="${#lists.size(usuarios)}">0</span> de <span th:text="${#lists.size(usuarios)}">0</span> usuarios</span>
             <div class="pagination-pills">
                 <span class="page-pill">‹</span>
                 <span class="page-pill active">1</span>
@@ -65,7 +77,21 @@
             </div>
         </footer>
     </section>
+
+    <div th:if="${esAdmin}" class="modal fade modal-user-clean" id="modalNuevoUsuario" tabindex="-1"
+         aria-labelledby="modalNuevoUsuarioTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title fs-5" id="modalNuevoUsuarioTitle">Nuevo usuario</h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <th:block th:replace="~{fragments/usuario-formulario :: formularioUsuario(true)}"></th:block>
+            </div>
+        </div>
+    </div>
 </main>
 <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+<script th:src="@{/js/usuarios-lista.js(v=1)}"></script>
 </body>
 </html>

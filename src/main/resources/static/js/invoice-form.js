@@ -121,6 +121,7 @@
         row.dataset.quantity = quantity;
 
         const productCell = document.createElement('td');
+        productCell.dataset.label = 'Producto';
         const productName = document.createElement('span');
         productName.className = 'line-product-name';
         productName.textContent = name;
@@ -138,14 +139,18 @@
 
         const quantityCell = document.createElement('td');
         quantityCell.className = 'line-quantity';
+        quantityCell.dataset.label = 'Cantidad';
         quantityCell.textContent = quantity;
         const priceCell = document.createElement('td');
         priceCell.className = 'line-price';
+        priceCell.dataset.label = 'Precio';
         priceCell.textContent = currency.format(price);
         const subtotalCell = document.createElement('td');
         subtotalCell.className = 'line-subtotal';
+        subtotalCell.dataset.label = 'Subtotal';
         subtotalCell.textContent = currency.format(price * quantity);
         const actionCell = document.createElement('td');
+        actionCell.dataset.label = 'Acciones';
         const removeButton = document.createElement('button');
         removeButton.type = 'button';
         removeButton.className = 'btn btn-sm btn-outline-secondary remove-line';

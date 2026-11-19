@@ -1,3 +1,5 @@
+@import url("/css/usuarios-formulario.css?v=14");
+
 /* Estilos específicos de templates/usuarios/lista.html. */
 
 .user-list-page {
@@ -63,6 +65,57 @@
 
 .user-list-card .table-responsive {
     overflow-x: auto;
+}
+
+.user-list-toolbar {
+    display: flex;
+    justify-content: flex-end;
+    padding: 1rem 1.1rem;
+    border-bottom: 1px solid #eeeaf2;
+}
+
+.user-list-search {
+    display: flex;
+    width: min(100%, 24rem);
+    min-height: 2.65rem;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0 0.85rem;
+    border: 1px solid #ded7e9;
+    border-radius: 0.65rem;
+    background: #ffffff;
+    color: #7c739a;
+}
+
+.user-list-search:focus-within {
+    border-color: #7c739a;
+    box-shadow: 0 0 0 0.2rem rgba(107, 76, 138, 0.12);
+}
+
+.user-list-search svg {
+    width: 1rem;
+    height: 1rem;
+    flex: 0 0 1rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.8;
+}
+
+.user-list-search input {
+    width: 100%;
+    min-width: 0;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: #393442;
+    font: inherit;
+    font-size: 0.82rem;
+}
+
+.user-list-search input::placeholder {
+    color: #81798d;
 }
 
 .user-list-table {
@@ -237,9 +290,94 @@
     font-weight: 700;
 }
 
+.modal-user-clean .modal-content {
+    overflow: hidden;
+    border: 1px solid #ede8f5;
+    border-radius: 1rem;
+    box-shadow: 0 10px 30px rgba(30, 22, 59, 0.12);
+}
+
+.modal-user-clean .modal-header {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid #ede8f5;
+    background: #ffffff;
+}
+
+.modal-user-clean .modal-title {
+    color: #1e163b;
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+.modal-user-clean .modal-user-form {
+    max-height: calc(100vh - 8rem);
+    overflow-y: auto;
+}
+
+.modal-user-clean .modal-body {
+    padding: 1.5rem;
+    background: #f7f4fb;
+}
+
+.modal-user-clean .form-label,
+.modal-user-clean .form-check-label {
+    color: #29233a;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.modal-user-clean .form-control,
+.modal-user-clean .form-select {
+    min-height: 2.75rem;
+    padding: 0.65rem 0.85rem;
+    border: 1px solid #ded7e9;
+    border-radius: 0.65rem;
+    color: #29233a;
+}
+
+.modal-user-clean .form-control:focus,
+.modal-user-clean .form-select:focus,
+.modal-user-clean .form-check-input:focus {
+    border-color: #8a5aa8;
+    box-shadow: 0 0 0 0.2rem rgba(107, 76, 138, 0.15);
+}
+
+.modal-user-clean .form-check-input:checked {
+    border-color: #6b4c8a;
+    background-color: #6b4c8a;
+}
+
+.modal-user-clean .modal-footer {
+    gap: 0.65rem;
+    padding: 1rem 1.5rem;
+    border-top: 1px solid #ede8f5;
+    background: #faf9fc;
+}
+
+.modal-user-clean .user-form-actions {
+    margin-top: 0;
+}
+
+.modal-user-clean .user-form-actions .btn {
+    min-height: 2.5rem;
+    padding: 0.55rem 1.25rem;
+    border-radius: 0.6rem;
+    font-weight: 600;
+}
+
+.modal-user-clean .user-form-actions .btn-primary {
+    border-color: #654388;
+    background: #654388;
+}
+
+.modal-user-clean .user-form-actions .btn-primary:hover {
+    border-color: #543472;
+    background: #543472;
+}
+
 @media (max-width: 575.98px) {
     .user-list-main {
-        padding-top: 1.4rem !important;
+        padding-top: calc(var(--topbar-height) + 1rem) !important;
     }
 
     .user-list-heading {
@@ -251,8 +389,117 @@
         justify-content: center;
     }
 
+    .user-list-toolbar {
+        padding: 0.8rem;
+    }
+
+    .user-list-search {
+        width: 100%;
+    }
+
+    .user-list-card .table-responsive {
+        overflow: visible;
+    }
+
+    .user-list-table {
+        display: block;
+        width: 100%;
+        min-width: 0;
+    }
+
+    .user-list-table thead {
+        display: none;
+    }
+
+    .user-list-table tbody {
+        display: grid;
+        gap: 0.75rem;
+        padding: 0.75rem;
+    }
+
+    .user-list-table tbody tr:has(td[colspan]) {
+        display: block;
+    }
+
+    .user-list-table tbody tr:has(td[colspan]) > td {
+        display: block;
+        width: 100%;
+    }
+
+    .user-list-table tbody tr:not(:has(td[colspan])) {
+        display: block;
+        overflow: hidden;
+        border: 1px solid #e9e5ed;
+        border-radius: 0.8rem;
+        background: #ffffff;
+        box-shadow: 0 0.2rem 0.65rem rgba(37, 27, 53, 0.04);
+    }
+
+    .user-list-table tbody tr:not(:has(td[colspan])) > td {
+        display: flex;
+        min-height: 2.8rem;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+        padding: 0.65rem 0.8rem;
+        border-bottom: 1px solid #f0edf3;
+        text-align: right;
+        overflow-wrap: anywhere;
+    }
+
+    .user-list-table tbody tr:not(:has(td[colspan])) > td::before {
+        flex: 0 0 auto;
+        color: #81798d;
+        content: attr(data-label);
+        font-size: 0.72rem;
+        font-weight: 650;
+        text-align: left;
+    }
+
+    .user-list-table tbody tr:not(:has(td[colspan])) > td:nth-child(2) {
+        justify-content: flex-start;
+        text-align: left;
+    }
+
+    .user-list-table tbody tr:not(:has(td[colspan])) > td:nth-child(2)::before {
+        margin-right: auto;
+    }
+
+    .user-list-table tbody tr:not(:has(td[colspan])) > td:nth-child(2) > div {
+        min-width: 0;
+        max-width: calc(100% - 4.5rem);
+    }
+
+    .user-list-table tbody tr:not(:has(td[colspan])) > td:nth-child(2) strong {
+        min-width: 0;
+        overflow-wrap: anywhere;
+    }
+
+    .user-list-table tbody tr:not(:has(td[colspan])) > td:first-child {
+        padding-left: 0.8rem;
+    }
+
+    .user-list-table tbody tr:not(:has(td[colspan])) > td:last-child {
+        display: block;
+        border-bottom: 0;
+        text-align: left;
+    }
+
+    .user-list-table tbody tr:not(:has(td[colspan])) > td:last-child::before {
+        display: block;
+        margin-bottom: 0.55rem;
+    }
+
+    .user-list-table tbody tr:not(:has(td[colspan])) > td:last-child > div {
+        display: flex !important;
+        flex-wrap: wrap;
+        gap: 0.45rem !important;
+    }
+
     .user-list-footer {
-        padding-right: 0.9rem;
-        padding-left: 0.9rem;
+        flex-wrap: wrap;
+        justify-content: center;
+        padding: 0.75rem 0.9rem;
+        text-align: center;
     }
 }
