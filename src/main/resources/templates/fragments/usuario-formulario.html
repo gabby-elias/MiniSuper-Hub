@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<body>
+<form th:fragment="formularioUsuario(modal)" th:action="@{/usuarios/guardar}" th:object="${usuarioForm}" method="post"
+      th:class="${modal ? 'user-form-fields modal-user-form' : 'user-form-fields'}">
+    <input type="hidden" th:field="*{id}">
+
+    <div th:class="${modal ? 'modal-body' : ''}">
+        <div class="mb-3">
+            <label for="username" class="form-label">Nombre de usuario</label>
+            <input id="username" class="form-control" th:field="*{username}" required maxlength="80" autocomplete="username">
+        </div>
+        <div class="mb-3">
+            <label for="nombre" class="form-label">Nombre completo</label>
+            <input id="nombre" class="form-control" th:field="*{nombre}" required maxlength="120" autocomplete="name">
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Contraseña <span class="optional" th:if="${usuarioForm.id != null and usuarioForm.id != 0}">(dejar en blanco para conservarla)</span></label>
+            <input id="password" class="form-control" th:field="*{password}" type="password" th:required="${usuarioForm.id == null or usuarioForm.id == 0}" autocomplete="new-password">
+        </div>
+        <div class="mb-3">
+            <label for="rol" class="form-label">Rol</label>
+            <select id="rol" class="form-select" th:field="*{rol}" required>
+                <option value="">Selecciona un rol</option>
+                <option th:each="rol : ${roles}" th:value="${rol.nombre}" th:text="${#strings.replace(rol.nombre, 'ROLE_', '')}"></option>
+            </select>
+        </div>
+        <div class="form-check mb-1">
+            <input id="activo" class="form-check-input" th:field="*{activo}" type="checkbox">
+            <label for="activo" class="form-check-label">Cuenta activa</label>
+        </div>
+    </div>
+
+    <div class="user-form-actions d-flex justify-content-end gap-2" th:classappend="${modal ? ' modal-footer' : ''}">
+        <button th:if="${modal}" class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancelar</button>
+        <a th:unless="${modal}" class="btn btn-secondary" th:href="@{/usuarios}">Cancelar</a>
+        <button class="btn btn-primary" type="submit" th:text="${usuarioForm.id == null or usuarioForm.id == 0 ? 'Guardar usuario' : 'Guardar cambios'}">
+            Guardar usuario
+        </button>
+    </div>
+</form>
+</body>
+</html>
+</body></select>

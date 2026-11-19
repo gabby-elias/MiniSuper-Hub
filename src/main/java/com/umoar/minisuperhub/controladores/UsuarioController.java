@@ -24,6 +24,8 @@ public class UsuarioController {
     @GetMapping
     public String listar(Model model) {
         model.addAttribute("usuarios", usuarioService.listar());
+        model.addAttribute("usuarioForm", new UsuarioForm());
+        model.addAttribute("roles", usuarioService.listarRoles());
         return "usuarios/lista";
     }
 

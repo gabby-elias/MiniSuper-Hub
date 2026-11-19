@@ -126,7 +126,7 @@
     color: #1E1B3A;
 }
 
-.user-form-card form > .d-flex:last-child {
+.user-form-card .user-form-actions {
     margin-top: 1.65rem;
     padding-top: 1.25rem;
     border-top: 1px solid #f0edf5;
@@ -141,11 +141,11 @@
         padding: 1.35rem;
     }
 
-    .user-form-card form > .d-flex:last-child {
+    .user-form-card .user-form-actions {
         flex-direction: column-reverse;
     }
 
-    .user-form-card form > .d-flex:last-child .btn {
+    .user-form-card .user-form-actions .btn {
         width: 100%;
     }
 }
