@@ -15,6 +15,52 @@
     const cancelLink = document.getElementById('cancelInvoice');
     const currency = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
     let selectedProduct = null;
+    const clientSearch = document.getElementById('clienteSearch');
+    const clients = document.getElementById('clienteId');
+    const clientSuggestions = document.getElementById('clientSuggestions');
+    const clientToggle = document.querySelector('.invoice-client-toggle');
+
+    function closeClientSuggestions() {
+        clientSuggestions.hidden = true;
+        clientSearch.setAttribute('aria-expanded', 'false');
+        clientToggle.setAttribute('aria-expanded', 'false');
+    }
+
+    function renderClientSuggestions(query = clientSearch.value) {
+        const normalizedQuery = query.trim().toLocaleLowerCase();
+        const matches = [...clients.options].filter(option =>
+            option.textContent.trim().toLocaleLowerCase().includes(normalizedQuery)
+        );
+        clientSuggestions.replaceChildren();
+
+        if (!matches.length) {
+            const emptyMessage = document.createElement('div');
+            emptyMessage.className = 'invoice-client-no-results';
+            emptyMessage.textContent = 'No se encontraron clientes.';
+            clientSuggestions.appendChild(emptyMessage);
+        } else {
+            matches.forEach((client, index) => {
+                const option = document.createElement('button');
+                option.type = 'button';
+                option.id = `client-suggestion-${index}`;
+                option.className = 'invoice-client-suggestion';
+                option.setAttribute('role', 'option');
+                option.setAttribute('aria-selected', String(client.value === clients.value));
+                option.textContent = client.textContent;
+                option.addEventListener('click', () => {
+                    clients.value = client.value;
+                    clientSearch.value = client.textContent;
+                    closeClientSuggestions();
+                    clientSearch.focus();
+                });
+                clientSuggestions.appendChild(option);
+            });
+        }
+
+        clientSuggestions.hidden = false;
+        clientSearch.setAttribute('aria-expanded', 'true');
+        clientToggle.setAttribute('aria-expanded', 'true');
+    }
 
     function closeSuggestions() {
         suggestions.hidden = true;
@@ -187,6 +233,49 @@
         productSearch.value = '';
         quantityInput.value = '1';
         productSearch.focus();
+    });
+
+    clientSearch.addEventListener('input', () => {
+        clients.value = '';
+        renderClientSuggestions();
+    });
+    clientSearch.addEventListener('click', () => renderClientSuggestions());
+    clientSearch.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+            closeClientSuggestions();
+            return;
+        }
+        if (event.key === 'Enter' && !clientSuggestions.hidden) {
+            const firstOption = clientSuggestions.querySelector('.invoice-client-suggestion');
+            if (firstOption) {
+                event.preventDefault();
+                firstOption.click();
+            }
+            return;
+        }
+        if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+            event.preventDefault();
+            if (clientSuggestions.hidden) renderClientSuggestions();
+            const options = [...clientSuggestions.querySelectorAll('.invoice-client-suggestion')];
+            if (!options.length) return;
+            const currentIndex = options.indexOf(document.activeElement);
+            const step = event.key === 'ArrowDown' ? 1 : -1;
+            const nextIndex = currentIndex < 0
+                ? (step > 0 ? 0 : options.length - 1)
+                : (currentIndex + step + options.length) % options.length;
+            options[nextIndex].focus();
+        }
+    });
+    clientToggle.addEventListener('click', () => {
+        if (clientSuggestions.hidden) {
+            renderClientSuggestions('');
+            clientSearch.focus();
+        } else {
+            closeClientSuggestions();
+        }
+    });
+    document.addEventListener('click', (event) => {
+        if (!event.target.closest('.invoice-client-field')) closeClientSuggestions();
     });
 
     productSearch.addEventListener('input', () => {
