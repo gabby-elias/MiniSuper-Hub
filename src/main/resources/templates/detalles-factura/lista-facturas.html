@@ -62,7 +62,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="factura : ${facturas}">
+            <tr th:each="factura : ${facturas}" data-pagination-row>
                 <td class="details-invoice-id" th:text="${factura.id}">0</td>
                 <td th:text="${factura.fecha != null ? #temporals.format(factura.fecha, 'dd/MM/yyyy HH:mm') : '—'}">—</td>
                 <td th:text="${factura.cliente != null ? factura.cliente.nombre : 'Consumidor final'}">Consumidor final</td>
@@ -98,5 +98,6 @@
     </section>
 </main>
 <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+<script th:src="@{/js/table-pagination.js}"></script>
 </body>
 </html>

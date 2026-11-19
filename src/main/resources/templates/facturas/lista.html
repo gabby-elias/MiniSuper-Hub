@@ -48,7 +48,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="factura : ${facturas}" data-invoice-row data-search-row
+                <tr th:each="factura : ${facturas}" data-invoice-row data-search-row data-pagination-row
                     th:attr="data-invoice-status=${factura.anulada ? 'anulada' : (factura.entregada ? 'entregada' : 'pendiente')}">
                     <td class="invoice-id" th:text="${factura.id}"></td>
                     <td th:text="${factura.fecha != null ? #temporals.format(factura.fecha, 'dd/MM/yyyy') : '—'}"></td>
@@ -88,5 +88,6 @@
     </section>
 </main>
 <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+<script th:src="@{/js/table-pagination.js}"></script>
 </body>
 </html>

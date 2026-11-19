@@ -10,19 +10,32 @@
             + Nuevo cliente
         </button>
     </div>
-    <section class="content-card table-responsive">
-        <table class="table table-hover align-middle">
-            <thead><tr><th>ID</th><th>Nombre</th><th>Documento</th><th>Dirección</th><th class="text-end">Acciones</th></tr></thead>
-            <tbody>
-            <tr th:each="cliente : ${clientes}">
-                <td th:text="${cliente.id}"></td><td th:text="${cliente.nombre}"></td><td th:text="${cliente.documento}"></td><td th:text="${cliente.direccion}"></td>
-                <td class="text-end text-nowrap"><th:block th:if="${esAdmin}"><a class="btn btn-sm btn-outline-light" th:href="@{/clientes/editar/{id}(id=${cliente.id})}">Editar</a>
-                    <form class="d-inline" th:action="@{/clientes/eliminar/{id}(id=${cliente.id})}" method="post" data-swal-confirm data-swal-action="delete" data-swal-title="¿Eliminar cliente?" data-swal-text="Si tiene facturas asociadas, no podrá eliminarse."><button class="btn btn-sm btn-outline-danger" type="submit">Eliminar</button></form></th:block>
-                </td>
-            </tr>
-            <tr th:if="${#lists.isEmpty(clientes)}"><td colspan="5" class="text-center text-secondary py-5">No hay clientes registrados.</td></tr>
-            </tbody>
-        </table>
+    <section class="content-card client-list-card">
+        <div class="client-list-toolbar">
+            <label class="client-list-search">
+                <span aria-hidden="true">⌕</span>
+                <input type="search" placeholder="Buscar clientes..." aria-label="Buscar clientes" data-table-search>
+            </label>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle" data-catalog-list>
+                <thead><tr><th>ID</th><th>Nombre</th><th>Documento</th><th>Dirección</th><th class="text-end">Acciones</th></tr></thead>
+                <tbody>
+                <tr th:each="cliente : ${clientes}" data-catalog-row>
+                    <td th:text="${cliente.id}"></td><td th:text="${cliente.nombre}"></td><td th:text="${cliente.documento}"></td><td th:text="${cliente.direccion}"></td>
+                    <td class="text-end text-nowrap"><th:block th:if="${esAdmin}"><a class="btn btn-sm btn-outline-light" th:href="@{/clientes/editar/{id}(id=${cliente.id})}">Editar</a>
+                        <form class="d-inline" th:action="@{/clientes/eliminar/{id}(id=${cliente.id})}" method="post" data-swal-confirm data-swal-action="delete" data-swal-title="¿Eliminar cliente?" data-swal-text="Si tiene facturas asociadas, no podrá eliminarse."><button class="btn btn-sm btn-outline-danger" type="submit">Eliminar</button></form></th:block>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(clientes)}"><td colspan="5" class="text-center text-secondary py-5">No hay clientes registrados.</td></tr>
+                <tr data-catalog-no-results hidden><td colspan="5" class="text-center text-secondary py-5">No se encontraron clientes que coincidan con la búsqueda.</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <footer class="client-list-footer">
+            <span>Mostrando <strong data-catalog-visible th:text="${#lists.size(clientes) > 5 ? 5 : #lists.size(clientes)}">0</strong> de <strong data-catalog-total th:text="${#lists.size(clientes)}">0</strong> clientes</span>
+            <div class="pagination-wrapper" data-catalog-pagination></div>
+        </footer>
     </section>
 
     <div class="modal fade modal-client-clean" id="modalNuevoCliente" tabindex="-1"
@@ -48,7 +61,8 @@
                         <div class="client-modal-field">
                             <label for="nuevoClienteDocumento" class="form-label">Documento <span>(opcional)</span></label>
                             <input id="nuevoClienteDocumento" class="form-control" type="text" name="documento"
-                                   placeholder="Número de documento" maxlength="50">
+                                   placeholder="12345678-9" maxlength="10" pattern="[0-9]{8}-[0-9]" inputmode="numeric"
+                                   title="Ingresa el documento con el formato 12345678-9.">
                         </div>
                         <div class="client-modal-field mb-0">
                             <label for="nuevoClienteDireccion" class="form-label">Dirección <span>(opcional)</span></label>
@@ -66,5 +80,6 @@
     </div>
 </main>
 <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+<script th:src="@{/js/catalog-list.js}"></script>
 </body>
 </html>
