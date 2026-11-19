@@ -25,8 +25,20 @@
         <div class="invoice-form-grid">
             <section class="invoice-workspace" aria-label="Productos de la factura">
                 <div class="invoice-client-field">
-                    <label for="clienteId" class="form-label">Cliente <span>(opcional)</span></label>
-                    <select id="clienteId" name="clienteId" class="form-select">
+                    <label for="clienteSearch" class="form-label">Cliente <span>(opcional)</span></label>
+                    <div class="invoice-client-picker">
+                        <input id="clienteSearch" class="form-control" type="search" autocomplete="off"
+                               placeholder="Buscar cliente por nombre" aria-controls="clientSuggestions"
+                               aria-expanded="false" aria-autocomplete="list" role="combobox"
+                               th:value="${factura.cliente != null ? factura.cliente.nombre : ''}">
+                        <button class="invoice-client-toggle" type="button" aria-label="Mostrar clientes"
+                                aria-controls="clientSuggestions" aria-expanded="false">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+                        </button>
+                        <div id="clientSuggestions" class="invoice-client-suggestions" role="listbox"
+                             aria-label="Clientes guardados" hidden></div>
+                    </div>
+                    <select id="clienteId" name="clienteId" class="d-none" tabindex="-1" aria-hidden="true">
                         <option value="" th:selected="${factura.cliente == null}">Consumidor final (sin registro)</option>
                         <option th:each="cliente : ${clientes}" th:value="${cliente.id}" th:text="${cliente.nombre}" th:selected="${factura.cliente != null and factura.cliente.id == cliente.id}"></option>
                     </select>

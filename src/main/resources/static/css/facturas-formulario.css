@@ -93,6 +93,8 @@ body.app-page.invoice-form-page {
 }
 
 .invoice-client-field {
+    position: relative;
+    z-index: 6;
     margin-bottom: 1.25rem;
 }
 
@@ -124,6 +126,93 @@ body.app-page.invoice-form-page {
     margin-top: 0.4rem;
     color: #625a72;
     font-size: 0.82rem;
+}
+
+.invoice-client-picker {
+    position: relative;
+}
+
+.invoice-client-picker .form-control {
+    padding-right: 3rem;
+}
+
+.invoice-client-toggle {
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: grid;
+    width: 2.75rem;
+    height: 100%;
+    place-items: center;
+    border: 0;
+    border-radius: 0 0.7rem 0.7rem 0;
+    background: transparent;
+    color: #514a60;
+}
+
+.invoice-client-toggle:hover,
+.invoice-client-toggle:focus-visible {
+    color: #6b4c8a;
+}
+
+.invoice-client-toggle:focus-visible {
+    outline: 2px solid #7c5a9e;
+    outline-offset: -3px;
+}
+
+.invoice-client-toggle svg {
+    width: 1rem;
+    height: 1rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 2;
+}
+
+.invoice-client-suggestions {
+    position: absolute;
+    z-index: 20;
+    top: calc(100% - 0.2rem);
+    right: 0;
+    left: 0;
+    max-height: 16rem;
+    overflow-y: auto;
+    border: 1px solid #ded7e9;
+    border-radius: 0.7rem;
+    background: #fff;
+    box-shadow: 0 0.6rem 1.4rem rgba(35, 25, 50, 0.16);
+}
+
+.invoice-client-suggestions[hidden] {
+    display: none;
+}
+
+.invoice-client-suggestion {
+    display: block;
+    width: 100%;
+    padding: 0.72rem 0.9rem;
+    border: 0;
+    border-bottom: 1px solid #f0edf4;
+    background: #fff;
+    color: #342e40;
+    text-align: left;
+}
+
+.invoice-client-suggestion:last-child {
+    border-bottom: 0;
+}
+
+.invoice-client-suggestion:hover,
+.invoice-client-suggestion:focus-visible {
+    outline: 0;
+    background: #f3eff8;
+}
+
+.invoice-client-no-results {
+    padding: 0.8rem 0.9rem;
+    color: #625a72;
+    font-size: 0.88rem;
 }
 
 .invoice-product-search {

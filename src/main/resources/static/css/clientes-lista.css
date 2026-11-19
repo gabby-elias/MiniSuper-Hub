@@ -1,1 +1,102 @@
 /* Estilos específicos de templates/clientes/lista.html. */
+
+.btn-client-new {
+    padding: 0.65rem 1.25rem;
+    border: 0;
+    border-radius: 0.7rem;
+    background: #4d246b;
+    box-shadow: 0 4px 12px rgba(77, 36, 107, 0.2);
+    color: #fff;
+    font-weight: 600;
+    transition: background-color 0.15s ease, transform 0.15s ease;
+}
+
+.btn-client-new:hover {
+    transform: translateY(-1px);
+    background: #3f1d59;
+}
+
+.modal-client-clean .modal-content {
+    overflow: hidden;
+    border: 1px solid #ede8f5;
+    border-radius: 1rem;
+    box-shadow: 0 10px 30px rgba(30, 22, 59, 0.12);
+}
+
+.modal-client-clean .modal-header {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid #ede8f5;
+    background: #fff;
+}
+
+.modal-client-clean .modal-title {
+    color: #1e163b;
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+.modal-client-clean .modal-body {
+    padding: 1.5rem;
+    background: #f7f5fa;
+}
+
+.client-modal-field {
+    margin-bottom: 1.15rem;
+}
+
+.modal-client-clean .form-label {
+    margin-bottom: 0.45rem;
+    color: #383246;
+    font-size: 0.88rem;
+    font-weight: 700;
+}
+
+.modal-client-clean .form-label span {
+    color: #625a72;
+    font-weight: 500;
+}
+
+.modal-client-clean .form-control {
+    min-height: 2.65rem;
+    border-color: #ded7e9;
+    border-radius: 0.65rem;
+    color: #2e2a3b;
+}
+
+.modal-client-clean .form-control:focus {
+    border-color: #7c5a9e;
+    box-shadow: 0 0 0 0.2rem rgba(107, 76, 138, 0.16);
+}
+
+.modal-client-clean .modal-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid #ede8f5;
+    background: #faf9fc;
+}
+
+.modal-client-clean .btn-submit-client {
+    padding: 0.55rem 1.35rem;
+    border: 0;
+    border-radius: 0.6rem;
+    background: #654388;
+    color: #fff;
+    font-weight: 600;
+    transition: background-color 0.15s ease;
+}
+
+.modal-client-clean .btn-submit-client:hover {
+    background: #543472;
+}
+
+@media (max-width: 575.98px) {
+    .modal-client-clean .modal-dialog {
+        margin: 0.75rem;
+    }
+
+    .modal-client-clean .modal-header,
+    .modal-client-clean .modal-body,
+    .modal-client-clean .modal-footer {
+        padding-right: 1rem;
+        padding-left: 1rem;
+    }
+}
