@@ -47,8 +47,9 @@
         </form>
     </section>
 
-    <section class="content-card details-table-card table-responsive" aria-label="Facturas registradas">
-        <table class="table table-hover align-middle details-table" data-pagination-table="detalles-factura" data-pagination-label="facturas">
+    <section class="content-card details-table-card" aria-label="Facturas registradas">
+        <div class="table-responsive details-table-scroll" tabindex="0" role="region" aria-label="Tabla de facturas; desplázate horizontalmente para ver todas las columnas">
+            <table class="table table-hover align-middle details-table" data-pagination-table="detalles-factura" data-pagination-label="facturas">
             <thead>
             <tr>
                 <th>N.º</th>
@@ -85,7 +86,8 @@
                 </td>
             </tr>
             </tbody>
-        </table>
+            </table>
+        </div>
         <footer class="details-table-footer">
             <span data-pagination-summary="detalles-factura"
                   th:text="|Mostrando ${#lists.size(facturas)} de ${#lists.size(facturas)} facturas|">Mostrando 0 de 0 facturas</span>

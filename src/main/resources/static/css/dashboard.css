@@ -554,7 +554,8 @@ body.app-page.dashboard-page {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    .dashboard-chart-panel {
+    .dashboard-chart-panel,
+    .dashboard-invoice-history-panel {
         grid-column: 1 / -1;
     }
 }
