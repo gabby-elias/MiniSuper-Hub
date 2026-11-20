@@ -4,27 +4,6 @@
 <body class="app-page">
 <nav th:replace="~{fragments/layout :: navbar('productos')}"></nav>
 <main class="app-main">
-    <!-- Tarjetas de métricas superiores (Imagen 2) -->
-    <section class="row g-3 product-kpi-grid" aria-label="Resumen de inventario">
-        <div class="col-12 col-md-4">
-            <article class="product-kpi-card">
-                <span class="product-kpi-label">Ventas de hoy</span>
-                <strong class="product-kpi-value value-green" th:text="|$${#numbers.formatDecimal(ventasHoy, 1, 2)}|">$0.00</strong>
-            </article>
-        </div>
-        <div class="col-12 col-md-4">
-            <article class="product-kpi-card">
-                <span class="product-kpi-label">Productos</span>
-                <strong class="product-kpi-value value-dark" th:text="${cantidadProductos}">0</strong>
-            </article>
-        </div>
-        <div class="col-12 col-md-4">
-            <article class="product-kpi-card">
-                <span class="product-kpi-label">Stock bajo</span>
-                <strong class="product-kpi-value value-amber" th:text="${cantidadStockBajo}">0</strong>
-            </article>
-        </div>
-    </section>
 
     <!-- Encabezado de la página -->
     <header class="product-page-header">
@@ -44,13 +23,13 @@
             <table class="table product-table align-middle" data-catalog-list>
                 <thead>
                 <tr>
-                    <th style="width: 100px;">Código</th>
-                    <th>Producto</th>
-                    <th>Categoría</th>
-                    <th style="width: 110px;">Precio</th>
-                    <th style="width: 110px;">Existencias</th>
-                    <th style="width: 130px;">Estado</th>
-                    <th th:if="${esAdmin}" class="text-end" style="width: 180px;">Acciones</th>
+                    <th style="width: 100px;">CODIGO</th>
+                    <th>PRODUCTO</th>
+                    <th>CATEGORIA</th>
+                    <th style="width: 110px;">PRECIO</th>
+                    <th style="width: 110px;">EXISTENCIAS</th>
+                    <th style="width: 130px;">ESTADO</th>
+                    <th th:if="${esAdmin}" class="text-end" style="width: 180px;">ACCIONES</th>
                 </tr>
                 </thead>
                 <tbody id="productTableBody">

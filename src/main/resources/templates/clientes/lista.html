@@ -11,21 +11,20 @@
         </button>
     </div>
     <section class="content-card client-list-card">
-        <div class="client-list-toolbar">
-            <label class="client-list-search">
-                <span aria-hidden="true">⌕</span>
-                <input type="search" placeholder="Buscar clientes..." aria-label="Buscar clientes" data-table-search>
-            </label>
-        </div>
         <div class="table-responsive">
             <table class="table table-hover align-middle" data-catalog-list>
-                <thead><tr><th>ID</th><th>Nombre</th><th>Documento</th><th>Dirección</th><th class="text-end">Acciones</th></tr></thead>
+                <thead><tr><th>ID</th><th>NOMBRE</th><th>DOCUMENTO</th><th>DIRECCION</th><th class="text-end">ACCIONES</th></tr></thead>
                 <tbody>
                 <tr th:each="cliente : ${clientes}" data-catalog-row>
-                    <td th:text="${cliente.id}"></td><td th:text="${cliente.nombre}"></td><td th:text="${cliente.documento}"></td><td th:text="${cliente.direccion}"></td>
-                    <td class="text-end text-nowrap"><th:block th:if="${esAdmin}"><a class="btn btn-sm btn-outline-light" th:href="@{/clientes/editar/{id}(id=${cliente.id})}">Editar</a>
-                        <form class="d-inline" th:action="@{/clientes/eliminar/{id}(id=${cliente.id})}" method="post" data-swal-confirm data-swal-action="delete" data-swal-title="¿Eliminar cliente?" data-swal-text="Si tiene facturas asociadas, no podrá eliminarse."><button class="btn btn-sm btn-outline-danger" type="submit">Eliminar</button></form></th:block>
-                    </td>
+                    <td th:text="${cliente.id}"></td><td class="client-name" th:text="${cliente.nombre}"></td><td th:text="${cliente.documento}"></td><td th:text="${cliente.direccion}"></td>
+                    <td><th:block th:if="${esAdmin}">
+                        <div class="category-actions">
+                            <a class="btn-action-outline" th:href="@{/clientes/editar/{id}(id=${cliente.id})}">Editar</a>
+                            <form class="d-inline" th:action="@{/clientes/eliminar/{id}(id=${cliente.id})}" method="post" data-swal-confirm data-swal-action="delete" data-swal-title="¿Eliminar cliente?" data-swal-text="Si tiene facturas asociadas, no podrá eliminarse.">
+                                <button class="btn-action-outline btn-action-delete" type="submit">Eliminar</button>
+                            </form>
+                        </div>
+                    </th:block></td>
                 </tr>
                 <tr th:if="${#lists.isEmpty(clientes)}"><td colspan="5" class="text-center text-secondary py-5">No hay clientes registrados.</td></tr>
                 <tr data-catalog-no-results hidden><td colspan="5" class="text-center text-secondary py-5">No se encontraron clientes que coincidan con la búsqueda.</td></tr>

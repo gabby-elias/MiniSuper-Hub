@@ -430,9 +430,14 @@ body.app-page.invoice-list-page {
 
 .invoice-list-page .invoice-list-title h1,
 .invoice-list-page .invoice-stat-card > div strong,
-.invoice-list-page .invoice-list-table .invoice-id,
-.invoice-list-page .invoice-list-table .invoice-list-total {
+.invoice-list-page .invoice-list-table .invoice-id {
     color: #2E2A3B;
+}
+
+.invoice-list-page .invoice-list-table .invoice-list-date,
+.invoice-list-page .invoice-list-table .invoice-list-total {
+    color: #6d4d8b;
+    font-weight: 700;
 }
 
 .invoice-list-page .invoice-list-title p,
