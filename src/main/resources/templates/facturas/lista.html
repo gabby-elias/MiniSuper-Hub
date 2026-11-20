@@ -42,16 +42,16 @@
             <table class="table invoice-list-table align-middle" data-pagination-table="facturas" data-pagination-label="facturas">
                 <thead>
                 <tr>
-                    <th>N.º</th><th>Fecha</th><th>Cliente</th>
-                    <th th:if="${esAdmin}">Vendedor</th>
-                    <th>Productos</th><th>Total</th><th>Estado</th><th>Acciones</th>
+                    <th>N.º</th><th>FECHA</th><th>CLIENTE</th>
+                    <th th:if="${esAdmin}">VENDEDOR</th>
+                    <th>PRODUCTOS</th><th>TOTAL</th><th>ESTADO</th><th>ACCIONES</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="factura : ${facturas}" data-invoice-row data-search-row data-pagination-row
                     th:attr="data-invoice-status=${factura.anulada ? 'anulada' : (factura.entregada ? 'entregada' : 'pendiente')}">
                     <td class="invoice-id" th:text="${factura.id}"></td>
-                    <td th:text="${factura.fecha != null ? #temporals.format(factura.fecha, 'dd/MM/yyyy') : '—'}"></td>
+                    <td class="invoice-list-date" th:text="${factura.fecha != null ? #temporals.format(factura.fecha, 'dd/MM/yyyy') : '—'}"></td>
                     <td th:text="${factura.cliente != null ? factura.cliente.nombre : 'Consumidor final'}"></td>
                     <td th:if="${esAdmin}" th:text="${factura.vendedor != null ? factura.vendedor.nombre : '—'}"></td>
                     <td th:text="${factura.detalles != null ? factura.detalles.size() : 0}"></td>

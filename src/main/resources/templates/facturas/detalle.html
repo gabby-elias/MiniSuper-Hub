@@ -92,10 +92,6 @@
     </section>
 
     <section class="invoice-lines content-card">
-        <div class="invoice-lines-heading">
-            <div><span class="invoice-summary-label">DESGLOSE</span><h2>Productos facturados</h2></div>
-            <span class="invoice-lines-count" th:text="${factura.detalles != null ? #lists.size(factura.detalles) + ' líneas' : '0 líneas'}">0 líneas</span>
-        </div>
 
         <div class="table-responsive">
             <table class="table invoice-table align-middle">

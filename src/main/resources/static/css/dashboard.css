@@ -60,16 +60,21 @@ body.app-page.dashboard-page {
 }
 
 .dashboard-stat {
+    --dashboard-stat-start: #6B4C8A;
+    --dashboard-stat-end: #594072;
+    --dashboard-stat-border: #6B4C8A;
+    --dashboard-stat-shadow: rgba(75, 47, 108, 0.16);
+    --dashboard-stat-hover-shadow: rgba(75, 47, 108, 0.25);
     display: flex;
     min-width: 0;
     min-height: 7.2rem;
     align-items: center;
     gap: 0.95rem;
     padding: 1.1rem;
-    border: 1px solid #6B4C8A;
+    border: 1px solid var(--dashboard-stat-border);
     border-radius: 0.9rem;
-    background: linear-gradient(140deg, #6B4C8A, #594072);
-    box-shadow: 0 0.35rem 1.2rem rgba(75, 47, 108, 0.14);
+    background: linear-gradient(140deg, var(--dashboard-stat-start), var(--dashboard-stat-end));
+    box-shadow: 0 0.35rem 1.2rem var(--dashboard-stat-shadow);
     color: #ffffff;
     text-decoration: none;
     transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
@@ -77,16 +82,41 @@ body.app-page.dashboard-page {
 
 .dashboard-stat:hover {
     transform: translateY(-2px);
-    border-color: #6B4C8A;
-    box-shadow: 0 0.65rem 1.5rem rgba(75, 47, 108, 0.22);
+    border-color: var(--dashboard-stat-border);
+    box-shadow: 0 0.65rem 1.5rem var(--dashboard-stat-hover-shadow);
     color: #ffffff;
 }
 
-.dashboard-stat--featured,
-.dashboard-stat--featured:hover {
-    border-color: #6B4C8A;
-    background: linear-gradient(140deg, #6B4C8A, #594072);
-    color: #ffffff;
+.dashboard-stat--sales {
+    --dashboard-stat-start: #247969;
+    --dashboard-stat-end: #17665b;
+    --dashboard-stat-border: #17665b;
+    --dashboard-stat-shadow: rgba(23, 102, 91, 0.17);
+    --dashboard-stat-hover-shadow: rgba(23, 102, 91, 0.28);
+}
+
+.dashboard-stat--invoices {
+    --dashboard-stat-start: #526fa8;
+    --dashboard-stat-end: #3c5286;
+    --dashboard-stat-border: #40558c;
+    --dashboard-stat-shadow: rgba(64, 85, 140, 0.17);
+    --dashboard-stat-hover-shadow: rgba(64, 85, 140, 0.28);
+}
+
+.dashboard-stat--products {
+    --dashboard-stat-start: #a96b2a;
+    --dashboard-stat-end: #82501e;
+    --dashboard-stat-border: #82501e;
+    --dashboard-stat-shadow: rgba(130, 80, 30, 0.17);
+    --dashboard-stat-hover-shadow: rgba(130, 80, 30, 0.28);
+}
+
+.dashboard-stat--clients {
+    --dashboard-stat-start: #76559b;
+    --dashboard-stat-end: #573d78;
+    --dashboard-stat-border: #573d78;
+    --dashboard-stat-shadow: rgba(87, 61, 120, 0.17);
+    --dashboard-stat-hover-shadow: rgba(87, 61, 120, 0.28);
 }
 
 .dashboard-stat-icon {
@@ -110,10 +140,6 @@ body.app-page.dashboard-page {
     stroke-width: 1.8;
 }
 
-.dashboard-stat--featured .dashboard-stat-icon {
-    background: rgba(255, 255, 255, 0.15);
-    color: #ffffff;
-}
 
 .dashboard-stat-copy {
     display: grid;
@@ -140,15 +166,6 @@ body.app-page.dashboard-page {
     font-size: 0.72rem;
 }
 
-.dashboard-stat--featured .dashboard-stat-copy > span,
-.dashboard-stat--featured .dashboard-stat-copy strong,
-.dashboard-stat--featured .dashboard-stat-copy small {
-    color: #ffffff;
-}
-
-.dashboard-stat--featured .dashboard-stat-copy small {
-    opacity: 0.78;
-}
 
 .dashboard-panel-grid {
     display: grid;
