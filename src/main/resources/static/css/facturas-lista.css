@@ -34,15 +34,15 @@ body.app-page.invoice-list-page > main.app-main {
 .invoice-list-title h1 {
     margin: 0;
     color: #1d3656;
-    font-size: 1.65rem;
-    font-weight: 760;
+    font-size: 1.75rem;
+    font-weight: 700;
     letter-spacing: -0.035em;
 }
 
 .invoice-list-title p {
     margin: 0.18rem 0 0;
     color: #73849a;
-    font-size: 0.86rem;
+    font-size: 0.88rem;
 }
 
 .invoice-new-button {
@@ -52,7 +52,7 @@ body.app-page.invoice-list-page > main.app-main {
     padding: 0.65rem 1rem;
     border-radius: 0.62rem;
     box-shadow: 0 0.35rem 0.75rem rgba(23, 75, 136, 0.16);
-    font-size: 0.85rem;
+    font-size: 0.88rem;
     font-weight: 650;
     white-space: nowrap;
 }
@@ -209,13 +209,13 @@ body.app-page.invoice-list-page > main.app-main {
     border-bottom: 0;
     background: #183e6c;
     color: #ffffff;
-    font-size: 0.72rem;
+    font-size: 0.82rem;
 }
 
 .invoice-list-table tbody td {
     padding: 0.5rem 0.7rem;
     color: #2E2A3B;
-    font-size: 0.75rem;
+    font-size: 0.88rem;
     font-weight: 400;
     white-space: nowrap;
 }
@@ -230,7 +230,7 @@ body.app-page.invoice-list-page > main.app-main {
     min-width: 4.3rem;
     padding: 0.32rem 0.56rem;
     border-radius: 999px;
-    font-size: 0.66rem;
+    font-size: 0.78rem;
     font-weight: 700;
 }
 
@@ -363,7 +363,7 @@ body.app-page.invoice-list-page > main.app-main {
     padding: 0.65rem 1rem;
     border-top: 1px solid #e8edf4;
     color: #788aa1;
-    font-size: 0.71rem;
+    font-size: 0.84rem;
 }
 
 @media (max-width: 720px) {
@@ -507,8 +507,8 @@ body.app-page.invoice-list-page {
 }
 
 .table-pagination button {
-    min-width: 1.8rem;
-    height: 1.8rem;
+    min-width: 2rem;
+    height: 2rem;
     display: inline-grid;
     place-items: center;
     padding: 0 0.35rem;
@@ -516,7 +516,7 @@ body.app-page.invoice-list-page {
     border-radius: 0.45rem;
     background: #fff;
     color: #6f6879;
-    font-size: 0.75rem;
+    font-size: 0.82rem;
     line-height: 1;
     cursor: pointer;
 }

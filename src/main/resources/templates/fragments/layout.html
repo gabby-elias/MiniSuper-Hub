@@ -7,8 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/app.css}">
     <link rel="stylesheet" th:href="@{/css/layout.css}">
-    <link rel="stylesheet" th:href="@{/css/{file}.css(file=${stylesheet}, v=25)}">
-    <link rel="stylesheet" th:href="@{/css/typography.css(v=1)}">
+    <link rel="stylesheet" th:href="@{/css/{file}.css(file=${stylesheet}, v=11)}">
 </head>
 <body>
 <th:block th:fragment="navbar(active)">
@@ -30,10 +29,9 @@
     </aside>
     <header class="app-topbar invoice-theme">
         <button class="sidebar-toggle" type="button" aria-label="Abrir menú" aria-expanded="false" data-sidebar-toggle><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
-        <div class="topbar-search" th:if="${active == 'categorias' or active == 'productos' or active == 'clientes' or active == 'usuarios'}">
+        <div class="topbar-search" th:if="${active == 'categorias' or active == 'productos'}">
             <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-            <input th:if="${active != 'usuarios'}" type="search" th:placeholder="${active == 'categorias' ? 'Buscar categorias...' : (active == 'productos' ? 'Buscar productos...' : 'Buscar clientes...')}" aria-label="Buscar" data-table-search>
-            <input th:if="${active == 'usuarios'}" id="user-list-search" type="search" placeholder="Buscar por nombre, usuario o rol..." aria-label="Buscar usuarios" autocomplete="off">
+            <input type="search" th:placeholder="${active == 'categorias' ? 'Buscar categorias...' : 'Buscar productos...'}" aria-label="Buscar" data-table-search>
         </div>
         <div class="topbar-spacer"></div>
         <div class="topbar-user"><span class="user-avatar" th:text="${esAdmin ? 'A' : 'E'}">A</span><span class="user-copy"><strong th:text="${esAdmin ? 'Administrador' : 'Empleado'}">Administrador</strong><small th:text="${nombreUsuario}">admin</small></span></div>
@@ -45,7 +43,134 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script th:src="@{/js/alerts.js}"></script>
-    <script th:src="@{/js/layout.js}"></script>
+    <script>
+        (() => {
+            const toggle = document.querySelector('[data-sidebar-toggle]');
+            const isMobileLayout = () => window.matchMedia('(max-width: 720px)').matches;
+            const isSidebarOpen = () => isMobileLayout()
+                    ? document.body.classList.contains('sidebar-open')
+                    : !document.body.classList.contains('sidebar-collapsed');
+            const setSidebarOpen = (opened) => {
+                const mobile = isMobileLayout();
+                document.body.classList.toggle('sidebar-open', mobile && opened);
+                document.body.classList.toggle('sidebar-collapsed', !mobile && !opened);
+                toggle?.setAttribute('aria-expanded', String(opened));
+                toggle?.setAttribute('aria-label', opened ? 'Cerrar menú' : 'Abrir menú');
+            };
+            const syncSidebarMode = () => {
+                if (isMobileLayout()) document.body.classList.remove('sidebar-collapsed');
+                else document.body.classList.remove('sidebar-open');
+                const opened = isSidebarOpen();
+                toggle?.setAttribute('aria-expanded', String(opened));
+                toggle?.setAttribute('aria-label', opened ? 'Cerrar menú' : 'Abrir menú');
+            };
+            toggle?.addEventListener('click', (event) => {
+                event.stopPropagation();
+                setSidebarOpen(!isSidebarOpen());
+            });
+            document.addEventListener('click', (event) => {
+                if (isMobileLayout() && isSidebarOpen() && !event.target.closest('.app-sidebar, [data-sidebar-toggle]')) {
+                    setSidebarOpen(false);
+                }
+            });
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape' && isSidebarOpen()) setSidebarOpen(false);
+            });
+            window.addEventListener('resize', syncSidebarMode);
+            syncSidebarMode();
+            const searches = [...document.querySelectorAll('[data-table-search]')];
+            const invoiceState = document.querySelector('[data-invoice-state]');
+            const noResults = document.querySelector('[data-invoice-no-results]');
+            const paginationTables = [...document.querySelectorAll('[data-pagination-table]')].map(table => {
+                const name = table.dataset.paginationTable;
+                return {
+                    name,
+                    label: table.dataset.paginationLabel || 'registros',
+                    rows: [...table.tBodies[0].rows].filter(row => !row.querySelector('td[colspan]')),
+                    page: 1,
+                    pageSize: 5,
+                    summary: document.querySelector(`[data-pagination-summary="${name}"]`),
+                    controls: document.querySelector(`[data-pagination-controls="${name}"]`)
+                };
+            });
+            const unpaginatedRows = [...document.querySelectorAll('main table tbody tr')]
+                    .filter(row => !row.querySelector('td[colspan]')
+                            && !row.closest('table[data-pagination-table]'));
+            const filterRows = () => {
+                const query = searches.map(input => input.value.trim().toLocaleLowerCase()).find(Boolean) || '';
+                const state = invoiceState?.value || '';
+                paginationTables.forEach(pagination => {
+                    const filtered = pagination.rows.filter(row => row.textContent.toLocaleLowerCase().includes(query)
+                            && (!row.dataset.invoiceStatus || !state || row.dataset.invoiceStatus === state));
+                    const pageCount = Math.max(1, Math.ceil(filtered.length / pagination.pageSize));
+                    pagination.page = Math.min(pagination.page, pageCount);
+                    const start = (pagination.page - 1) * pagination.pageSize;
+                    const end = Math.min(start + pagination.pageSize, filtered.length);
+                    pagination.rows.forEach(row => { row.hidden = true; });
+                    filtered.slice(start, end).forEach(row => { row.hidden = false; });
+
+                    if (pagination.summary) {
+                        pagination.summary.textContent = `Mostrando ${end - start} de ${filtered.length} ${pagination.label}`;
+                    }
+                    if (pagination.name === 'facturas' && noResults) noResults.hidden = filtered.length > 0;
+                    if (pagination.controls) {
+                        const previous = pagination.controls.querySelector('[data-page-prev]');
+                        const next = pagination.controls.querySelector('[data-page-next]');
+                        const numbers = pagination.controls.querySelector('[data-page-numbers]');
+                        previous.disabled = pagination.page <= 1;
+                        next.disabled = pagination.page >= pageCount;
+                        numbers.replaceChildren();
+                        const firstPage = Math.max(1, Math.min(pagination.page - 2, pageCount - 4));
+                        const lastPage = Math.min(pageCount, firstPage + 4);
+                        for (let page = firstPage; page <= lastPage; page++) {
+                            const button = document.createElement('button');
+                            button.type = 'button';
+                            button.textContent = String(page);
+                            button.setAttribute('aria-label', `Página ${page}`);
+                            button.setAttribute('aria-current', page === pagination.page ? 'page' : 'false');
+                            button.classList.toggle('is-active', page === pagination.page);
+                            button.addEventListener('click', () => {
+                                pagination.page = page;
+                                filterRows();
+                            });
+                            numbers.appendChild(button);
+                        }
+                    }
+                });
+                unpaginatedRows.forEach(row => {
+                    row.hidden = !row.textContent.toLocaleLowerCase().includes(query);
+                });
+            };
+            document.addEventListener('keydown', event => {
+                if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
+                    event.preventDefault();
+                    searches[0]?.focus();
+                }
+            });
+            searches.forEach(input => input.addEventListener('input', () => {
+                searches.forEach(other => {
+                    if (other !== input) other.value = input.value;
+                });
+                paginationTables.forEach(pagination => { pagination.page = 1; });
+                filterRows();
+            }));
+            invoiceState?.addEventListener('change', () => {
+                paginationTables.forEach(pagination => { pagination.page = 1; });
+                filterRows();
+            });
+            paginationTables.forEach(pagination => {
+                pagination.controls?.querySelector('[data-page-prev]')?.addEventListener('click', () => {
+                    pagination.page = Math.max(1, pagination.page - 1);
+                    filterRows();
+                });
+                pagination.controls?.querySelector('[data-page-next]')?.addEventListener('click', () => {
+                    pagination.page++;
+                    filterRows();
+                });
+            });
+            filterRows();
+        })();
+    </script>
 </th:block>
 </body>
 </html>
